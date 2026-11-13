@@ -79,7 +79,6 @@ src/osm.py                  lectura y descarga de OpenStreetMap
 tests/test_proyecto.py      casos de prueba
 herramientas/descargar_mapa.py   vuelve a descargar el mapa (solo para actualizarlo)
 documento/main.tex          documento en LaTeX
-version_anterior/           primera versión (solo El Salao), como referencia
 ```
 
 ## Fuente de los datos
