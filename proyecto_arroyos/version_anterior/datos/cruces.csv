@@ -1,0 +1,24 @@
+u,v,via,metros,lat,lon,tipo,bloqueado_lluvia,confirmado,nota
+9153386897,950518889,Calle 61,286.8,10.918426,-74.797713,a_nivel,1,no,Clasificado desde etiquetas de OpenStreetMap
+14111493325,9754244575,Arroyo El Salado,123.8,10.91975,-74.80062,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9754244575,9754244570,Arroyo El Salado,62.0,10.919917,-74.799847,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9754244570,1882409290,Arroyo El Salado,90.5,10.919825,-74.799173,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+1882409290,9153386897,Arroyo El Salado,119.3,10.919736,-74.798242,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9153386897,9153391971,Arroyo El Salado,16.1,10.919707,-74.797631,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9153391971,9153386900,Arroyo El Salado,123.8,10.91978,-74.797011,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+1882409076,1882409081,Calle 72,11.4,10.918313,-74.805055,puente,0,no,Clasificado desde etiquetas de OpenStreetMap
+1882408996,9277452045,Carrera 21,120.5,10.917917,-74.80853,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9277452045,9277452043,Carrera 21,39.0,10.917957,-74.807801,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9277452043,9277452040,Carrera 21,74.1,10.917996,-74.807285,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9277452040,9277452027,Carrera 21,30.5,10.918034,-74.806808,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9277452027,9277452047,Carrera 21,80.6,10.918074,-74.806303,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9277452043,5907299525,Calle 75,43.8,10.918168,-74.807638,a_nivel,1,no,Clasificado desde etiquetas de OpenStreetMap
+8349875443,1882409272,Carrera 22D,29.4,10.919703,-74.801655,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+1882409290,5414667391,,95.4,10.920135,-74.798932,a_nivel,1,no,Clasificado desde etiquetas de OpenStreetMap
+7512452452,7512452453,Calle 77,16.0,10.919021,-74.81149,puente,0,no,Clasificado desde etiquetas de OpenStreetMap
+1882409247,1882409272,,38.0,10.919639,-74.801931,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap
+9754244570,8345985045,,62.1,10.91968,-74.799401,a_nivel,1,no,Clasificado desde etiquetas de OpenStreetMap
+1879820191,8345985075,Avenida Murillo,13.8,10.919737,-74.799238,puente,0,no,Clasificado desde etiquetas de OpenStreetMap
+8345985078,8345985070,Avenida Murillo,14.0,10.919739,-74.799056,puente,0,no,Clasificado desde etiquetas de OpenStreetMap
+9277452027,5721926884,Calle 74,38.7,10.918222,-74.806685,a_nivel,1,no,Clasificado desde etiquetas de OpenStreetMap
+14111493325,8349875443,,47.7,10.919626,-74.801317,sobre_cauce,1,no,Clasificado desde etiquetas de OpenStreetMap

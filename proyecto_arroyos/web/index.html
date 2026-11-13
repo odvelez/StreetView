@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arroyos y desvíos</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <aside id="panel">
+    <header>
+      <h1>Arroyos y desvíos</h1>
+      <p class="sub">Barranquilla y su área metropolitana. Marque un arroyo y el programa calcula
+        cuánto se alargan los recorridos cuando crece y qué medida temporal ayuda más mientras se canaliza.</p>
+    </header>
+
+    <section>
+      <h2><span class="num">1</span> Marque el arroyo</h2>
+      <label class="fila">Ir a
+        <select id="municipio">
+          <option value="">— elegir —</option>
+          <option value="10.9878,-74.8001,13">Barranquilla</option>
+          <option value="10.9185,-74.7677,14">Soledad</option>
+          <option value="10.8590,-74.7739,14">Malambo</option>
+          <option value="11.0103,-74.9547,14">Puerto Colombia</option>
+          <option value="10.8994,-74.8858,14">Galapa</option>
+        </select>
+      </label>
+      <p class="ayuda">Los arroyos de OpenStreetMap se ven en <b class="azul">azul claro</b>: haga clic en uno
+        para usarlo. Si el suyo no aparece, o corre por una calle, dibújelo.</p>
+      <div class="botones">
+        <button id="btn-dibujar" class="sec">Dibujar</button>
+        <button id="btn-deshacer" class="sec">Deshacer</button>
+        <button id="btn-borrar" class="sec">Borrar</button>
+      </div>
+      <p id="estado-dibujo" class="ayuda"></p>
+      <button id="btn-ejemplo" class="enlace">Cargar el ejemplo: arroyo El Salao (Soledad)</button>
+    </section>
+
+    <section>
+      <h2><span class="num">2</span> Ajustes</h2>
+      <label class="fila">Zona a cada lado
+        <select id="radio"><option>300</option><option selected>400</option><option>500</option><option>600</option></select> m
+      </label>
+      <label class="fila">Puente peatonal nuevo hasta
+        <select id="luz"><option>40</option><option selected>60</option><option>80</option></select> m
+      </label>
+      <label class="fila">Medidas por tipo
+        <select id="k"><option selected>1</option><option>2</option><option>3</option></select>
+      </label>
+      <button id="btn-analizar" class="pri" disabled>Analizar</button>
+      <p id="estado" class="estado"></p>
+    </section>
+
+    <section id="resultados" hidden></section>
+
+    <footer>
+      Datos del mapa: © colaboradores de OpenStreetMap (ODbL).<br>
+      Proyecto final de Matemáticas Discretas, Universidad del Norte, 2026.
+    </footer>
+  </aside>
+
+  <main id="mapa"></main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
