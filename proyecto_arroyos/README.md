@@ -17,7 +17,7 @@ El caso de estudio es el arroyo El Salao, en Soledad.
 ## Requisitos
 
 - Python 3.10 o superior.
-- `pip install flask matplotlib`
+- `pip install -r requirements.txt`
   - Flask es necesario para la página web.
   - matplotlib es opcional; solo se usa para generar `resultados/mapa.png`.
 - Los algoritmos (BFS, Dijkstra, centralidades y selección voraz) usan solo la biblioteca estándar.
