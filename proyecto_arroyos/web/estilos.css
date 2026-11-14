@@ -275,4 +275,21 @@ body.recorriendo .leaflet-container { background: #161d22; }
   #rec-unidad { font-size: 18px; }
   #rec-titulo { font-size: 18px; margin-top: 6px; }
   #rec-detalle { font-size: 14px; }
+
+  /* Todo lo que se toca mide al menos 48 px. */
+  button, select, summary, .fila.check, .selector button { min-height: 48px; }
+  button.enlace { display: flex; align-items: center; width: 100%; padding: 4px 0; }
+  .botones button { flex: 1 1 0; }
+  .fila { min-height: 48px; margin: 4px 0; }
+  .lista li.clic { min-height: 48px; }
+  #rec-saltar { min-height: 48px; }
+  h1 { font-size: 18px; }
+  .sub { font-size: 13px; }
+  .leaflet-touch .leaflet-bar a { width: 48px; height: 48px; line-height: 48px; font-size: 24px; }
+  .leyenda summary { min-height: 48px; }
+  .leyenda { max-width: 200px; }
+  .detalle { width: auto; max-height: 190px; padding: 10px 12px; font-size: 12.5px; }
+  .det-fila > b { font-size: 14px; }
+  .detalle .ver-todo { min-height: 48px; }
+  .leaflet-popup-content a { display: inline-block; min-height: 32px; line-height: 32px; }
 }
