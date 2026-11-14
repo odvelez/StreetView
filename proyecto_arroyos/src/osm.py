@@ -208,3 +208,22 @@ def leer_cuadros(archivos, recuadro):
                 parte += 1
             pedazo = []
     return nodos_r, vias_r
+
+
+def semaforos(recuadro):
+    """{id: (lat, lon)} de los semáforos (highway=traffic_signals) que ya están en las descargas
+    guardadas, dentro del recuadro. Devuelve None si no hay descarga guardada: no se sabe.
+    No descarga nada."""
+    archivos = cuadros_que_cubren(recuadro)
+    if archivos is None:
+        archivo = CACHE / f"calles_{hashlib.sha1(consulta(recuadro).encode()).hexdigest()[:16]}.json"
+        archivos = [archivo] if archivo.exists() else None
+    if archivos is None:
+        return None
+    s, o, n, e = recuadro
+    res = {}
+    for a in archivos:
+        for el in json.loads(a.read_text(encoding="utf-8"))["elements"]:
+            if el["type"] == "node" and el.get("tags", {}).get("highway") == "traffic_signals"                     and s <= el["lat"] <= n and o <= el["lon"] <= e:
+                res[str(el["id"])] = (el["lat"], el["lon"])
+    return res

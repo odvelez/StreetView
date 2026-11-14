@@ -60,6 +60,11 @@ class Arroyo:
         if not self.lineas:
             raise ValueError("El arroyo necesita al menos dos puntos")
         self.segmentos = [(l[i], l[i + 1]) for l in self.lineas for i in range(len(l) - 1)]
+        # Metros recorridos por el cauce hasta el inicio de cada segmento (para `posicion`).
+        self.inicio_segmento, total = [], 0.0
+        for a, b in self.segmentos:
+            self.inicio_segmento.append(total)
+            total += math.hypot(b[0] - a[0], b[1] - a[1])
         # Índice espacial: cuadrícula de CELDA metros con los segmentos que pasan por cada celda.
         # Así, para saber si una calle toca el arroyo, solo se revisan los segmentos cercanos.
         self.celdas = {}
@@ -85,6 +90,17 @@ class Arroyo:
 
     def longitud(self):
         return sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in self.segmentos)
+
+    def posicion(self, p):
+        """Metros, medidos a lo largo del cauce desde su inicio, del punto del cauce más cercano a p."""
+        mejor = None
+        for i, (a, b) in enumerate(self.segmentos):
+            d, t, _ = proyectar(p, a, b)
+            if mejor is None or d < mejor[0]:
+                mejor = (d, i, t)
+        _, i, t = mejor
+        a, b = self.segmentos[i]
+        return self.inicio_segmento[i] + t * math.hypot(b[0] - a[0], b[1] - a[1])
 
     def corta(self, p, q):
         """True si el segmento p-q (en metros) atraviesa el cauce."""
