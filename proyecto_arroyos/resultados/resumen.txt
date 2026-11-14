@@ -1,17 +1,18 @@
-ARROYO: Arroyo El Salao, Soledad (caso de estudio)
-Longitud del cauce analizado: 2386 m
+OBRA: Canalización del arroyo El Salao, Soledad (caso de estudio)
+Longitud del eje de la obra: 2386 m
 Red vial: 5859 esquinas, 8827 tramos (OpenStreetMap, descargado con Overpass)
-Tramos bloqueados con lluvia: 120   Puentes: 9   Esquinas dentro del cauce: 68
-Zona de estudio (a 400 m del cauce): 578 en el lado norte, 508 en el lado sur; muestra de 120, 120 por lado
+Tramos cerrados por la obra: 120   Puentes: 9   Esquinas dentro de la franja de obra: 68
+Zona de estudio (a 400 m del eje): 578 en el lado norte, 508 en el lado sur; muestra de 120, 120 por lado
+Escenario: toda la obra a la vez, sin etapas.
 
 PEATONES (grafo no dirigido)
   Escenario                   Media m   Desvío  % >200 m    Máx m  Sin cam.
   Seco                           1168        0       0.0        0         -
-  Lluvia                         1238       70      10.9      763         -
-  Lluvia + puente peatonal       1195       26       2.0      440         -
+  Con la obra                    1238       70      10.9      763         -
+  Obra + paso peatonal           1195       26       2.0      440         -
   Candidatos evaluados: 50
-  Pares sin camino: 0 con lluvia -> 0 con medida (0 recuperados)
-  Desvío medio sobre los mismos 14400 pares que tenían camino con lluvia: 69.7 m -> 26.1 m
+  Pares sin camino: 0 con la obra -> 0 con medida (0 recuperados)
+  Desvío medio sobre los mismos 14400 pares que tenían camino con la obra: 69.7 m -> 26.1 m
   1. Calle 75D x Carrera 21A  <->  Calle 76 x Carrera 21  (paso nuevo, 48 m)  -> desvío 49 m
   2. Calle 66 x Carrera 22A  <->  Calle 67B x Carrera 22D  (cruce de la Carrera 22A, 173 m)  -> desvío 32 m
   3. Calle 67 x Carrera 23  <->  Carrera 22D  (cruce de la Calle 67, 132 m)  -> desvío 26 m
@@ -19,15 +20,15 @@ PEATONES (grafo no dirigido)
 VEHÍCULOS (grafo dirigido, respeta sentidos viales)
   Escenario                   Media m   Desvío  % >200 m    Máx m  Sin cam.
   Seco                           1288        0       0.0        0         -
-  Lluvia                         1427      138      23.4     1580       240
-  Lluvia + doble sentido         1421      132      23.4     1580       120
+  Con la obra                    1427      138      23.4     1580       240
+  Obra + doble sentido           1421      132      23.4     1580       120
   Candidatos evaluados: 151
-  Pares sin camino: 240 con lluvia -> 120 con medida (120 recuperados)
-  Desvío medio sobre los mismos 28560 pares que tenían camino con lluvia: 137.5 m -> 132.3 m
+  Pares sin camino: 240 con la obra -> 120 con medida (120 recuperados)
+  Desvío medio sobre los mismos 28560 pares que tenían camino con la obra: 137.5 m -> 132.3 m
   1. calle sin nombre: esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)  -> desvío 138 m
   2. calle sin nombre: Avenida Murillo -> Carrera 16 Sur (112 m)  -> desvío 132 m
 
-RUTAS ALTERNAS (cruces que la lluvia cierra; metros en seco -> con lluvia)
+RUTAS ALTERNAS (cruces que la obra cierra; metros sin obra -> con la obra)
   Calle 61               carro 120 -> 1895   a pie 120 -> 217
   Arroyo El Salao        carro 102 -> 1107   a pie 102 -> 957
   Carrera 22D            carro 102 -> 1107   a pie 106 -> 934

@@ -2715,11 +2715,11 @@
   "con_medida": {
    "pares": 14400,
    "sin_camino": 0,
-   "distancia_media_m": 1194.5920091776356,
-   "desvio_medio_m": 26.130495288760997,
+   "distancia_media_m": 1194.5920091776845,
+   "desvio_medio_m": 26.130495288809346,
    "pct_mayor_200m": 1.9861111111111112,
-   "desvio_max_m": 440.3275448163866,
-   "desvio_fijo_m": 26.130495288760997
+   "desvio_max_m": 440.32754481676017,
+   "desvio_fijo_m": 26.130495288809346
   },
   "candidatos": 50,
   "recuperados": 0,
