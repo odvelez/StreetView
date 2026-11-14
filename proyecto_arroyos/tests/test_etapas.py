@@ -3,7 +3,7 @@ import unittest
 
 from src.analisis import tablas, voraz
 from src.etapas import cortes, numero_de_etapas, plan_por_etapas, puentes_por_longitud
-from src.geometria import Arroyo, Plano
+from src.geometria import Obra, Plano
 from src.grafo import Grafo
 from tests.test_proyecto import barrio_de_prueba
 
@@ -48,23 +48,23 @@ class CortesDeEtapas(unittest.TestCase):
         self.assertTrue(all(0 < b - a <= 700 for a, b in zip(c, c[1:])), c)
 
 
-class PosicionEnElCauce(unittest.TestCase):
-    def test_posicion_a_lo_largo_de_un_cauce_recto(self):
-        # Cauce recto de oeste a este. Un punto sobre el 25 % de su largo queda en el 25 %.
+class PosicionEnElEje(unittest.TestCase):
+    def test_posicion_a_lo_largo_de_un_eje_recto(self):
+        # Eje recto de oeste a este. Un punto sobre el 25 % de su largo queda en el 25 %.
         plano = Plano(10.0)
         lineas = [[(10.0, -74.000), (10.0, -73.990)]]
-        arroyo = Arroyo(lineas, plano)
-        largo = arroyo.longitud()
+        obra = Obra(lineas, plano)
+        largo = obra.longitud()
         p = plano.xy((10.0003, -74.000 + 0.0025))
-        self.assertAlmostEqual(arroyo.posicion(p), 0.25 * largo, places=3)
-        self.assertAlmostEqual(arroyo.posicion(plano.xy((10.0, -73.980))), largo, places=3)   # más allá del extremo
+        self.assertAlmostEqual(obra.posicion(p), 0.25 * largo, places=3)
+        self.assertAlmostEqual(obra.posicion(plano.xy((10.0, -73.980))), largo, places=3)   # más allá del extremo
 
     def test_posicion_con_dos_segmentos(self):
         plano = Plano(10.0)
-        arroyo = Arroyo([[(10.0, -74.000), (10.0, -73.999), (10.001, -73.999)]], plano)
+        obra = Obra([[(10.0, -74.000), (10.0, -73.999), (10.001, -73.999)]], plano)
         primero = plano.dist((10.0, -74.000), (10.0, -73.999))
         p = plano.xy((10.0005, -73.9992))              # junto al segundo tramo, a la mitad
-        self.assertAlmostEqual(arroyo.posicion(p), primero + plano.dist((10.0, -73.999), (10.0005, -73.999)), places=2)
+        self.assertAlmostEqual(obra.posicion(p), primero + plano.dist((10.0, -73.999), (10.0005, -73.999)), places=2)
 
 
 class SeparacionEntreElegidos(unittest.TestCase):
@@ -93,7 +93,7 @@ class SeparacionEntreElegidos(unittest.TestCase):
 
 
 class PlanEnElBarrio(unittest.TestCase):
-    """Barrio miniatura: arroyo de unos 438 m con la Carrera 1 (a nivel) y la Carrera 2 (puente)."""
+    """Barrio miniatura: obra de unos 438 m con la Carrera 1 (a nivel) y la Carrera 2 (puente)."""
 
     def test_una_etapa_cierra_los_dos_cruces_y_pone_un_puente(self):
         red, lineas = barrio_de_prueba()
@@ -118,7 +118,7 @@ class PlanEnElBarrio(unittest.TestCase):
         self.assertEqual(e["peatones"]["obra"]["sin_camino"], 0)
         self.assertGreater(e["peatones"]["obra"]["desvio_medio_m"], 0)
 
-    def test_varias_etapas_cubren_todo_el_cauce_sin_repetir_cierres(self):
+    def test_varias_etapas_cubren_toda_la_obra_sin_repetir_cierres(self):
         red, lineas = barrio_de_prueba()
         plan = plan_por_etapas(red, lineas, etapa_max_m=200)       # 438 m / 200 m -> 3 etapas
         et = plan["etapas"]
@@ -126,7 +126,7 @@ class PlanEnElBarrio(unittest.TestCase):
         self.assertEqual(et[0]["inicio_m"], 0)
         for a, b in zip(et, et[1:]):
             self.assertEqual(a["fin_m"], b["inicio_m"])
-        self.assertAlmostEqual(et[-1]["fin_m"], plan["arroyo"]["longitud_m"], delta=1)
+        self.assertAlmostEqual(et[-1]["fin_m"], plan["obra"]["longitud_m"], delta=1)
         cerrados = [i for e in et for i in e["tramos_cerrados"]]
         self.assertEqual(len(cerrados), len(set(cerrados)))        # ningún tramo se cierra en dos etapas
         self.assertEqual(len(cerrados), 2)                          # y los dos cruces se cierran en alguna

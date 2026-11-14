@@ -100,14 +100,14 @@ def exp_voraz():
 def exp_criticos(top=10):
     print("Intermediación en el grafo vehicular (tarda unos 2 minutos)")
     red, lineas, r, ctx = caso(k=1)
-    arroyo, v = ctx["arroyo"], ctx["vehiculos"]
+    obra, v = ctx["obra"], ctx["vehiculos"]
     t = time.time()
     bs, bl = intermediacion(v["seco"]), intermediacion(v["lluvia"])
     print(f"  calculado en {time.time() - t:.0f} s")
     en_zona = set(ctx["lados_todos"][1]) | set(ctx["lados_todos"][-1])
 
     def fila(n, valor, otro=None):
-        d = arroyo.ubicar(red.plano.xy(red.pos[n]))[0]
+        d = obra.ubicar(red.plano.xy(red.pos[n]))[0]
         return dict(esquina=n, nombre=red.nombre(n), valor=round(valor, 6), distancia_cauce_m=round(d),
                     en_zona=n in en_zona, posicion=list(red.pos[n]),
                     osm=f"https://www.openstreetmap.org/node/{n}")
@@ -214,7 +214,7 @@ def exp_control():
     print("Control del lado: producto cruz contra componentes conexas")
     red, lineas, r, ctx = caso(k=1)
     conjuntos = {"zona (sin la orilla)": lados_de_zona(ctx["lados_todos"]),
-                 "todas a menos de 400 m (con la orilla)": lados_por_distancia(red, ctx["arroyo"], RADIO)}
+                 "todas a menos de 400 m (con la orilla)": lados_por_distancia(red, ctx["obra"], RADIO)}
     datos = {}
     for nombre, lado in conjuntos.items():
         for modo in ("barrera_total", "lluvia"):

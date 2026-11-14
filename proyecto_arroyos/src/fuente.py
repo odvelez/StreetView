@@ -1,7 +1,9 @@
-"""De dónde salen los datos: arroyos con nombre, el ejemplo El Salao y la red vial de una zona."""
+"""De dónde salen los datos: el ejemplo El Salao, obras guardadas en archivo, arroyos con nombre
+(heredado) y la red vial de una zona."""
 import csv
 import json
 import math
+from pathlib import Path
 
 from src import osm
 from src.geometria import M_LAT, m_lon, orientar
@@ -16,7 +18,7 @@ _local = None
 
 
 def recuadro_de(lineas, radio):
-    """Recuadro (sur, oeste, norte, este) alrededor del arroyo y su lado más largo en metros."""
+    """Recuadro (sur, oeste, norte, este) alrededor de la obra y su lado más largo en metros."""
     lats = [p[0] for l in lineas for p in l]
     lons = [p[1] for l in lineas for p in l]
     lat0 = sum(lats) / len(lats)
@@ -58,11 +60,50 @@ def red_para(recuadro):
 
 
 def lineas_ejemplo():
-    """Cauce del arroyo El Salao en Soledad (caso de estudio del documento)."""
+    """Eje de la obra de canalización del arroyo El Salao en Soledad (caso de estudio del documento)."""
     with open(osm.DATOS / "arroyo_el_salao.csv", newline="", encoding="utf-8") as f:
         segs = [[(float(r["lat1"]), float(r["lon1"])), (float(r["lat2"]), float(r["lon2"]))]
                 for r in csv.DictReader(f)]
     return orientar(segs)
+
+
+def leer_obra(ruta):
+    """Lee un archivo de obra (formato de equipo/cambio_a_obras.md, sección 8):
+
+        {"nombre": "...", "ilustrativo": true, "lineas": [[[lat, lon], [lat, lon], ...], ...]}
+
+    Devuelve dict(nombre, ilustrativo, lineas) con las líneas ya orientadas. `nombre` e
+    `ilustrativo` son opcionales (por defecto, el nombre del archivo y False).
+    Lanza ValueError con un mensaje claro si el archivo no tiene ese formato.
+    """
+    ruta = Path(ruta)
+    try:
+        datos = json.loads(ruta.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as ex:
+        raise ValueError(f"{ruta.name} no es un JSON válido: {ex}") from None
+    if not isinstance(datos, dict) or not isinstance(datos.get("lineas"), list):
+        raise ValueError(f'{ruta.name} debe tener la forma {{"nombre": ..., "lineas": [[[lat, lon], ...]]}}.')
+    lineas = []
+    for k, linea in enumerate(datos["lineas"], 1):
+        try:
+            puntos = [(float(p[0]), float(p[1])) for p in linea if len(p) == 2]
+        except (TypeError, ValueError):
+            raise ValueError(f"{ruta.name}: la línea {k} tiene puntos que no son [lat, lon].") from None
+        if len(puntos) != len(linea):
+            raise ValueError(f"{ruta.name}: la línea {k} tiene puntos que no son [lat, lon].")
+        if any(not (-90 <= la <= 90 and -180 <= lo <= 180) for la, lo in puntos):
+            raise ValueError(f"{ruta.name}: la línea {k} tiene coordenadas fuera de rango (¿lat y lon al revés?).")
+        if len(puntos) >= 2:
+            lineas.append(puntos)
+    if not lineas:
+        raise ValueError(f"{ruta.name} no tiene ninguna línea con al menos dos puntos.")
+    return dict(nombre=str(datos.get("nombre") or ruta.stem), ilustrativo=bool(datos.get("ilustrativo", False)),
+                lineas=orientar(lineas))
+
+
+def lineas_de_archivo(ruta):
+    """Líneas [(lat, lon), ...] del eje de la obra guardada en `ruta` (ver `leer_obra`)."""
+    return leer_obra(ruta)["lineas"]
 
 
 def arroyos_osm():

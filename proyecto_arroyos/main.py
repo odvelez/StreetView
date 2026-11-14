@@ -1,12 +1,16 @@
-"""Arroyos y desvíos: análisis por línea de comandos (la web está en app.py).
+"""Obras viales y desvíos: análisis de una obra hecha toda a la vez, por línea de comandos.
+
+La web está en app.py; el plan por etapas, en herramientas/plan_etapas.py.
 
 Ejemplos:
-  python main.py                               # caso de estudio: arroyo El Salao (Soledad)
-  python main.py --arroyo "Arroyo Don Juan"    # cualquier arroyo con nombre en OpenStreetMap
-  python main.py --listar                      # nombres de los arroyos disponibles
-  python main.py --radio 500 --k 3 --luz 80    # otros ajustes
+  python main.py                                            # caso de estudio: canalización de El Salao
+  python main.py --obra datos/ejemplos/obra_ilustrativa.json # cualquier obra guardada en un archivo
+  python main.py --radio 500 --k 3 --luz 80                 # otros ajustes
+  python main.py --ancho 20                                 # franja de obra más ancha (por defecto 10 m)
 
-Entrada: datos/ (calles y arroyos de OpenStreetMap).
+Obsoletas (se quitan en la limpieza final): --arroyo "Arroyo Don Juan" y --listar.
+
+Entrada: datos/ (calles de OpenStreetMap y ejes de obra).
 Salida: resumen en pantalla y archivos en resultados/ (resumen.txt, analisis.json, mapa.png).
 """
 import argparse
@@ -16,7 +20,7 @@ from collections import Counter
 from pathlib import Path
 
 from src import fuente
-from src.analisis import analizar
+from src.analisis import TOLERANCIA_M, analizar
 
 SALIDA = Path(__file__).resolve().parent / "resultados"
 
@@ -29,18 +33,19 @@ def linea(nombre, m):
 
 def informe(nombre, r):
     p = []
-    p.append(f"ARROYO: {nombre}")
-    p.append(f"Longitud del cauce analizado: {r['arroyo']['longitud_m']} m")
+    p.append(f"OBRA: {nombre}")
+    p.append(f"Longitud del eje de la obra: {r['arroyo']['longitud_m']} m")
     p.append(f"Red vial: {r['red']['esquinas']} esquinas, {r['red']['tramos']} tramos ({r['fuente']})")
-    p.append(f"Tramos bloqueados con lluvia: {r['red']['bloqueados']}   Puentes: {r['red']['puentes']}   "
-             f"Esquinas dentro del cauce: {r['red']['esquinas_inundadas']}")
+    p.append(f"Tramos cerrados por la obra: {r['red']['bloqueados']}   Puentes: {r['red']['puentes']}   "
+             f"Esquinas dentro de la franja de obra: {r['red']['esquinas_inundadas']}")
     lados = ", ".join(f"{v} en el {k}" for k, v in r["zona"]["lados"].items())
     muestra = ", ".join(f"{v}" for v in r["zona"]["muestra"].values())
-    p.append(f"Zona de estudio (a {r['zona']['radio_m']:.0f} m del cauce): {lados}; muestra de {muestra} por lado")
+    p.append(f"Zona de estudio (a {r['zona']['radio_m']:.0f} m del eje): {lados}; muestra de {muestra} por lado")
+    p.append("Escenario: toda la obra a la vez, sin etapas.")
     for a in r["avisos"]:
         p.append(f"AVISO: {a}")
     cab = f"  {'Escenario':<26}{'Media m':>9}{'Desvío':>9}{'% >200 m':>10}{'Máx m':>9}{'Sin cam.':>10}"
-    for clave, titulo, medida in (("peatones", "PEATONES (grafo no dirigido)", "puente peatonal"),
+    for clave, titulo, medida in (("peatones", "PEATONES (grafo no dirigido)", "paso peatonal"),
                                   ("vehiculos", "VEHÍCULOS (grafo dirigido, respeta sentidos viales)", "doble sentido")):
         x = r.get(clave)
         if not x:
@@ -48,13 +53,13 @@ def informe(nombre, r):
         p.append(f"\n{titulo}")
         p.append(cab)
         p.append(linea("Seco", x["seco"]))
-        p.append(linea("Lluvia", x["lluvia"]))
-        p.append(linea(f"Lluvia + {medida}", x["con_medida"]))
+        p.append(linea("Con la obra", x["lluvia"]))
+        p.append(linea(f"Obra + {medida}", x["con_medida"]))
         p.append(f"  Candidatos evaluados: {x['candidatos']}")
         ll, cm = x["lluvia"], x["con_medida"]
-        p.append(f"  Pares sin camino: {ll['sin_camino']} con lluvia -> {cm['sin_camino']} con medida "
+        p.append(f"  Pares sin camino: {ll['sin_camino']} con la obra -> {cm['sin_camino']} con medida "
                  f"({x['recuperados']} recuperados)")
-        p.append(f"  Desvío medio sobre los mismos {ll['pares'] - ll['sin_camino']} pares que tenían camino con lluvia: "
+        p.append(f"  Desvío medio sobre los mismos {ll['pares'] - ll['sin_camino']} pares que tenían camino con la obra: "
                  f"{ll['desvio_fijo_m']:.1f} m -> {cm['desvio_fijo_m']:.1f} m")
         if not x["propuestas"]:
             p.append(f"  Ningún {medida} reduce el desvío medio al menos 2 %.")
@@ -67,7 +72,7 @@ def informe(nombre, r):
                 p.append(f"  {q['orden']}. {q['via']}: {q['desde']} -> {q['hasta']} ({q['metros']} m)"
                          f"  -> desvío {q['desvio_medio_m']:.0f} m")
     if r["rutas"]:
-        p.append("\nRUTAS ALTERNAS (cruces que la lluvia cierra; metros en seco -> con lluvia)")
+        p.append("\nRUTAS ALTERNAS (cruces que la obra cierra; metros sin obra -> con la obra)")
         for x in r["rutas"]:
             partes = []
             for quien, k in (("carro", "carro"), ("a pie", "pie")):
@@ -119,10 +124,10 @@ def dibujar(r, ruta):
     for lado in ax.spines.values():
         lado.set_color("#d0d0cc")
     ax.legend(handles=[
-        Line2D([], [], color=AZUL, lw=3.5, alpha=0.7, label="Arroyo"),
-        Line2D([], [], color=ROJO, lw=2.2, label="Tramo bloqueado con lluvia"),
+        Line2D([], [], color=AZUL, lw=3.5, alpha=0.7, label="Eje de la obra"),
+        Line2D([], [], color=ROJO, lw=2.2, label="Tramo cerrado por la obra"),
         Line2D([], [], color=VERDE, lw=4, label="Puente existente"),
-        Line2D([], [], marker="o", ls=(0, (1, 1)), color=NARANJA, ms=9, label="Puente peatonal propuesto"),
+        Line2D([], [], marker="o", ls=(0, (1, 1)), color=NARANJA, ms=9, label="Paso peatonal provisional propuesto"),
         Line2D([], [], color=MORADO, lw=3.5, label="Calle propuesta a doble sentido"),
     ], loc="lower left", framealpha=0.95, edgecolor="#d0d0cc", fontsize=9)
     ax.text(0.995, 0.008, "Datos del mapa: © colaboradores de OpenStreetMap (ODbL)", transform=ax.transAxes,
@@ -133,11 +138,15 @@ def dibujar(r, ruta):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Desvíos por arroyos y medidas temporales mientras se canalizan.")
-    ap.add_argument("--arroyo", help='nombre del arroyo en OpenStreetMap (por defecto, el ejemplo El Salao)')
-    ap.add_argument("--listar", action="store_true", help="lista los arroyos con nombre disponibles")
-    ap.add_argument("--radio", type=float, default=400, help="metros a cada lado del cauce (por defecto 400)")
-    ap.add_argument("--luz", type=float, default=60, help="largo máximo de un puente peatonal nuevo (por defecto 60)")
+    ap = argparse.ArgumentParser(description="Desvíos que causa una obra vial y medidas temporales mientras dura.")
+    ap.add_argument("--obra", help="archivo JSON con el eje de la obra (por defecto, la canalización de El Salao)")
+    ap.add_argument("--arroyo", help="(obsoleto) nombre de un arroyo en OpenStreetMap")
+    ap.add_argument("--listar", action="store_true", help="(obsoleto) lista los arroyos con nombre disponibles")
+    ap.add_argument("--radio", type=float, default=400, help="metros a cada lado del eje de la obra (por defecto 400)")
+    ap.add_argument("--luz", type=float, default=60,
+                    help="largo máximo de un paso peatonal provisional nuevo (por defecto 60)")
+    ap.add_argument("--ancho", type=float, default=TOLERANCIA_M,
+                    help=f"ancho de la franja de obra, en m desde el eje (por defecto {TOLERANCIA_M})")
     ap.add_argument("--k", type=int, default=3, help="medidas a proponer de cada tipo (por defecto 3)")
     ap.add_argument("--sin-mapa", action="store_true", help="no genera resultados/mapa.png")
     args = ap.parse_args()
@@ -149,21 +158,33 @@ def main():
         return
     if not (100 <= args.radio <= 800) or not (1 <= args.k <= 3) or not (10 <= args.luz <= 150):
         ap.error("--radio entre 100 y 800, --k entre 1 y 3, --luz entre 10 y 150")
+    if not (10 <= args.ancho <= 60):
+        ap.error("--ancho entre 10 y 60")
+    if args.obra and args.arroyo:
+        ap.error("use --obra o --arroyo, no los dos")
 
-    if args.arroyo:
+    if args.obra:
+        try:
+            datos = fuente.leer_obra(args.obra)
+        except (OSError, ValueError) as ex:
+            raise SystemExit(f"No se pudo leer la obra: {ex}")
+        nombre, lineas = datos["nombre"], datos["lineas"]
+        if datos["ilustrativo"] and "no es una obra real" not in nombre.lower():
+            nombre += " (ejemplo ilustrativo, no es una obra real)"
+    elif args.arroyo:
         nombre, lineas = args.arroyo, fuente.lineas_por_nombre(args.arroyo)
         if not lineas:
             raise SystemExit(f"No hay ningún arroyo llamado «{args.arroyo}». Use --listar para ver los nombres.")
     else:
-        nombre, lineas = "Arroyo El Salao, Soledad (caso de estudio)", fuente.lineas_ejemplo()
+        nombre, lineas = "Canalización del arroyo El Salao, Soledad (caso de estudio)", fuente.lineas_ejemplo()
 
     recuadro, lado = fuente.recuadro_de(lineas, args.radio)
     if lado > fuente.MAX_LADO_M:
-        raise SystemExit(f"El arroyo ocupa una zona de {lado / 1000:.1f} km: es demasiado grande. "
+        raise SystemExit(f"La obra ocupa una zona de {lado / 1000:.1f} km: es demasiado grande. "
                          "Use la web para marcar solo un tramo.")
     t = time.time()
     red, origen = fuente.red_para(recuadro)
-    r = analizar(red, lineas, radio=args.radio, luz_max=args.luz, k=args.k)
+    r = analizar(red, lineas, radio=args.radio, luz_max=args.luz, k=args.k, ancho_m=args.ancho)
     r["fuente"], r["recuadro"] = origen, recuadro
     texto = informe(nombre, r)
     print(texto)

@@ -1,28 +1,30 @@
-"""Análisis de un arroyo cualquiera y de las medidas temporales mientras se canaliza.
+"""Análisis de una obra que cierra calles y de las medidas temporales mientras dura.
 
 Pasos:
-  1. Clasificar los tramos que tocan el arroyo: bloqueados con lluvia o puentes.
-  2. Escenario seco (red completa) y escenario de lluvia (sin los tramos bloqueados).
-  3. Zona de estudio: esquinas a cada lado del arroyo, a menos de `radio` metros.
-  4. Desvío de cada par (a, b) de lados opuestos:  d_lluvia(a, b) - d_seco(a, b).
-  5. Cruces cerrados: pares de esquinas secas, en lados opuestos, que en seco se
-     unían por tramos que la lluvia bloquea.
+  1. Clasificar los tramos que tocan la franja de obra (el eje con un ancho): cerrados por la
+     obra o puentes que la obra puede mantener abiertos.
+  2. Escenario seco (red completa) y escenario con toda la obra a la vez, sin etapas (sin los
+     tramos cerrados). En el JSON este escenario conserva el nombre heredado «lluvia».
+  3. Zona de estudio: esquinas a cada lado del eje de la obra, a menos de `radio` metros.
+  4. Desvío de cada par (a, b) de lados opuestos:  d_obra(a, b) - d_seco(a, b).
+  5. Cruces cerrados: pares de esquinas fuera de la franja, en lados opuestos, que en seco se
+     unían por tramos que la obra cierra.
   6. Tres medidas, cada una para quien la usa:
-       - Puente peatonal  -> grafo de peatones (no dirigido).
-       - Doble sentido    -> grafo de vehículos (dirigido): una calle de un solo
-                             sentido pasa a doble sentido mientras dure la obra.
-       - Ruta alterna     -> camino mínimo con lluvia para cada cruce cerrado.
+       - Paso peatonal provisional -> grafo de peatones (no dirigido).
+       - Doble sentido             -> grafo de vehículos (dirigido): una calle de un solo
+                                      sentido pasa a doble sentido mientras dure la obra.
+       - Ruta alterna              -> camino mínimo con la obra para cada cruce cerrado.
      Las dos primeras se eligen con una heurística voraz: en cada ronda se prueba
      cada candidato y se queda el que más reduce el desvío medio.
 """
 import math
 from dataclasses import asdict, dataclass
 
-from src.geometria import Arroyo, orientar, proyectar, se_cruzan
+from src.geometria import Obra, orientar, proyectar, se_cruzan
 from src.grafo import INF, Grafo, dijkstra, reconstruir_camino
 
-TOLERANCIA_M = 10      # una calle a menos de esto del cauce se considera dentro de él
-FRACCION_SOBRE = 0.6   # fracción de la calle que debe ir por el cauce para decir "va sobre él"
+TOLERANCIA_M = 10      # ancho_m por defecto: una calle a menos de esto del eje queda dentro de la franja
+FRACCION_SOBRE = 0.6   # fracción de la calle que debe ir por la franja para decir "va sobre ella"
 UMBRAL_M = 200         # desvío que consideramos "grande"
 LUZ_MAX_M = 60         # longitud máxima de un puente peatonal nuevo (donde no hay calle)
 MAX_POR_LADO = 120     # esquinas de muestra por lado, para que el cálculo tarde segundos
@@ -32,12 +34,14 @@ MEJORA_MIN = 0.02     # una medida se recomienda solo si baja el desvío medio a
 
 
 # ---------------------------------------------------------------- 1. contacto
-def clasificar(red, arroyo, abiertos=(), cerrados=()):
-    """Devuelve {id_tramo: (estado, motivo)} para todo tramo en contacto con el arroyo.
+def clasificar(red, obra, abiertos=(), cerrados=(), ancho_m=TOLERANCIA_M):
+    """Devuelve {id_tramo: (estado, motivo)} para todo tramo en contacto con la franja de obra.
 
-    estado: "bloqueado" o "puente".  motivo: "cruza", "sobre" o "esquina".
-    Una esquina a menos de TOLERANCIA_M del cauce se considera inundada: todos
-    sus tramos se bloquean, salvo que sea el extremo de un puente.
+    estado: "bloqueado" (cerrado por la obra) o "puente".  motivo: "cruza", "sobre" o "esquina".
+    `ancho_m` es el ancho de la franja de obra, medido desde el eje hacia cada lado (por defecto
+    TOLERANCIA_M = 10 m, el valor de siempre). Una esquina a menos de `ancho_m` del eje queda
+    dentro de la franja: todos sus tramos se cierran, salvo que sea el extremo de un puente.
+    El segundo valor devuelto son esas esquinas (en el código se llaman `inundadas`).
     """
     xy = red.plano.xy
     contacto = {}
@@ -45,24 +49,24 @@ def clasificar(red, arroyo, abiertos=(), cerrados=()):
         pts = [xy(p) for p in t.forma]
         segs = set()
         for a, b in zip(pts, pts[1:]):
-            segs |= arroyo.cercanos(a, b, TOLERANCIA_M)
+            segs |= obra.cercanos(a, b, ancho_m)
         if not segs:
             continue
-        segs = [arroyo.segmentos[i] for i in segs]
+        segs = [obra.segmentos[i] for i in segs]
         cruza = any(se_cruzan(a, b, c, d) for a, b in zip(pts, pts[1:]) for c, d in segs)
         muestras = []
         for a, b in zip(pts, pts[1:]):
             n = max(1, int(math.hypot(b[0] - a[0], b[1] - a[1]) // 5))
             muestras += [(a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n) for j in range(n + 1)]
-        cerca = sum(min(proyectar(q, c, d)[0] for c, d in segs) < TOLERANCIA_M for q in muestras)
+        cerca = sum(min(proyectar(q, c, d)[0] for c, d in segs) < ancho_m for q in muestras)
         sobre = cerca / len(muestras) > FRACCION_SOBRE
         if cruza or sobre:
             contacto[t.id] = ("puente" if t.puente else "bloqueado", "cruza" if cruza else "sobre")
 
     extremos_puente = {n for t in red.tramos if t.puente and t.id in contacto for n in (t.u, t.v)}
     inundadas = {n for n, p in red.pos.items()
-                 if n not in extremos_puente and arroyo.cercanos(xy(p), xy(p), TOLERANCIA_M)
-                 and arroyo.ubicar(xy(p))[0] < TOLERANCIA_M}
+                 if n not in extremos_puente and obra.cercanos(xy(p), xy(p), ancho_m)
+                 and obra.ubicar(xy(p))[0] < ancho_m}
     for t in red.tramos:
         if t.id not in contacto and (t.u in inundadas or t.v in inundadas) and not t.puente:
             contacto[t.id] = ("bloqueado", "esquina")
@@ -77,15 +81,15 @@ def clasificar(red, arroyo, abiertos=(), cerrados=()):
 
 
 # ------------------------------------------------------------------ 3. zona
-def zona(red, arroyo, radio, g_pea, g_veh, inundadas):
-    """Esquinas de cada lado del arroyo (todas y una muestra pareja de cada lado)."""
+def zona(red, obra, radio, g_pea, g_veh, inundadas, ancho_m=TOLERANCIA_M):
+    """Esquinas de cada lado de la obra, fuera de la franja (todas y una muestra pareja de cada lado)."""
     lados = {1: [], -1: []}
     info = {}
     for n, p in red.pos.items():
         if n in inundadas or n not in g_veh.adj or n not in g_pea.adj or not g_veh.adj[n]:
             continue
-        d, lado, extremo = arroyo.ubicar(red.plano.xy(p))
-        if TOLERANCIA_M <= d <= radio and not extremo:
+        d, lado, extremo = obra.ubicar(red.plano.xy(p))
+        if ancho_m <= d <= radio and not extremo:
             lados[lado].append(n)
             info[n] = (d, lado)
 
@@ -123,12 +127,12 @@ def nombres_de_lados(red, lados):
 @dataclass
 class Metricas:
     pares: int              # pares con camino en seco
-    sin_camino: int         # pares que con lluvia quedan sin ningún camino
+    sin_camino: int         # pares que con la obra quedan sin ningún camino
     distancia_media_m: float
     desvio_medio_m: float
     pct_mayor_200m: float
     desvio_max_m: float
-    # Desvío medio solo sobre los pares que ya tenían camino con lluvia, antes de cualquier
+    # Desvío medio solo sobre los pares que ya tenían camino con la obra, antes de cualquier
     # medida. Es un conjunto fijo: agregar una medida nunca lo hace subir, mientras que
     # `desvio_medio_m` cambia de conjunto cuando una medida devuelve el camino a un par.
     desvio_fijo_m: float = 0.0
@@ -150,7 +154,7 @@ def tablas(g, origenes, objetivos=None):
 def medir(F, R, base, pares, arcos=(), ref=None):
     """Métricas de los pares, opcionalmente agregando arcos nuevos (x, y, peso).
 
-    `ref` es el conjunto de pares con camino en el escenario de referencia (lluvia sin
+    `ref` es el conjunto de pares con camino en el escenario de referencia (obra sin
     medidas). Con él se calcula `desvio_fijo_m`; sin él, es igual a `desvio_medio_m`.
 
     Con un arco nuevo x -> y, el camino a -> b puede ser a ~> x -> y ~> b, así que
@@ -307,7 +311,7 @@ def voraz(g, origenes, base, pares, candidatos, k, F=None, R=None, mejora_min=ME
 
     `mejora_min`: fracción mínima en que debe bajar el desvío medio (por defecto 2 %).
     `incompatibles(info_elegido, info_candidato)`: si devuelve True, el candidato se descarta
-    por estar demasiado cerca de uno ya elegido (para repartir los puentes a lo largo del cauce).
+    por estar demasiado cerca de uno ya elegido (para repartir los pasos peatonales a lo largo de la obra).
     """
     g = g.copia()
     objetivos = set(origenes) | extremos(candidatos)
@@ -347,12 +351,12 @@ def voraz(g, origenes, base, pares, candidatos, k, F=None, R=None, mejora_min=ME
 
 
 # ------------------------------------------------------------- 5. candidatos
-def cruces_cerrados(red, arroyo, contacto, inundadas, g_lluvia, vehicular, max_m=200):
-    """Cruces que la lluvia cierra: pares (x, y) de esquinas secas en lados opuestos
-    que en seco se unían por tramos que ahora están bloqueados.
+def cruces_cerrados(red, obra, contacto, inundadas, g_obra, vehicular, max_m=200):
+    """Cruces que la obra cierra: pares (x, y) de esquinas fuera de la franja, en lados
+    opuestos, que en seco se unían por tramos que ahora están cerrados.
 
-    Se arma el grafo H solo con los tramos bloqueados. Desde cada esquina seca x
-    que toca H se busca, dentro de H, la esquina seca y más cercana del otro lado.
+    Se arma el grafo H solo con los tramos cerrados. Desde cada esquina x fuera de la franja
+    que toca H se busca, dentro de H, la esquina y más cercana del otro lado.
     Devuelve [dict(via, x, y, metros, forma)].
     """
     xy = red.plano.xy
@@ -371,8 +375,8 @@ def cruces_cerrados(red, arroyo, contacto, inundadas, g_lluvia, vehicular, max_m
         for a, b in ((t.u, t.v), (t.v, t.u)):
             if (a, b) not in tramo_de or t.metros < tramo_de[(a, b)].metros:
                 tramo_de[(a, b)] = t
-    secas = [n for n in H.adj if n not in inundadas and g_lluvia.adj.get(n)]
-    lado = {n: arroyo.ubicar(xy(red.pos[n]))[1] for n in secas}
+    secas = [n for n in H.adj if n not in inundadas and g_obra.adj.get(n)]
+    lado = {n: obra.ubicar(xy(red.pos[n]))[1] for n in secas}
     res, vistos = [], set()
     for x in secas:
         dist, pred = dijkstra(H, x, limite=max_m)
@@ -395,11 +399,11 @@ def cruces_cerrados(red, arroyo, contacto, inundadas, g_lluvia, vehicular, max_m
     return res
 
 
-def candidatos_puente_peatonal(red, arroyo, cruces, lados_todos, g_lluvia, luz_max):
-    """Lugares posibles para un puente peatonal, de dos tipos:
+def candidatos_puente_peatonal(red, obra, cruces, lados_todos, g_obra, luz_max):
+    """Lugares posibles para un paso peatonal provisional, de dos tipos:
 
-    - "cruce": un cruce que la lluvia cierra (calle que pasa por el arroyo o esquina
-      inundada). El puente devuelve a los peatones ese mismo paso.
+    - "cruce": un cruce que la obra cierra (calle que atraviesa la franja o esquina
+      dentro de ella). El paso devuelve a los peatones ese mismo cruce.
     - "nuevo": dos esquinas de lados opuestos a menos de `luz_max` metros en línea
       recta, donde hoy no hay ninguna calle que cruce.
     """
@@ -418,21 +422,21 @@ def candidatos_puente_peatonal(red, arroyo, cruces, lados_todos, g_lluvia, luz_m
     for c in cruces:
         agregar("cruce", c["via"], c["x"], c["y"], c["metros"], c["forma"])
 
-    cerca = {s: [n for n in lados_todos[s] if arroyo.ubicar(xy(red.pos[n]))[0] <= luz_max] for s in (1, -1)}
+    cerca = {s: [n for n in lados_todos[s] if obra.ubicar(xy(red.pos[n]))[0] <= luz_max] for s in (1, -1)}
     for x in cerca[1]:
         mejor, dmin = None, INF
         for y in cerca[-1]:
             d = red.plano.dist(red.pos[x], red.pos[y])
             if d < dmin:
                 mejor, dmin = y, d
-        if mejor is not None and dmin <= luz_max and mejor not in g_lluvia.adj.get(x, {}) \
-                and arroyo.corta(xy(red.pos[x]), xy(red.pos[mejor])):
+        if mejor is not None and dmin <= luz_max and mejor not in g_obra.adj.get(x, {}) \
+                and obra.corta(xy(red.pos[x]), xy(red.pos[mejor])):
             agregar("nuevo", "", x, mejor, dmin, [red.pos[x], red.pos[mejor]])
     return cand
 
 
-def candidatos_doble_sentido(red, arroyo, contacto, inundadas, radio):
-    """Calles de un solo sentido, cerca del arroyo, que podrían habilitarse en doble sentido."""
+def candidatos_doble_sentido(red, obra, contacto, inundadas, radio):
+    """Calles de un solo sentido, cerca de la obra, que podrían habilitarse en doble sentido."""
     xy = red.plano.xy
     cand = []
     for t in red.tramos:
@@ -441,7 +445,7 @@ def candidatos_doble_sentido(red, arroyo, contacto, inundadas, radio):
         if t.u in inundadas or t.v in inundadas:
             continue
         medio = t.forma[len(t.forma) // 2]
-        if arroyo.ubicar(xy(medio))[0] > radio:
+        if obra.ubicar(xy(medio))[0] > radio:
             continue
         # Arco que hoy NO existe: el sentido contrario al permitido.
         x, y = (t.v, t.u) if t.sentido == 1 else (t.u, t.v)
@@ -454,11 +458,14 @@ def candidatos_doble_sentido(red, arroyo, contacto, inundadas, radio):
 
 
 # -------------------------------------------------------------- ruta alterna
-def rutas_alternas(red, cruces_v, cruces_p, g_veh_lluvia, g_pea_lluvia):
-    """Para cada cruce cerrado, el camino mínimo con lluvia (lo que habría que señalizar)."""
+def rutas_alternas(red, cruces_v, cruces_p, g_veh_obra, g_pea_obra):
+    """Para cada cruce cerrado, el camino mínimo con la obra (lo que habría que señalizar).
+
+    En cada ruta, `lluvia_m` es el recorrido con la obra (nombre heredado del JSON).
+    """
     rutas = {}
-    for cruces, g, clave, vehicular in ((cruces_v, g_veh_lluvia, "carro", True),
-                                        (cruces_p, g_pea_lluvia, "pie", False)):
+    for cruces, g, clave, vehicular in ((cruces_v, g_veh_obra, "carro", True),
+                                        (cruces_p, g_pea_obra, "pie", False)):
         for c in cruces:
             y = c["y"]
             dist, pred = dijkstra(g, c["x"], objetivos={y})
@@ -491,27 +498,31 @@ def extra(dato):
 
 
 # ------------------------------------------------------------------ principal
-def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrados=(), contexto=None):
-    """Análisis completo. Si `contexto` es un dict, se llena con los grafos, tablas y candidatos
-    que se usaron (para los experimentos de herramientas/); no cambia el resultado."""
+def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrados=(), contexto=None,
+             ancho_m=TOLERANCIA_M):
+    """Análisis completo de la obra `lineas` hecha toda a la vez, sin etapas.
+
+    Si `contexto` es un dict, se llena con los grafos, tablas y candidatos que se usaron (para los
+    experimentos de herramientas/); no cambia el resultado. `ancho_m`: ver `clasificar`.
+    """
     lineas = orientar(lineas)
-    arroyo = Arroyo(lineas, red.plano)
-    contacto, inundadas = clasificar(red, arroyo, set(abiertos), set(cerrados))
+    obra = Obra(lineas, red.plano)
+    contacto, inundadas = clasificar(red, obra, set(abiertos), set(cerrados), ancho_m)
     excluir = {i for i, (estado, _) in contacto.items() if estado == "bloqueado"}
 
-    pea_seco, pea_lluvia = red.grafo_peatones(), red.grafo_peatones(excluir)
-    veh_seco, veh_lluvia = red.grafo_vehiculos(), red.grafo_vehiculos(excluir)
+    pea_seco, pea_obra = red.grafo_peatones(), red.grafo_peatones(excluir)
+    veh_seco, veh_obra = red.grafo_vehiculos(), red.grafo_vehiculos(excluir)
 
-    lados_todos, lados, _ = zona(red, arroyo, radio, pea_seco, veh_seco, inundadas)
+    lados_todos, lados, _ = zona(red, obra, radio, pea_seco, veh_seco, inundadas, ancho_m)
     nombres = nombres_de_lados(red, lados_todos)
     avisos = []
     if len(lados[1]) < 3 or len(lados[-1]) < 3:
-        avisos.append("Hay muy pocas esquinas a uno de los lados del arroyo. Dibuje un tramo "
+        avisos.append("Hay muy pocas esquinas a uno de los lados de la obra. Dibuje un tramo "
                       "más largo o aumente el radio.")
 
     origenes = sorted(set(lados[1]) | set(lados[-1]))
     resultado = dict(
-        arroyo=dict(longitud_m=round(arroyo.longitud()), lineas=[[list(p) for p in l] for l in lineas]),
+        arroyo=dict(longitud_m=round(obra.longitud()), lineas=[[list(p) for p in l] for l in lineas]),
         red=dict(esquinas=len(red.pos), tramos=len(red.tramos),
                  bloqueados=len(excluir), puentes=sum(1 for e, _ in contacto.values() if e == "puente"),
                  esquinas_inundadas=len(inundadas)),
@@ -538,45 +549,46 @@ def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrad
     # En seco solo hace falta d(a, b) con a del primer lado: Dijkstra desde ese lado.
     Fs = tablas(pea_seco, lados[1], objetivos=set(lados[-1]))
     pares_p = [(a, b) for a in lados[1] for b in lados[-1] if b in Fs[a]]
-    cruces_p = cruces_cerrados(red, arroyo, contacto, inundadas, pea_lluvia, vehicular=False)
-    cruces_v = cruces_cerrados(red, arroyo, contacto, inundadas, veh_lluvia, vehicular=True)
-    cand_p = candidatos_puente_peatonal(red, arroyo, cruces_p, lados_todos, pea_lluvia, luz_max)
-    # Con lluvia hacen falta los dos lados: d(y, b) sale de la tabla de b (no dirigido: R = F).
-    Fl = tablas(pea_lluvia, origenes, objetivos=set(origenes) | extremos(cand_p))
-    elegidos_p, g_final_p = voraz(pea_lluvia, origenes, Fs, pares_p, cand_p, k, F=Fl, R=Fl)
-    lluvia_p = medir(Fl, Fl, Fs, pares_p)
-    final_p = elegidos_p[-1][1] if elegidos_p else lluvia_p
+    cruces_p = cruces_cerrados(red, obra, contacto, inundadas, pea_obra, vehicular=False)
+    cruces_v = cruces_cerrados(red, obra, contacto, inundadas, veh_obra, vehicular=True)
+    cand_p = candidatos_puente_peatonal(red, obra, cruces_p, lados_todos, pea_obra, luz_max)
+    # Con la obra hacen falta los dos lados: d(y, b) sale de la tabla de b (no dirigido: R = F).
+    Fl = tablas(pea_obra, origenes, objetivos=set(origenes) | extremos(cand_p))
+    elegidos_p, g_final_p = voraz(pea_obra, origenes, Fs, pares_p, cand_p, k, F=Fl, R=Fl)
+    obra_p = medir(Fl, Fl, Fs, pares_p)
+    final_p = elegidos_p[-1][1] if elegidos_p else obra_p
     resultado["peatones"] = dict(
-        seco=asdict(medir(Fs, Fs, Fs, pares_p)), lluvia=asdict(lluvia_p),
+        seco=asdict(medir(Fs, Fs, Fs, pares_p)), lluvia=asdict(obra_p),
         con_medida=asdict(final_p), candidatos=len(cand_p),
-        recuperados=lluvia_p.sin_camino - final_p.sin_camino, propuestas=propuestas(elegidos_p))
+        recuperados=obra_p.sin_camino - final_p.sin_camino, propuestas=propuestas(elegidos_p))
 
     # ---- Vehículos: dirigido, pares en los dos sentidos.
     pares_v = [(a, b) for a in lados[1] for b in lados[-1]] + [(b, a) for a in lados[1] for b in lados[-1]]
     Vs = tablas(veh_seco, origenes, objetivos=set(origenes))
     pares_v = [(a, b) for a, b in pares_v if b in Vs[a]]
-    cand_v = candidatos_doble_sentido(red, arroyo, contacto, inundadas, radio)
+    cand_v = candidatos_doble_sentido(red, obra, contacto, inundadas, radio)
     objetivos_v = set(origenes) | extremos(cand_v)
-    Vl = tablas(veh_lluvia, origenes, objetivos_v)
-    Rl = tablas(veh_lluvia.invertido(), origenes, objetivos_v)
-    elegidos_v, g_final_v = voraz(veh_lluvia, origenes, Vs, pares_v, cand_v, k, F=Vl, R=Rl)
-    lluvia_v = medir(Vl, Rl, Vs, pares_v)
-    final_v = elegidos_v[-1][1] if elegidos_v else lluvia_v
+    Vl = tablas(veh_obra, origenes, objetivos_v)
+    Rl = tablas(veh_obra.invertido(), origenes, objetivos_v)
+    elegidos_v, g_final_v = voraz(veh_obra, origenes, Vs, pares_v, cand_v, k, F=Vl, R=Rl)
+    obra_v = medir(Vl, Rl, Vs, pares_v)
+    final_v = elegidos_v[-1][1] if elegidos_v else obra_v
     resultado["vehiculos"] = dict(
-        seco=asdict(medir(Vs, Vs, Vs, pares_v)), lluvia=asdict(lluvia_v),
+        seco=asdict(medir(Vs, Vs, Vs, pares_v)), lluvia=asdict(obra_v),
         con_medida=asdict(final_v), candidatos=len(cand_v),
-        recuperados=lluvia_v.sin_camino - final_v.sin_camino, propuestas=propuestas(elegidos_v))
+        recuperados=obra_v.sin_camino - final_v.sin_camino, propuestas=propuestas(elegidos_v))
     if not cand_v:
-        avisos.append("En OpenStreetMap no hay calles de un solo sentido registradas cerca de este "
-                      "arroyo, así que no se puede proponer un cambio de sentido.")
+        avisos.append("En OpenStreetMap no hay calles de un solo sentido registradas cerca de esta "
+                      "obra, así que no se puede proponer un cambio de sentido.")
 
-    resultado["rutas"] = rutas_alternas(red, cruces_v, cruces_p, veh_lluvia, pea_lluvia)
+    resultado["rutas"] = rutas_alternas(red, cruces_v, cruces_p, veh_obra, pea_obra)
     if contexto is not None:
+        # Las claves «arroyo» y «lluvia» se conservan para herramientas/experimentos.py y las pruebas.
         contexto.update(
-            red=red, arroyo=arroyo, contacto=contacto, inundadas=inundadas, lados=lados,
+            red=red, obra=obra, arroyo=obra, contacto=contacto, inundadas=inundadas, lados=lados,
             lados_todos=lados_todos, origenes=origenes,
-            peatones=dict(seco=pea_seco, lluvia=pea_lluvia, final=g_final_p, F_seco=Fs, F_lluvia=Fl,
+            peatones=dict(seco=pea_seco, lluvia=pea_obra, final=g_final_p, F_seco=Fs, F_lluvia=Fl,
                           pares=pares_p, candidatos=cand_p),
-            vehiculos=dict(seco=veh_seco, lluvia=veh_lluvia, final=g_final_v, F_seco=Vs, F_lluvia=Vl,
+            vehiculos=dict(seco=veh_seco, lluvia=veh_obra, final=g_final_v, F_seco=Vs, F_lluvia=Vl,
                            R_lluvia=Rl, pares=pares_v, candidatos=cand_v))
     return resultado

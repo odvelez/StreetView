@@ -1,18 +1,18 @@
-"""Plan de canalización por etapas: cómo hacer la obra sin parar la movilidad.
+"""Plan de obra por etapas: cómo hacer una obra que cierra calles sin parar la movilidad.
 
-Idea: un arroyo largo no se canaliza de una vez. Se divide en etapas a lo largo del cauce y,
+Idea: una obra larga no se hace de una vez. Se divide en etapas a lo largo del eje de la obra y,
 mientras se trabaja en una etapa, solo se cierran los cruces de ese tramo; el resto de la
 ciudad sigue abierta. Para cada etapa el programa calcula:
 
   - el desvío que causa el cierre (peatones: grafo no dirigido; vehículos: grafo dirigido),
-  - los puentes peatonales temporales: uno por cada `un_puente_cada_m` metros de obra
+  - los pasos peatonales provisionales: uno por cada `un_puente_cada_m` metros de obra
     (mínimo uno), repartidos a lo largo del tramo,
   - las calles a pasar a doble sentido mientras dure la etapa,
   - las rutas alternas que hay que señalizar en cada cruce cerrado,
   - las esquinas que reciben más recorridos desviados (la carga), que son las candidatas
     a control de tráfico (semáforo o agente), con la información de si ya tienen semáforo.
 
-Cuántas etapas hay depende de lo largo del cauce: n = ceil(longitud / etapa_max_m). Los cortes
+Cuántas etapas hay depende de lo largo de la obra: n = ceil(longitud / etapa_max_m). Los cortes
 se eligen con programación dinámica para que ninguna etapa concentre demasiados cruces y
 ninguna pase de `etapa_max_m`.
 
@@ -20,24 +20,29 @@ Qué NO hace (y debe decirse): no hay datos de volumen de tránsito, así que la
 congestión: es cuántos recorridos desviados pasan por la esquina. Tampoco diseña carriles ni
 tiempos de semáforo. Es el mismo modelo de conectividad del resto del proyecto.
 
-Escenario distinto a la lluvia: aquí no hay creciente; en cada etapa se cierran todos los
-tramos que tocan el cauce dentro del tramo en obra, incluidos los puentes existentes, porque
-la obra los intervendría.
+Diferencia con `analisis.analizar` (toda la obra a la vez, sin etapas): aquí, en cada etapa, se
+cierran todos los tramos que tocan la franja de obra dentro del tramo en obra, incluidos los
+puentes existentes (calles que la obra podría mantener abiertas), porque la obra los intervendría.
+Con `cerrar_puentes=False` los puentes existentes se mantienen abiertos.
+
+Nombres heredados del JSON (no se quitan para no romper la pantalla): la clave `arroyo` del plan
+(ahora también está como `obra`), `cauce` en cada etapa (ahora también `eje`) y `lluvia_m` en
+las rutas (el recorrido con la obra).
 """
 import bisect
 import math
 from dataclasses import asdict
 
 from src import osm
-from src.analisis import (MEJORA_MIN, MAX_POR_LADO, LUZ_MAX_M, candidatos_doble_sentido,
+from src.analisis import (MEJORA_MIN, MAX_POR_LADO, LUZ_MAX_M, TOLERANCIA_M, candidatos_doble_sentido,
                           candidatos_puente_peatonal, clasificar, cruces_cerrados, extremos,
                           medir, rutas_alternas, tablas, voraz, zona)
-from src.geometria import Arroyo, orientar
+from src.geometria import Obra, orientar
 from src.grafo import INF, dijkstra
 
 ETAPA_MAX_M = 1000         # largo máximo de una etapa de obra
-UN_PUENTE_CADA_M = 500     # un puente peatonal temporal por cada tanto de obra (mínimo uno)
-VENTANA_M = 250            # esquinas a esta distancia, a lo largo del cauce, de la etapa, cuentan
+UN_PUENTE_CADA_M = 500     # un paso peatonal provisional por cada tanto de obra (mínimo uno)
+VENTANA_M = 250            # esquinas a esta distancia, a lo largo del eje, de la etapa, cuentan
 MAX_POR_LADO_ETAPA = 60    # muestra de esquinas por lado en cada etapa
 MAX_SENTIDOS = 2           # calles a pasar a doble sentido en cada etapa, como máximo
 TOP_CARGA = 5              # esquinas con más recorridos desviados que se listan por etapa
@@ -45,11 +50,14 @@ MAX_RUTAS_ETAPA = 6
 PASO_CORTE_M = 25          # los cortes entre etapas se buscan cada tanto
 RADIO_SEMAFORO_M = 40      # un semáforo a menos de esto de la esquina cuenta como suyo
 SEPARACION_SENTIDOS_M = 150
+# Formas de medir los recorridos. "lados": pares de esquinas de un lado al otro de la obra (como
+# siempre). "afectados" (R7, opcional) aún no está hecho.
+MEDICIONES = ("lados",)
 
 
 # ------------------------------------------------------------ longitud y cortes
 def puentes_por_longitud(longitud_m, un_puente_cada_m=UN_PUENTE_CADA_M):
-    """Puentes peatonales temporales para una etapa: uno por cada `un_puente_cada_m`, mínimo uno."""
+    """Pasos peatonales provisionales para una etapa: uno por cada `un_puente_cada_m`, mínimo uno."""
     return max(1, round(longitud_m / un_puente_cada_m))
 
 
@@ -58,12 +66,12 @@ def numero_de_etapas(longitud_m, etapa_max_m=ETAPA_MAX_M):
 
 
 def cortes(longitud_m, posiciones, etapa_max_m=ETAPA_MAX_M, paso_m=PASO_CORTE_M):
-    """Posiciones (m desde el inicio del cauce) donde empieza cada etapa, más el final.
+    """Posiciones (m desde el inicio del eje) donde empieza cada etapa, más el final.
 
     Se eligen n = ceil(longitud / etapa_max_m) etapas. Programación dinámica sobre una malla de
     posibles cortes: ninguna etapa pasa de etapa_max_m ni queda muy corta, y se minimiza primero
     el mayor número de cruces en una sola etapa y después la suma de cuadrados (reparto parejo).
-    `posiciones` son las posiciones de los cruces del cauce que se cerrarían.
+    `posiciones` son las posiciones, a lo largo del eje, de los cruces que se cerrarían.
     """
     etapa_max_m = max(paso_m, int(etapa_max_m // paso_m) * paso_m)
     n = numero_de_etapas(longitud_m, etapa_max_m)
@@ -107,11 +115,11 @@ def muestrear(lista, n):
     return [lista[int(i * paso)] for i in range(n)]
 
 
-def recorte_del_cauce(lineas, arroyo, p0, p1):
-    """Puntos (lat, lon) del cauce entre las posiciones p0 y p1 (metros desde el inicio)."""
+def recorte_del_eje(lineas, obra, p0, p1):
+    """Puntos (lat, lon) del eje de la obra entre las posiciones p0 y p1 (metros desde el inicio)."""
     pares = [(l[i], l[i + 1]) for l in lineas if len(l) >= 2 for i in range(len(l) - 1)]
     puntos = []
-    for (a, b), ((ax, ay), (bx, by)), inicio in zip(pares, arroyo.segmentos, arroyo.inicio_segmento):
+    for (a, b), ((ax, ay), (bx, by)), inicio in zip(pares, obra.segmentos, obra.inicio_segmento):
         largo = math.hypot(bx - ax, by - ay)
         fin = inicio + largo
         if fin < p0 or inicio > p1 or largo == 0:
@@ -122,6 +130,9 @@ def recorte_del_cauce(lineas, arroyo, p0, p1):
             if not puntos or puntos[-1] != p:
                 puntos.append(p)
     return [list(p) for p in puntos]
+
+
+recorte_del_cauce = recorte_del_eje   # nombre anterior
 
 
 # ----------------------------------------------------------------- una etapa
@@ -161,15 +172,16 @@ def carga_de_desvios(g_obra, tablas_seco, tablas_obra, pares):
 
 
 def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, radio):
-    """Todo el análisis de una etapa: desvío, puentes, doble sentido, rutas y carga."""
-    red, arroyo = ctx["red"], ctx["arroyo"]
+    """Todo el análisis de una etapa: desvío, pasos peatonales, doble sentido, rutas y carga."""
+    red, obra = ctx["red"], ctx["obra"]
     xy = red.plano.xy
     contacto_e = {i: ("bloqueado", ctx["contacto"][i][1]) for i in cerrados_ids}
     longitud = p1 - p0
     estructurales = [i for i in cerrados_ids if ctx["contacto"][i][1] in ("cruza", "sobre")]
+    eje = recorte_del_eje(ctx["lineas"], obra, p0, p1)
     resultado = dict(
         numero=numero, inicio_m=round(p0), fin_m=round(p1), longitud_m=round(longitud),
-        cauce=recorte_del_cauce(ctx["lineas"], arroyo, p0, p1),
+        cauce=eje, eje=eje,            # `cauce` es el nombre heredado; se conserva hasta la limpieza final
         tramos_cerrados=sorted(cerrados_ids), cruces_cerrados=len(estructurales),
         puentes_existentes_cerrados=sum(1 for i in cerrados_ids if red.tramos[i].puente),
         puentes_necesarios=puentes_por_longitud(longitud, un_puente_cada_m),
@@ -190,15 +202,15 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
     def en_etapa(info):
         return p0 - 100 <= info["pos_m"] <= p1 + 100
 
-    cruces_p = cruces_cerrados(red, arroyo, contacto_e, ctx["inundadas"], pea_obra, vehicular=False)
-    cruces_v = cruces_cerrados(red, arroyo, contacto_e, ctx["inundadas"], veh_obra, vehicular=True)
+    cruces_p = cruces_cerrados(red, obra, contacto_e, ctx["inundadas"], pea_obra, vehicular=False)
+    cruces_v = cruces_cerrados(red, obra, contacto_e, ctx["inundadas"], veh_obra, vehicular=True)
 
     # ---- peatones
     Fs = tablas(ctx["pea_seco"], muestra[1], objetivos=set(muestra[-1]))
     pares_p = [(a, b) for a in muestra[1] for b in muestra[-1] if b in Fs[a]]
-    cand_p = candidatos_puente_peatonal(red, arroyo, cruces_p, lados_w, pea_obra, luz_max)
+    cand_p = candidatos_puente_peatonal(red, obra, cruces_p, lados_w, pea_obra, luz_max)
     for info, _ in cand_p:
-        info["pos_m"] = round(arroyo.posicion(xy(_punto_medio(info["forma"]))))
+        info["pos_m"] = round(obra.posicion(xy(_punto_medio(info["forma"]))))
     cand_p = [c for c in cand_p if en_etapa(c[0])]
     Fl = tablas(pea_obra, origenes, objetivos=set(origenes) | extremos(cand_p))
     sep = un_puente_cada_m / 2
@@ -211,16 +223,16 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
         puentes=_formato_propuestas(elegidos_p))
     if len(elegidos_p) < resultado["puentes_necesarios"]:
         resultado["avisos"].append(
-            f"Por el largo de la etapa corresponden {resultado['puentes_necesarios']} puentes peatonales, pero solo "
+            f"Por el largo de la etapa corresponden {resultado['puentes_necesarios']} pasos peatonales, pero solo "
             f"{len(elegidos_p)} reduce el desvío.")
 
     # ---- vehículos
     pares_v = [(a, b) for a in muestra[1] for b in muestra[-1]] + [(b, a) for a in muestra[1] for b in muestra[-1]]
     Vs = tablas(ctx["veh_seco"], origenes, objetivos=set(origenes))
     pares_v = [(a, b) for a, b in pares_v if b in Vs[a]]
-    cand_v = candidatos_doble_sentido(red, arroyo, contacto_e, ctx["inundadas"], radio)
+    cand_v = candidatos_doble_sentido(red, obra, contacto_e, ctx["inundadas"], radio)
     for info, _ in cand_v:
-        info["pos_m"] = round(arroyo.posicion(xy(_punto_medio(info["forma"]))))
+        info["pos_m"] = round(obra.posicion(xy(_punto_medio(info["forma"]))))
     cand_v = [c for c in cand_v if en_etapa(c[0])]
     objetivos_v = set(origenes) | extremos(cand_v)
     Vl = tablas(veh_obra, origenes, objetivos_v)
@@ -258,32 +270,38 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
 # ---------------------------------------------------------------- el plan
 def plan_por_etapas(red, lineas, radio=400, luz_max=LUZ_MAX_M, etapa_max_m=ETAPA_MAX_M,
                     un_puente_cada_m=UN_PUENTE_CADA_M, abiertos=(), cerrados=(), recuadro=None,
-                    cerrar_puentes=True):
-    """Plan de obra por etapas para el arroyo `lineas`. Devuelve un dict listo para JSON.
+                    cerrar_puentes=True, ancho_m=TOLERANCIA_M, medicion="lados"):
+    """Plan de obra por etapas para la obra `lineas` (su eje). Devuelve un dict listo para JSON.
 
     `abiertos` y `cerrados` son ids de tramos que el usuario corrigió (como en `analizar`).
     `recuadro` (sur, oeste, norte, este) permite saber qué esquinas ya tienen semáforo.
     `cerrar_puentes`: si la obra también cierra los puentes que ya existen en el tramo (por defecto sí,
     porque hay que intervenirlos). Con False solo se cierran los cruces a nivel.
+    `ancho_m`: ancho de la franja de obra, medido desde el eje (ver `analisis.clasificar`). Con el
+    valor por defecto (10 m) el resultado es el de siempre.
+    `medicion`: cómo se miden los recorridos. Por ahora solo "lados" (pares de esquinas de un lado
+    al otro de la obra); cualquier otro valor es un error.
     """
+    if medicion not in MEDICIONES:
+        raise ValueError(f"medicion={medicion!r} no existe. Use una de: {', '.join(MEDICIONES)}.")
     lineas = orientar(lineas)
-    arroyo = Arroyo(lineas, red.plano)
-    contacto, inundadas = clasificar(red, arroyo, set(abiertos), set(cerrados))
+    obra = Obra(lineas, red.plano)
+    contacto, inundadas = clasificar(red, obra, set(abiertos), set(cerrados), ancho_m)
     xy = red.plano.xy
     pea_seco, veh_seco = red.grafo_peatones(), red.grafo_vehiculos()
-    lados_todos, _, _ = zona(red, arroyo, radio, pea_seco, veh_seco, inundadas)
-    pos_nodo = {n: arroyo.posicion(xy(red.pos[n])) for s in (1, -1) for n in lados_todos[s]}
-    longitud = arroyo.longitud()
+    lados_todos, _, _ = zona(red, obra, radio, pea_seco, veh_seco, inundadas, ancho_m)
+    pos_nodo = {n: obra.posicion(xy(red.pos[n])) for s in (1, -1) for n in lados_todos[s]}
+    longitud = obra.longitud()
 
-    # tramos que la obra cerraría, con su posición a lo largo del cauce
-    cerrables = {i: arroyo.posicion(xy(_punto_medio(red.tramos[i].forma)))
+    # tramos que la obra cerraría, con su posición a lo largo del eje
+    cerrables = {i: obra.posicion(xy(_punto_medio(red.tramos[i].forma)))
                  for i, (estado, _) in contacto.items()
                  if estado == "bloqueado" or (cerrar_puentes and estado == "puente")}
     posiciones_cruces = [p for i, p in cerrables.items() if contacto[i][1] in ("cruza", "sobre")]
     # (los puentes que no se cierran tampoco cuentan para repartir las etapas)
     limites = cortes(longitud, posiciones_cruces, etapa_max_m)
 
-    ctx = dict(red=red, arroyo=arroyo, lineas=lineas, contacto=contacto, inundadas=inundadas,
+    ctx = dict(red=red, obra=obra, lineas=lineas, contacto=contacto, inundadas=inundadas,
                lados_todos=lados_todos, pos_nodo=pos_nodo, pea_seco=pea_seco, veh_seco=veh_seco,
                semaforos=osm.semaforos(recuadro) if recuadro else None)
     etapas = []
@@ -293,10 +311,11 @@ def plan_por_etapas(red, lineas, radio=400, luz_max=LUZ_MAX_M, etapa_max_m=ETAPA
         ids = [i for i, p in cerrables.items() if p0 <= p < p1 or (ultimo and p >= p1)]
         etapas.append(evaluar_etapa(ctx, k + 1, p0, p1, ids, luz_max, un_puente_cada_m, radio))
 
+    datos_obra = dict(longitud_m=round(longitud), lineas=[[list(p) for p in l] for l in lineas])
     plan = dict(
-        arroyo=dict(longitud_m=round(longitud), lineas=[[list(p) for p in l] for l in lineas]),
+        arroyo=datos_obra, obra=datos_obra,      # `arroyo` es el nombre heredado
         parametros=dict(radio_m=radio, luz_max_m=luz_max, etapa_max_m=etapa_max_m, un_puente_cada_m=un_puente_cada_m,
-                        cerrar_puentes=cerrar_puentes),
+                        cerrar_puentes=cerrar_puentes, ancho_m=ancho_m, medicion=medicion),
         etapas=etapas, semaforos_conocidos=None if ctx["semaforos"] is None else len(ctx["semaforos"]))
     plan["resumen"] = resumen_del_plan(plan)
     plan["pasos"] = pasos_del_plan(plan)
@@ -311,7 +330,7 @@ def resumen_del_plan(plan):
     esquinas = sum(len(x["carga"]) for x in e)
     sin_semaforo = sum(1 for x in e for c in x["carga"] if c["semaforo"] is False)
     peor = max(e, key=lambda x: (x["peatones"] or {}).get("obra", {}).get("desvio_medio_m", 0), default=None)
-    return dict(etapas=len(e), longitud_m=plan["arroyo"]["longitud_m"], puentes_peatonales=puentes,
+    return dict(etapas=len(e), longitud_m=plan["obra"]["longitud_m"], puentes_peatonales=puentes,
                 cambios_de_sentido=sentidos, rutas_alternas=rutas, esquinas_de_control=esquinas,
                 esquinas_sin_semaforo=sin_semaforo, etapa_mas_dificil=peor["numero"] if peor else None)
 
@@ -331,23 +350,24 @@ def pasos_del_plan(plan):
 
     Cada paso: id, titulo, cifra (texto grande), unidad, detalle (lista de frases), etapa (o None),
     capas (qué dibujar con foco: "etapas", "puentes", "sentidos", "rutas", "carga", "cauce"),
+    donde "puentes" son los pasos peatonales provisionales y "cauce" es el eje de la obra.
     foco ([[lat, lon], [lat, lon]] del recuadro al que acercar el mapa).
     """
     r, e = plan["resumen"], plan["etapas"]
-    todo = [p for l in plan["arroyo"]["lineas"] for p in l]
+    todo = [p for l in plan["obra"]["lineas"] for p in l]
     foco_total = _limites(todo)
     pasos = [dict(
         id="etapas", titulo="Etapas de obra", cifra=str(r["etapas"]), etapa=None, capas=["etapas"], foco=foco_total,
         unidad=_plural(r["etapas"], "etapa de obra", "etapas de obra"),
-        detalle=[f"El arroyo mide {r['longitud_m']:,} m y se canaliza por tramos de hasta "
+        detalle=[f"La obra mide {r['longitud_m']:,} m a lo largo de su eje y se hace por tramos de hasta "
                  f"{plan['parametros']['etapa_max_m']} m.".replace(",", "."),
                  "En cada etapa solo se cierran los cruces de ese tramo; el resto sigue abierto.",
                  "Los cortes se eligen para que ninguna etapa concentre demasiados cruces."])]
     por_etapa = ", ".join(f"etapa {x['numero']}: {len((x['peatones'] or {}).get('puentes', []))}" for x in e)
     pasos.append(dict(
-        id="puentes", titulo="Puentes peatonales temporales", cifra=str(r["puentes_peatonales"]), etapa=None,
+        id="puentes", titulo="Pasos peatonales provisionales", cifra=str(r["puentes_peatonales"]), etapa=None,
         capas=["puentes"], foco=foco_total,
-        unidad=_plural(r["puentes_peatonales"], "puente peatonal", "puentes peatonales"),
+        unidad=_plural(r["puentes_peatonales"], "paso peatonal", "pasos peatonales"),
         detalle=[f"Uno por cada {plan['parametros']['un_puente_cada_m']} m de obra, repartidos a lo largo del tramo.",
                  por_etapa + "."]))
     pasos.append(dict(
@@ -378,21 +398,21 @@ def pasos_del_plan(plan):
         if p:
             detalle.append(f"A pie: el desvío medio pasa de {p['obra']['desvio_medio_m']:.0f} m a "
                            f"{p['con_puentes']['desvio_medio_m']:.0f} m con {len(p['puentes'])} "
-                           f"{_plural(len(p['puentes']), 'puente', 'puentes')}.")
+                           f"{_plural(len(p['puentes']), 'paso peatonal', 'pasos peatonales')}.")
         if v:
             detalle.append(f"En carro: desvío medio de {v['obra']['desvio_medio_m']:.0f} m"
                            + (f"; {v['obra']['sin_camino']} pares sin camino" if v['obra']['sin_camino'] else "")
                            + (f"; {len(v['medidas'])} cambio(s) de sentido." if v["medidas"] else "."))
         detalle += x["avisos"]
-        puntos = x["cauce"] or todo
+        puntos = x["eje"] or todo
         pasos.append(dict(
             id=f"etapa-{x['numero']}", titulo=f"Etapa {x['numero']} de {r['etapas']}", etapa=x["numero"],
             cifra=str(len((p or {}).get("puentes", []))), unidad=_plural(len((p or {}).get("puentes", [])),
-                                                                          "puente peatonal", "puentes peatonales"),
+                                                                          "paso peatonal", "pasos peatonales"),
             detalle=detalle, capas=["etapas", "puentes", "sentidos", "rutas", "carga"], foco=_limites(puntos)))
     pasos.append(dict(
         id="limites", titulo="Qué no mide este plan", cifra="!", unidad="límites", etapa=None, capas=[], foco=foco_total,
         detalle=["No hay datos de volumen de tránsito: no se mide congestión, solo desvíos en metros.",
                  "No se diseñan carriles ni tiempos de semáforo.",
-                 "Los puentes y cambios de sentido deben verificarse en terreno antes de proponerlos."]))
+                 "Los pasos peatonales y cambios de sentido deben verificarse en terreno antes de proponerlos."]))
     return pasos

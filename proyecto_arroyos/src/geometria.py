@@ -1,4 +1,4 @@
-"""Geometría plana local: distancias en metros, cruces y lado del arroyo.
+"""Geometría plana local: distancias en metros, cruces y lado del eje de la obra.
 
 En una zona de pocos kilómetros la Tierra se puede tratar como plana:
 1 grado de latitud mide unos 110.6 km y 1 grado de longitud mide 111.3 km * cos(latitud).
@@ -51,22 +51,25 @@ def proyectar(p, a, b):
     return math.hypot(p[0] - qx, p[1] - qy), t, cruz
 
 
-class Arroyo:
-    """Cauce formado por una o varias líneas quebradas [(lat, lon), ...]."""
+class Obra:
+    """Eje de la obra: una o varias líneas quebradas [(lat, lon), ...].
+
+    La franja de obra es el eje con un ancho (ver `ancho_m` en `analisis.clasificar`).
+    """
 
     def __init__(self, lineas, plano):
         self.plano = plano
         self.lineas = [[plano.xy(p) for p in linea] for linea in lineas if len(linea) >= 2]
         if not self.lineas:
-            raise ValueError("El arroyo necesita al menos dos puntos")
+            raise ValueError("La obra necesita al menos dos puntos")
         self.segmentos = [(l[i], l[i + 1]) for l in self.lineas for i in range(len(l) - 1)]
-        # Metros recorridos por el cauce hasta el inicio de cada segmento (para `posicion`).
+        # Metros recorridos por el eje hasta el inicio de cada segmento (para `posicion`).
         self.inicio_segmento, total = [], 0.0
         for a, b in self.segmentos:
             self.inicio_segmento.append(total)
             total += math.hypot(b[0] - a[0], b[1] - a[1])
         # Índice espacial: cuadrícula de CELDA metros con los segmentos que pasan por cada celda.
-        # Así, para saber si una calle toca el arroyo, solo se revisan los segmentos cercanos.
+        # Así, para saber si una calle toca la obra, solo se revisan los segmentos cercanos.
         self.celdas = {}
         for i, (a, b) in enumerate(self.segmentos):
             for c in self._celdas(a, b, 20):
@@ -82,7 +85,7 @@ class Arroyo:
                 yield cx, cy
 
     def cercanos(self, a, b, margen):
-        """Índices de los segmentos del cauce que podrían estar a menos de `margen` de a-b."""
+        """Índices de los segmentos del eje que podrían estar a menos de `margen` de a-b."""
         res = set()
         for c in self._celdas(a, b, margen):
             res.update(self.celdas.get(c, ()))
@@ -92,7 +95,7 @@ class Arroyo:
         return sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in self.segmentos)
 
     def posicion(self, p):
-        """Metros, medidos a lo largo del cauce desde su inicio, del punto del cauce más cercano a p."""
+        """Metros, medidos a lo largo del eje desde su inicio, del punto del eje más cercano a p."""
         mejor = None
         for i, (a, b) in enumerate(self.segmentos):
             d, t, _ = proyectar(p, a, b)
@@ -103,11 +106,11 @@ class Arroyo:
         return self.inicio_segmento[i] + t * math.hypot(b[0] - a[0], b[1] - a[1])
 
     def corta(self, p, q):
-        """True si el segmento p-q (en metros) atraviesa el cauce."""
+        """True si el segmento p-q (en metros) atraviesa el eje de la obra."""
         return any(se_cruzan(p, q, a, b) for a, b in self.segmentos)
 
     def ubicar(self, p):
-        """(distancia al cauce, lado +1/-1, True si el punto queda frente a un extremo)."""
+        """(distancia al eje, lado +1/-1, True si el punto queda frente a un extremo)."""
         mejor = None
         for linea in self.lineas:
             ultimo = len(linea) - 2
@@ -119,8 +122,12 @@ class Arroyo:
         return mejor
 
 
+# Nombre anterior (el proyecto empezó con arroyos). Oscar lo quita en la limpieza final.
+Arroyo = Obra
+
+
 def orientar(lineas):
-    """Ordena y orienta los tramos para que todos sigan el mismo sentido del cauce.
+    """Ordena y orienta los tramos para que todos sigan el mismo sentido del eje.
 
     Así "izquierda" significa lo mismo en todos los tramos, aunque el usuario
     los haya dibujado o seleccionado en desorden.

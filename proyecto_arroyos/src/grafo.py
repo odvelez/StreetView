@@ -103,7 +103,7 @@ def dijkstra(g, fuentes, objetivos=None, limite=INF):
         acortar el camino a un nodo ya cerrado.
       - limite: no cierra nodos a más de esa distancia.
 
-    Una fuente que no está en el grafo (por ejemplo, una esquina que con lluvia
+    Una fuente que no está en el grafo (por ejemplo, una esquina que con la obra
     perdió todas sus calles) queda aislada: solo se alcanza a sí misma.
     """
     if not isinstance(fuentes, (list, set, tuple, frozenset)):

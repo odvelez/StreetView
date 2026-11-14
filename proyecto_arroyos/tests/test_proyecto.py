@@ -2,7 +2,7 @@
 import unittest
 
 from src.analisis import Evaluador, actualizar_tablas, analizar, medir, tablas
-from src.geometria import Arroyo, Plano, orientar, se_cruzan
+from src.geometria import Obra, Plano, orientar, se_cruzan
 from src.red import Red
 from src.grafo import (Grafo, bfs, centralidad_cercania, centralidad_grado, componentes_conexas,
                        dijkstra, intermediacion, reconstruir_camino)
@@ -80,7 +80,7 @@ class Algoritmos(unittest.TestCase):
         self.assertEqual(dijkstra(g.invertido(), "c")[0], {"c": 0, "b": 1, "a": 2})
 
     def test_dijkstra_fuente_aislada(self):
-        # Una esquina que con lluvia pierde todas sus calles ya no está en el grafo:
+        # Una esquina que con la obra pierde todas sus calles ya no está en el grafo:
         # Dijkstra no debe fallar, solo se alcanza a sí misma (antes daba KeyError).
         dist, pred = dijkstra(self.ponderado, "Z")
         self.assertEqual(dist, {"Z": 0})
@@ -103,15 +103,15 @@ class Geometria(unittest.TestCase):
         self.assertTrue(se_cruzan((0, 0), (2, 2), (0, 2), (2, 0)))
         self.assertFalse(se_cruzan((0, 0), (1, 0), (0, 1), (1, 1)))
 
-    def test_lado_del_arroyo(self):
+    def test_lado_de_la_obra(self):
         plano = Plano(10.0)
-        arroyo = Arroyo([[(10.0, -74.01), (10.0, -73.99)]], plano)   # cauce de oeste a este
-        d_n, lado_n, ext_n = arroyo.ubicar(plano.xy((10.001, -74.0)))
-        d_s, lado_s, _ = arroyo.ubicar(plano.xy((9.999, -74.0)))
+        obra = Obra([[(10.0, -74.01), (10.0, -73.99)]], plano)   # eje de oeste a este
+        d_n, lado_n, ext_n = obra.ubicar(plano.xy((10.001, -74.0)))
+        d_s, lado_s, _ = obra.ubicar(plano.xy((9.999, -74.0)))
         self.assertAlmostEqual(d_n, 110.6, places=1)
         self.assertNotEqual(lado_n, lado_s)
         self.assertFalse(ext_n)
-        self.assertTrue(arroyo.ubicar(plano.xy((10.0, -73.98)))[2])   # frente a un extremo
+        self.assertTrue(obra.ubicar(plano.xy((10.0, -73.98)))[2])   # frente a un extremo
 
     def test_orientar_une_tramos(self):
         # Dos tramos dibujados en sentidos opuestos que se tocan: quedan como una sola línea.
@@ -124,17 +124,17 @@ def barrio_de_prueba(norte_un_sentido=False, esquina_aislada=False):
 
         n0 ---- n1 ---- n2      Calle Norte (lat 10.0010)
                |        |
-    ~~~~~~~~~~ | ~~~~~~ | ~~~  arroyo (lat 10.0005)
+    ~~~~~~~~~~ | ~~~~~~ | ~~~  eje de la obra (lat 10.0005)
                |        |
         s0 ---- s1 ---- s2      Calle Sur   (lat 10.0000)
 
-    Carrera 1 (s1-n1) cruza el arroyo a nivel: se bloquea con lluvia.
+    Carrera 1 (s1-n1) cruza la obra a nivel: la obra la cierra.
     Carrera 2 (s2-n2) es un puente: sigue abierta.
     Distancias: vertical 0.001 grados = 110.6 m; horizontal 0.001 grados = 109.6 m.
-    De s1 a n1: en seco 110.6 m; con lluvia s1-s2-n2-n1 = 109.6 + 110.6 + 109.6 = 329.8 m.
+    De s1 a n1: sin obra 110.6 m; con la obra s1-s2-n2-n1 = 109.6 + 110.6 + 109.6 = 329.8 m.
 
-    Con esquina_aislada se agrega la Carrera 0 (s3-n3), que solo cruza el arroyo:
-    con lluvia, s3 y n3 se quedan sin ninguna calle.
+    Con esquina_aislada se agrega la Carrera 0 (s3-n3), que solo cruza la obra:
+    con la obra, s3 y n3 se quedan sin ninguna calle.
     """
     lon = {0: -74.002, 1: -74.001, 2: -74.000}
     nodos = {}
@@ -158,21 +158,21 @@ def barrio_de_prueba(norte_un_sentido=False, esquina_aislada=False):
 
 class ModeloMiniatura(unittest.TestCase):
     def test_clasifica_cruce_y_puente(self):
-        red, arroyo = barrio_de_prueba()
-        r = analizar(red, arroyo)
+        red, obra = barrio_de_prueba()
+        r = analizar(red, obra)
         estados = {c["via"]: c["estado"] for c in r["contacto"]}
         self.assertEqual(estados, {"Carrera 1": "bloqueado", "Carrera 2": "puente"})
 
     def test_desvio_conocido_en_ruta_alterna(self):
-        red, arroyo = barrio_de_prueba()
-        r = analizar(red, arroyo)
+        red, obra = barrio_de_prueba()
+        r = analizar(red, obra)
         ruta = next(x for x in r["rutas"] if x["via"] == "Carrera 1")
         self.assertEqual(ruta["pie"]["seco_m"], 111)       # 110.6 redondeado
         self.assertEqual(ruta["pie"]["lluvia_m"], 330)     # 329.8 redondeado
 
     def test_puente_peatonal_devuelve_el_cruce(self):
-        red, arroyo = barrio_de_prueba()
-        r = analizar(red, arroyo)
+        red, obra = barrio_de_prueba()
+        r = analizar(red, obra)
         p = r["peatones"]
         self.assertGreater(p["lluvia"]["desvio_medio_m"], 0)
         self.assertEqual(p["propuestas"][0]["via"], "Carrera 1")
@@ -181,8 +181,8 @@ class ModeloMiniatura(unittest.TestCase):
     def test_doble_sentido_resuelve_calle_de_un_sentido(self):
         # Con la Calle Norte en un solo sentido (n0 -> n2) y la Carrera 1 bloqueada,
         # un carro que cruza por el puente llega a n2 pero no puede devolverse a n1 ni a n0.
-        red, arroyo = barrio_de_prueba(norte_un_sentido=True)
-        r = analizar(red, arroyo)
+        red, obra = barrio_de_prueba(norte_un_sentido=True)
+        r = analizar(red, obra)
         v = r["vehiculos"]
         self.assertGreater(v["lluvia"]["sin_camino"], 0)
         self.assertEqual(v["propuestas"][0]["via"], "Calle Norte")
@@ -206,8 +206,8 @@ class ModeloMiniatura(unittest.TestCase):
 
     def test_esquina_aislada_no_rompe_el_analisis(self):
         # Caso del error 500 de la web: una esquina de la muestra pierde todas sus calles.
-        red, arroyo = barrio_de_prueba(esquina_aislada=True)
-        r = analizar(red, arroyo)
+        red, obra = barrio_de_prueba(esquina_aislada=True)
+        r = analizar(red, obra)
         self.assertGreater(r["peatones"]["lluvia"]["sin_camino"], 0)
         self.assertGreater(r["vehiculos"]["lluvia"]["sin_camino"], 0)
 
