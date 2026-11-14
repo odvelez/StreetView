@@ -723,8 +723,12 @@ function lineaRuta(forma, color, { peso = 5, borde = "white", dash = null } = {}
 function encuadrar(pts) {
   if (!pts.length) return;
   const ancho = mapa.getSize().x;
-  const der = ancho > 600 ? Math.min(330, ancho / 2) : 20;   // deja sitio al recuadro de detalle
-  irA(L.latLngBounds(pts), { paddingTopLeft: [40, 40], paddingBottomRight: [der, 40], maxZoom: 18, duration: 0.5 });
+  // Deja sitio al recuadro de detalle: a la derecha en pantalla ancha, arriba en pantalla pequeña.
+  const caja = detalle.getContainer();
+  const alto = caja.hidden ? 0 : caja.offsetHeight + 10;
+  const der = ancho > 600 ? Math.min(330, ancho / 2) : 20;
+  const arr = ancho > 600 ? 40 : Math.min(alto + 20, mapa.getSize().y / 2);
+  irA(L.latLngBounds(pts), { paddingTopLeft: [20, arr], paddingBottomRight: [der, 30], maxZoom: 18, duration: 0.5 });
 }
 
 function filaDetalle(clase, quien, dato) {
