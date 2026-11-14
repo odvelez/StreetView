@@ -10,7 +10,9 @@ Rutas:
   GET  /api/arroyos    cauces de OpenStreetMap del área metropolitana
   GET  /api/ejemplo    el arroyo El Salao en Soledad, caso de estudio del documento
   POST /api/analizar   recibe el arroyo marcado y devuelve el análisis (src/analisis.py)
+  POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py)
 """
+import math
 import time
 from pathlib import Path
 
@@ -18,7 +20,8 @@ from flask import Flask, jsonify, request, send_from_directory
 from werkzeug.exceptions import HTTPException
 
 from src import fuente, osm
-from src.analisis import analizar
+from src.analisis import TOLERANCIA_M, analizar
+from src.etapas import ETAPA_MAX_M, MEDICIONES, UN_PUENTE_CADA_M, plan_por_etapas
 
 RAIZ = Path(__file__).resolve().parent
 WEB = RAIZ / "web"
@@ -87,6 +90,64 @@ def api_analizar():
     resultado["recuadro"] = recuadro
     resultado["fuente"] = origen
     return jsonify(resultado)
+
+
+def _numero(pedido, clave, defecto, minimo, maximo):
+    """Valor numérico del pedido, acotado a [minimo, maximo] como en /api/analizar.
+
+    Si es un número entero se devuelve como int, para que los textos digan «1000 m» y no «1000.0 m».
+    """
+    v = float(pedido.get(clave, defecto))
+    if not math.isfinite(v):
+        raise ValueError(clave)
+    v = min(max(v, minimo), maximo)
+    return int(v) if v.is_integer() else v
+
+
+@app.post("/api/plan")
+def api_plan():
+    """Plan de obra por etapas. Pedido y respuesta: equipo/cambio_a_obras.md, sección 5."""
+    pedido = request.get_json(force=True, silent=True)
+    if not isinstance(pedido, dict):
+        return jsonify(error="El pedido debe ser un objeto JSON."), 400
+    try:
+        lineas = [[(float(p[0]), float(p[1])) for p in l] for l in pedido.get("lineas", [])]
+        lineas = [l for l in lineas if len(l) >= 2]
+        radio = _numero(pedido, "radio", 400, 100, 800)
+        luz = _numero(pedido, "luz_max", 60, 10, 150)
+        etapa_max = _numero(pedido, "etapa_max_m", ETAPA_MAX_M, 300, 2000)
+        un_puente_cada = _numero(pedido, "un_puente_cada_m", UN_PUENTE_CADA_M, 200, 1000)
+        ancho = _numero(pedido, "ancho_m", TOLERANCIA_M, 10, 60)
+        abiertos = [int(i) for i in pedido.get("abiertos", [])]
+        cerrados = [int(i) for i in pedido.get("cerrados", [])]
+        cerrar_puentes = pedido.get("cerrar_puentes", True)
+        medicion = pedido.get("medicion", "lados")
+    except (TypeError, ValueError, IndexError, KeyError):
+        return jsonify(error="Datos del pedido inválidos."), 400
+    if not isinstance(cerrar_puentes, bool):
+        return jsonify(error="cerrar_puentes debe ser true o false."), 400
+    if medicion not in MEDICIONES:
+        return jsonify(error=f"medicion debe ser una de: {', '.join(MEDICIONES)}."), 400
+    if not lineas:
+        return jsonify(error="Marque el eje de la obra con al menos dos puntos."), 400
+
+    recuadro, lado = fuente.recuadro_de(lineas, radio)
+    if lado > fuente.MAX_LADO_M:
+        return jsonify(error=f"La zona es muy grande ({lado / 1000:.1f} km de lado). Marque una obra "
+                             f"más corta, de unos 4 km como máximo."), 400
+    t0 = time.time()
+    try:
+        red, origen = fuente.red_para(recuadro)
+    except osm.ErrorDescarga as ex:
+        return jsonify(error=str(ex).split("\n")[0]), 503
+    t1 = time.time()
+    plan = plan_por_etapas(red, lineas, radio=radio, luz_max=luz, etapa_max_m=etapa_max,
+                           un_puente_cada_m=un_puente_cada, abiertos=abiertos, cerrados=cerrados,
+                           recuadro=recuadro, cerrar_puentes=cerrar_puentes, ancho_m=ancho, medicion=medicion)
+    plan["tiempos"] = dict(red_s=round(t1 - t0, 1), plan_s=round(time.time() - t1, 1))
+    plan["recuadro"] = recuadro
+    plan["fuente"] = origen
+    return jsonify(plan)
 
 
 if __name__ == "__main__":

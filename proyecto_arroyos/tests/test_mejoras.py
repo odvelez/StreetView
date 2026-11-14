@@ -40,8 +40,8 @@ class DesvioFijo(unittest.TestCase):
         self.assertLessEqual(despues.desvio_fijo_m, antes.desvio_fijo_m)
 
     def test_recuperados_en_el_informe(self):
-        red, arroyo = barrio_de_prueba(norte_un_sentido=True)
-        v = analizar(red, arroyo)["vehiculos"]
+        red, obra = barrio_de_prueba(norte_un_sentido=True)
+        v = analizar(red, obra)["vehiculos"]
         self.assertEqual(v["recuperados"], v["lluvia"]["sin_camino"] - v["con_medida"]["sin_camino"])
         self.assertGreater(v["recuperados"], 0)
 
@@ -49,7 +49,7 @@ class DesvioFijo(unittest.TestCase):
 def grafo_complementario():
     """Dos arcos que solo sirven juntos.
 
-        s -> a      b -> t         (con lluvia no hay camino de s a t)
+        s -> a      b -> t         (con la obra no hay camino de s a t)
 
     Candidatos:  c0 = a -> m (1 m),  c1 = m -> b (1 m),  c2 = t -> s (1 m, no ayuda a s -> t).
     Solo la pareja {c0, c1} conecta s con t: s -> a -> m -> b -> t = 1 + 1 + 1 + 1 = 4 m.
@@ -108,9 +108,9 @@ class VorazContraFuerzaBruta(unittest.TestCase):
 
 class ControlDeLados(unittest.TestCase):
     def _barrio(self):
-        red, arroyo = barrio_de_prueba()
+        red, obra = barrio_de_prueba()
         contexto = {}
-        analizar(red, arroyo, contexto=contexto)
+        analizar(red, obra, contexto=contexto)
         return red, contexto
 
     def test_barrera_total_separa_los_dos_lados(self):
@@ -122,7 +122,7 @@ class ControlDeLados(unittest.TestCase):
         self.assertEqual(r["acuerdo_pct"], 100.0)
 
     def test_con_el_puente_abierto_los_lados_se_mezclan(self):
-        # Con lluvia el puente sigue abierto: una sola componente con 3 esquinas de cada lado.
+        # Con la obra hecha toda a la vez el puente sigue abierto: una sola componente con 3 esquinas de cada lado.
         red, c = self._barrio()
         r = control_de_lados(red, c["contacto"], lados_de_zona(c["lados_todos"]), "lluvia")
         self.assertEqual(r["componentes"], 1)
