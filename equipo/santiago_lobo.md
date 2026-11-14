@@ -18,7 +18,7 @@ La app **planifica obras por etapas**. Tú haces que se vea y se use bien. Lo m�
 | **L1** | **Recorrido paso a paso.** Al pulsar «Planificar obra»: la página se desenfoca y oscurece; en el centro una tarjeta con la **cifra en grande** (`paso.cifra`, 96 px o más), su unidad, el título y el detalle; botones Anterior, Siguiente y Saltar (y teclas ← → Esc); «Paso 3 de 9»; el mapa se acerca a `paso.foco` y resalta solo las capas de `paso.capas`. Los pasos vienen en `plan.pasos`: no los inventes ni los reordenes | Ves los 9 pasos de El Salao en orden, con teclado y en 390 × 844 |
 | **L2** | Menú de inicio en 3 pasos (elegir municipio, definir la obra, planificar). Quita la capa azul de arroyos y todo texto de «arroyo», «cauce» o «lluvia»: usa «obra», «Dibujar la obra», «Cargar ejemplo: obra de canalización de El Salao». Ajustes plegables: largo máximo de etapa, un paso peatonal cada tanto, y si la obra cierra los puentes existentes | Un compañero planifica una obra sin que le expliques |
 | **L3** | Pantalla de resultados clara: cruce cerrado, ruta en carro y ruta a pie distinguibles; cifras principales juntas; enlace a Street View; mostrar `avisos` | Se entiende de un vistazo |
-| **L4** | Escritorio y pantalla pequeña (panel inferior en 700 px o menos, botones de 44 px, sin desplazamiento horizontal) | Se ve bien en 1920×1080, 1366×768 y 390×844 |
+| **L4** | Escritorio y pantalla pequeña (panel inferior en 700 px o menos, botones de 48 px, sin desplazamiento horizontal) | Se ve bien en 1920×1080, 1366×768 y 390×844 |
 | **L5** | Lista de comprobación en `equipo/entregas/lobo_checklist.md` (los 9 pasos, teclado, cambio de etapas, error del servidor, consola sin errores rojos) | Llena |
 
 **Qué dibuja cada capa de un paso:** `etapas` el eje en tramos de colores (`etapas[].cauce`, o `eje` si existe); `puentes` marcadores naranja (`peatones.puentes[].forma`); `sentidos` calle morada (`vehiculos.medidas[].forma`); `rutas` carro amarilla y a pie verde punteada (`rutas[]`); `carga` círculos en `carga[].posicion`, rojo si `semaforo` es `false`, verde si `true`, gris si `null`. Colores de etapas aptos para daltonismo (Okabe-Ito: `#0072B2`, `#E69F00`, `#009E73`, `#CC79A7`, `#56B4E9`, `#D55E00`).
@@ -28,7 +28,7 @@ La app **planifica obras por etapas**. Tú haces que se vea y se use bien. Lo m�
 - **Tus archivos:** `web/` y, si hace falta un ajuste, `app.py` (avisa a Oscar). **No toques** `src/`, `tests/`, `datos/`, `resultados/`.
 - **No uses** `/api/arroyos` ni `lineas_por_nombre`: la ruta queda en `app.py` hasta que Oscar la quite.
 - Lo que recibes del servidor puede cambiar solo agregando campos: si falta uno, no te rompas. `peatones` o `vehiculos` pueden ser `null`.
-- **44 pruebas de Python en verde** antes de cada commit. No inventes datos. Cargas externas solo con versión exacta (Leaflet 1.9.4).
+- **48 pruebas de Python en verde** antes de cada commit. No inventes datos. Cargas externas solo con versión exacta (Leaflet 1.9.4).
 - Rama `obras`. Commits pequeños, uno por tarea, mensaje en español. **Commit y push al terminar cada tarea.** No cambies los `id` ni la estructura de pantallas después del sábado: Gustavo toma capturas.
 
 ## Metaprompt para tu Claude
@@ -67,7 +67,7 @@ algo falla, DETENTE y dime qué pasó.
       1000), un paso peatonal cada (250, 500, 750; por defecto 500), y si la obra cierra los puentes existentes.
       NO uses /api/arroyos ni lineas_por_nombre.
   L3  Pantalla de resultados clara, con enlace a Street View y avisos.
-  L4  Escritorio y pantalla pequeña (390x844), botones de 44 px, sin scroll horizontal.
+  L4  Escritorio y pantalla pequeña (390x844), botones de 48 px, sin scroll horizontal.
   L5  equipo/entregas/lobo_checklist.md con la lista de comprobación y su resultado.
 
 REGLAS: el JSON puede cambiar solo agregando campos: si falta uno, no te rompas. No inventes datos. Cargas

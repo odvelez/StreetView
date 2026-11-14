@@ -66,6 +66,6 @@ tarea resume en 3 líneas qué hiciste y qué probaste.
 git clone https://github.com/odvelez/StreetView.git
 cd StreetView/proyecto_arroyos
 pip install -r requirements.txt
-python -m unittest          # deben pasar 44 pruebas
+python -m unittest          # deben pasar 48 pruebas
 git checkout -b gustavo/apoyo
 ```

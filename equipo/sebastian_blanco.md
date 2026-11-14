@@ -20,7 +20,7 @@ Lee antes, 5 minutos: [cambio_a_obras.md](cambio_a_obras.md) (objetivo, reglas y
 ## Reglas
 
 - **No toques archivos ajenos sin avisar al dueño.** Antes de que Oscar te avise, no edites nada.
-- **44 pruebas en verde** antes de cada commit. No inventes datos ni cambies cifras.
+- **48 pruebas en verde** antes de cada commit. No inventes datos ni cambies cifras.
 - Rama `obras` (la misma de Karel y Lobo; ya terminaron). Commits pequeños, mensaje en español. **Commit y push al terminar cada tarea.**
 - **Si el tiempo aprieta,** corta B3 (robustez) primero.
 
@@ -72,6 +72,6 @@ Oscar".
 git clone https://github.com/odvelez/StreetView.git
 cd StreetView/proyecto_arroyos
 pip install -r requirements.txt
-python -m unittest          # deben pasar 44 pruebas
+python -m unittest          # deben pasar 48 pruebas
 python app.py               # http://localhost:5000
 ```

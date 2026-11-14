@@ -16,7 +16,7 @@ El proyecto **ya no trata de arroyos**. Trata de **cómo hacer obras de la mejor
 - La **solución por etapas** (`src/etapas.py`): número de etapas según el largo, cortes con programación dinámica, un paso peatonal por cada 500 m de obra, cambios de sentido, rutas alternas, esquinas con más recorridos desviados y semáforos conocidos.
 - El **menú de inicio**, el **recorrido paso a paso** (cifra grande, resto desenfocado, botón «Siguiente») y la lista de etapas.
 - El contrato `POST /api/plan` y los `pasos[]` (ver sección 5).
-- Los algoritmos y las **44 pruebas**, que deben seguir en verde.
+- Los algoritmos y las **48 pruebas**, que deben seguir en verde.
 
 ## 3. Mapa de términos
 
@@ -68,7 +68,7 @@ Cada puente (`puentes[]`): `orden`, `tipo`, `via`, `desde`, `hasta`, `recorrido_
 2. **La posta se pasa así:** (a) `python -m unittest` en verde; (b) commit y push a `obras`; (c) escribes tu nota de entrega `equipo/entregas/<tu_nombre>_entrega.md` (qué cambió, cómo se corre, qué falta, qué te preocupa); (d) avisas a la siguiente persona **y a Oscar**: «tu turno». La siguiente persona empieza con `git pull` y comprobando que las pruebas pasan.
 3. **El JSON solo se agranda: agrega campos, no los quites ni los renombres.** Karel puede **agregar** `eje` junto a `cauce`; el nombre viejo lo quita Oscar al final.
 4. **No se borra nada** de `datos/` ni funciones que otro archivo todavía use (por ejemplo `fuente.arroyos_osm` o `/api/arroyos`). Oscar limpia al final.
-5. **Las 44 pruebas deben pasar** antes de cada commit (`python -m unittest`).
+5. **Las 48 pruebas deben pasar** antes de cada commit (`python -m unittest`).
 6. **No se inventan datos.** Sin fuente, queda como pendiente.
 7. `main.py` y `plan_etapas.py` **sobrescriben `resultados/`**. Después de correrlos, `git checkout -- proyecto_arroyos/resultados`, salvo que Oscar pida regenerarlos.
 8. **Nadie sube a `main`:** solo Oscar, al final.
@@ -96,7 +96,7 @@ Para obras fuera de El Salao (lo hace Oscar y lo lee Karel):
 | Paso | Cuándo (aproximado) | Quién | Qué | Pasa la posta cuando |
 |---|---|---|---|---|
 | **0** | Hecho | Oscar | Subió la base a `main` | — |
-| **0b** | Ya, **antes de que Karel cree la rama** | Oscar | Crea el ejemplo de obra que no es un arroyo (`herramientas/eje_de_calle.py` y `datos/ejemplos/obra_ilustrativa.json`) y lo sube a `main` | Archivo en `main` |
+| **0b** | **Hecho** | Oscar | Creó el ejemplo de obra que no es un arroyo (`herramientas/eje_de_calle.py` y `datos/ejemplos/obra_ilustrativa.json`: 600 m de la calle 72) y lo subió a `main` | Archivo en `main` |
 | **1** | Sábado, desde la mañana | **Karel** | Crea la rama `obras` desde `main` (ya con el ejemplo de obra). Hace R1 a R6 (refactor y `/api/plan`) | Pruebas en verde, push y nota de entrega |
 | **2** | Sábado, después de Karel | **Lobo** | `git pull` de `obras`. Hace la parte gráfica (L1 a L5) | Pruebas en verde, push y nota de entrega |
 | **3** | Sábado en la noche, después de Lobo | **Blanco** | `git pull` de `obras`. Prueba, devuelve fallos y corrige (B1 a B4) | Pruebas en verde, push y nota de entrega |
@@ -116,7 +116,7 @@ Para obras fuera de El Salao (lo hace Oscar y lo lee Karel):
 
 ### Oscar: lo que tienes que hacer
 
-1. **Paso 0b (ya):** crear el ejemplo de obra (`herramientas/eje_de_calle.py` y `datos/ejemplos/obra_ilustrativa.json`) y subirlo a `main`, antes de que Karel cree la rama.
+1. **Paso 0b (hecho):** el ejemplo de obra ya está en `main`.
 2. Avisar el orden al equipo y decirle a Karel su hora límite.
 3. Estar atento a cada «tu turno» y confirmar que las pruebas pasan antes de que siga el siguiente.
 4. **Paso 4:** escribir `tests/test_app.py`, juntar a Gustavo, limpiar y dejar la app lista.
@@ -132,7 +132,7 @@ El trabajo de código es un RELEVO en la rama obras: Karel -> Lobo -> Blanco, un
 aparte en gustavo/apoyo (diapositivas y figuras). Tu trabajo es: (A) crear el ejemplo de obra antes del turno
 de Karel, (B) VERIFICAR cada entrega y (C) cerrar.
 
-(A) ANTES DEL TURNO DE KAREL, cuando yo te lo pida:
+(A) YA HECHO (el ejemplo de obra está en main). Solo repítelo si yo te lo pido:
   - Crea herramientas/eje_de_calle.py: dado --calle "Calle 72" --largo-m 600 --salida <archivo>, genera un
     archivo JSON {"nombre", "ilustrativo": true, "lineas": [[[lat, lon], ...]]} uniendo los tramos de esa
     calle (usa fuente.red_para(recuadro) y red.tramos: cada Tramo tiene via y forma) hasta el largo pedido.

@@ -19,7 +19,7 @@ Dos cosas: (1) cambiar el código de «arroyo» a «obra» **sin cambiar ni una 
 | **R6** | **Ruta `POST /api/plan` en `app.py`** (es lo único que tocas de ese archivo). Pedido y respuesta: sección 5 de `cambio_a_obras.md`. Mismas validaciones y errores (JSON, 400 y 503) que `/api/analizar`. Campos nuevos: `etapa_max_m` (300 a 2000, por defecto 1000), `un_puente_cada_m` (200 a 1000, por defecto 500), `cerrar_puentes` (booleano, por defecto `true`), `ancho_m` (10 a 60, por defecto 10). Llama a `plan_por_etapas(...)` y devuelve el diccionario más `tiempos`, `recuadro` y `fuente` | Con la app corriendo, El Salao devuelve 200 con 3 etapas y 9 pasos |
 | **R3** | `fuente.lineas_de_archivo(ruta)` y la opción `--obra <archivo>` en `main.py` y `plan_etapas.py` (formato en la sección 8 de `cambio_a_obras.md`) | `plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json` funciona. El archivo lo crea Oscar y ya viene en `main` cuando creas la rama `obras`. Si por algo no está, haz uno propio de prueba y no lo subas |
 | **R4** | Parámetro `medicion="lados"` (igual que hoy) en `plan_por_etapas`; otro valor falla con mensaje claro | Hay prueba |
-| **R5** | Adapta los nombres en las pruebas y agrega: regresión de El Salao (mismos números que `resultados/linea_base/`), `ancho_m`, obra a lo largo de una calle (calcula el resultado **a mano** y escríbelo en un comentario), alias, `lineas_de_archivo` y `medicion` inválida | `python -m unittest` pasa todo (44 más las tuyas) |
+| **R5** | Adapta los nombres en las pruebas y agrega: regresión de El Salao (mismos números que `resultados/linea_base/`), `ancho_m`, obra a lo largo de una calle (calcula el resultado **a mano** y escríbelo en un comentario), alias, `lineas_de_archivo` y `medicion` inválida | `python -m unittest` pasa todo (48 más las tuyas) |
 | R7 (opcional) | `medicion="afectados"`: medir el conjunto fijo de recorridos que quedan más largos o sin camino con la obra. Cambia las cifras: tabla antes y después en `equipo/entregas/karel_afectados.md`, apagado por defecto | Tabla hecha |
 | R8 (opcional) | Que los pasos peatonales «nuevos» crucen la franja casi perpendicular y no corten calles; pruebas en `tests/test_puentes.py` | Tabla antes y después |
 
@@ -30,7 +30,7 @@ Dos cosas: (1) cambiar el código de «arroyo» a «obra» **sin cambiar ni una 
 - **Tus archivos:** `src/`, `main.py`, `herramientas/plan_etapas.py`, `herramientas/experimentos.py`, `tests/` y, en `app.py`, solo la ruta `/api/plan`. **No toques** `web/`, `datos/`, `documento/`.
 - **El JSON solo se agranda:** agrega campos, no quites ni renombres. No borres `fuente.arroyos_osm` ni mueves datos: Oscar limpia al final.
 - Firmas de funciones: solo agrega parámetros **al final y con valor por defecto**.
-- **44 pruebas en verde** antes de cada commit. No inventes datos.
+- **48 pruebas en verde** antes de cada commit. No inventes datos.
 - Rama `obras`. Commits pequeños, uno por tarea, con mensaje en español. **Commit y push al terminar cada tarea.**
 - Después de correr `main.py` o `plan_etapas.py`: `git checkout -- proyecto_arroyos/resultados`.
 
@@ -95,7 +95,7 @@ posta a Lobo". Al final de cada tarea resume en 3 líneas qué hiciste y qué pr
 git clone https://github.com/odvelez/StreetView.git
 cd StreetView/proyecto_arroyos
 pip install -r requirements.txt
-python -m unittest          # deben pasar 44 pruebas
+python -m unittest          # deben pasar 48 pruebas
 git checkout -b obras
 git push -u origin obras
 ```
