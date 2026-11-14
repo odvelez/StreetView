@@ -13,8 +13,12 @@ Rutas:
   POST /api/analizar   recibe el arroyo marcado y devuelve el análisis (src/analisis.py)
   POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py)
 """
+import hashlib
+import json
 import math
+import threading
 import time
+from collections import OrderedDict
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
@@ -26,14 +30,27 @@ from src.etapas import ETAPA_MAX_M, MEDICIONES, UN_PUENTE_CADA_M, plan_por_etapa
 
 RAIZ = Path(__file__).resolve().parent
 WEB = RAIZ / "web"
+MAX_PUNTOS = 2000        # puntos del eje de la obra, sumando todas las líneas
+MAX_CACHE = 16           # planes guardados en memoria (los últimos pedidos distintos)
 
 app = Flask(__name__, static_folder=None)
+app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024   # 1 MB: 2.000 puntos ocupan unos 50 kB
+
+# Errores HTTP de las rutas /api/: siempre en JSON y en español, para que la página los muestre.
+MENSAJES_HTTP = {
+    400: "El pedido no se pudo leer. Vuelva a cargar la página e inténtelo de nuevo.",
+    404: "Esa dirección no existe en este programa. Vuelva a la página de inicio.",
+    405: "Esa dirección no acepta este tipo de pedido.",
+    413: "El pedido es demasiado grande. Dibuje la obra con menos puntos.",
+}
 
 
 @app.errorhandler(Exception)
 def error_inesperado(ex):
     """Cualquier error del análisis vuelve como JSON, para que la página lo muestre."""
     if isinstance(ex, HTTPException):
+        if request.path.startswith("/api/"):
+            return jsonify(error=MENSAJES_HTTP.get(ex.code, f"Error {ex.code} al atender el pedido.")), ex.code
         return ex
     app.logger.exception("Error al atender %s", request.path)
     return jsonify(error="Ocurrió un error inesperado al planificar esta obra. "
@@ -68,18 +85,75 @@ def ejemplo_obra():
                    lineas=[[list(p) for p in l] for l in obra["lineas"]])
 
 
+class PedidoInvalido(ValueError):
+    """Error del pedido con un mensaje para mostrar tal cual."""
+
+
+def _lineas(pedido):
+    """Líneas [(lat, lon), ...] del pedido, ya validadas; descarta las de menos de dos puntos.
+
+    Lanza PedidoInvalido si hay coordenadas que no son números finitos, fuera de rango o demasiados puntos.
+    Lanza TypeError, ValueError o IndexError si la forma no es [[[lat, lon], ...], ...].
+    """
+    crudas = pedido.get("lineas", [])
+    if not isinstance(crudas, list) or not all(isinstance(l, list) for l in crudas):
+        raise ValueError("lineas")
+    if sum(len(l) for l in crudas) > MAX_PUNTOS:
+        raise PedidoInvalido(f"La obra tiene demasiados puntos (más de {MAX_PUNTOS:,}). ".replace(",", ".")
+                             + "Dibújela con menos clics o divídala en obras más cortas.")
+    lineas = [[(float(p[0]), float(p[1])) for p in l] for l in crudas]
+    for l in lineas:
+        for la, lo in l:
+            if not (math.isfinite(la) and math.isfinite(lo)):
+                raise PedidoInvalido("Hay puntos de la obra sin coordenadas válidas. Borre la obra y vuelva a dibujarla.")
+            if not (-90 <= la <= 90 and -180 <= lo <= 180):
+                raise PedidoInvalido("Hay puntos de la obra con coordenadas fuera de rango (la latitud va de -90 a 90 "
+                                     "y la longitud de -180 a 180; ¿están al revés?). Revise los puntos y vuelva a intentarlo.")
+    return [l for l in lineas if len(l) >= 2]
+
+
+def aviso_de_zona(recuadro):
+    """Aviso (no bloquea) si la zona no está en el mapa guardado y hay que descargarla, o None."""
+    S, O, N, E = osm.RECUADRO
+    s, o, n, e = recuadro
+    if not (S <= s and O <= o and n <= N and e <= E):
+        return ("La obra está fuera del área metropolitana guardada. Sus calles se descargan de OpenStreetMap: "
+                "el plan puede tardar más y necesita internet.")
+    local = fuente.mapa_local()
+    descarga = osm.CACHE / f"calles_{hashlib.sha1(osm.consulta(recuadro).encode()).hexdigest()[:16]}.json"
+    guardada = (recuadro in fuente._redes or (local is not None and local.contiene(recuadro))
+                or osm.cuadros_que_cubren(recuadro) is not None or descarga.exists())
+    if not guardada:
+        return ("Esta zona no está completa en el mapa guardado. Sus calles se descargan de OpenStreetMap: "
+                "el plan puede tardar más y necesita internet.")
+    return None
+
+
+# Caché de los últimos MAX_CACHE planes. La clave incluye todos los parámetros que cambian el plan.
+_cache_planes = OrderedDict()
+_cache_lock = threading.Lock()
+
+
+def limpiar_cache():
+    with _cache_lock:
+        _cache_planes.clear()
+
+
 @app.post("/api/analizar")
 def api_analizar():
-    pedido = request.get_json(force=True)
+    pedido = request.get_json(force=True, silent=True)
+    if not isinstance(pedido, dict):
+        return jsonify(error="El pedido debe ser un objeto JSON."), 400
     try:
-        lineas = [[(float(p[0]), float(p[1])) for p in l] for l in pedido.get("lineas", [])]
-        lineas = [l for l in lineas if len(l) >= 2]
+        lineas = _lineas(pedido)
         radio = min(max(float(pedido.get("radio", 400)), 100), 800)
         luz = min(max(float(pedido.get("luz_max", 60)), 10), 150)
         k = min(max(int(pedido.get("k", 1)), 1), 3)
         abiertos = [int(i) for i in pedido.get("abiertos", [])]
         cerrados = [int(i) for i in pedido.get("cerrados", [])]
-    except (TypeError, ValueError):
+    except PedidoInvalido as ex:
+        return jsonify(error=str(ex)), 400
+    except (TypeError, ValueError, IndexError, KeyError):
         return jsonify(error="Datos del pedido inválidos."), 400
     if not lineas:
         return jsonify(error="Marque el arroyo con al menos dos puntos."), 400
@@ -120,8 +194,7 @@ def api_plan():
     if not isinstance(pedido, dict):
         return jsonify(error="El pedido debe ser un objeto JSON."), 400
     try:
-        lineas = [[(float(p[0]), float(p[1])) for p in l] for l in pedido.get("lineas", [])]
-        lineas = [l for l in lineas if len(l) >= 2]
+        lineas = _lineas(pedido)
         radio = _numero(pedido, "radio", 400, 100, 800)
         luz = _numero(pedido, "luz_max", 60, 10, 150)
         etapa_max = _numero(pedido, "etapa_max_m", ETAPA_MAX_M, 300, 2000)
@@ -131,6 +204,8 @@ def api_plan():
         cerrados = [int(i) for i in pedido.get("cerrados", [])]
         cerrar_puentes = pedido.get("cerrar_puentes", True)
         medicion = pedido.get("medicion", "lados")
+    except PedidoInvalido as ex:
+        return jsonify(error=str(ex)), 400
     except (TypeError, ValueError, IndexError, KeyError):
         return jsonify(error="Datos del pedido inválidos."), 400
     if not isinstance(cerrar_puentes, bool):
@@ -144,7 +219,20 @@ def api_plan():
     if lado > fuente.MAX_LADO_M:
         return jsonify(error=f"La zona es muy grande ({lado / 1000:.1f} km de lado). Marque una obra "
                              f"más corta, de unos 4 km como máximo."), 400
+
+    # Todos los parámetros que cambian el plan van en la clave del caché.
+    clave = json.dumps([lineas, radio, luz, etapa_max, un_puente_cada, ancho, abiertos, cerrados,
+                        cerrar_puentes, medicion])
     t0 = time.time()
+    with _cache_lock:
+        guardado = _cache_planes.get(clave)
+        if guardado is not None:
+            _cache_planes.move_to_end(clave)
+    if guardado is not None:
+        return jsonify(dict(guardado, aviso_zona=None, en_cache=True,
+                            tiempos=dict(red_s=0.0, plan_s=round(time.time() - t0, 1))))
+
+    aviso = aviso_de_zona(recuadro)
     try:
         red, origen = fuente.red_para(recuadro)
     except osm.ErrorDescarga as ex:
@@ -153,10 +241,16 @@ def api_plan():
     plan = plan_por_etapas(red, lineas, radio=radio, luz_max=luz, etapa_max_m=etapa_max,
                            un_puente_cada_m=un_puente_cada, abiertos=abiertos, cerrados=cerrados,
                            recuadro=recuadro, cerrar_puentes=cerrar_puentes, ancho_m=ancho, medicion=medicion)
-    plan["tiempos"] = dict(red_s=round(t1 - t0, 1), plan_s=round(time.time() - t1, 1))
     plan["recuadro"] = recuadro
     plan["fuente"] = origen
-    return jsonify(plan)
+    with _cache_lock:
+        _cache_planes[clave] = plan
+        _cache_planes.move_to_end(clave)
+        while len(_cache_planes) > MAX_CACHE:
+            _cache_planes.popitem(last=False)
+    # Campos agregados (el JSON solo se agranda): aviso_zona (texto o null) y en_cache (true o false).
+    return jsonify(dict(plan, aviso_zona=aviso, en_cache=False,
+                        tiempos=dict(red_s=round(t1 - t0, 1), plan_s=round(time.time() - t1, 1))))
 
 
 if __name__ == "__main__":
