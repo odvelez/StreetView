@@ -2,6 +2,8 @@
 
 Matemáticas Discretas, Universidad del Norte. Equipo: Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santiago Lobo.
 
+> **ACTUALIZACIÓN (viernes 13, noche): el proyecto cambió de arroyos a «hacer obras viales de la mejor forma». El reparto y el plan vigentes están en [equipo/cambio_a_obras.md](equipo/cambio_a_obras.md). Lo que sigue (reparto de Persona 1, 2 y 3) quedó desactualizado.**
+
 > Este archivo es el **plan del equipo**. Las instrucciones para instalar y ejecutar el programa siguen en [`proyecto_arroyos/README.md`](proyecto_arroyos/README.md).
 
 **Entrega:** domingo 15 de noviembre de 2026, 11:59 p. m. (hora de Bogotá), por Brightspace.
