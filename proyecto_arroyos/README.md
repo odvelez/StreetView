@@ -82,10 +82,12 @@ src/etapas.py               plan de canalización por etapas (cuántas etapas, p
 tests/test_proyecto.py      casos de prueba
 tests/test_mejoras.py       pruebas del desvío fijo, la fuerza bruta y el control de lados
 tests/test_etapas.py         pruebas del plan por etapas
+tests/test_eje_de_calle.py   pruebas del generador de obra ilustrativa
 herramientas/descargar_mapa.py   vuelve a descargar el mapa (solo para actualizarlo)
 herramientas/experimentos.py     intermediación, sensibilidad, control, histograma y voraz contra óptimo
 herramientas/diagnostico_sin_camino.py   por qué hay pares de vehículos sin camino con lluvia
 herramientas/plan_etapas.py        plan de canalización por etapas desde la terminal (resultados/plan_etapas.txt y .json)
+herramientas/eje_de_calle.py       crea un archivo de obra ilustrativa a lo largo de una calle (datos/ejemplos/)
 resultados/informe_cambios.md    qué se cambió, qué se encontró y qué falta
 documento/main.tex          documento en LaTeX
 ```
