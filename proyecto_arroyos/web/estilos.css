@@ -16,6 +16,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html, body {
   margin: 0;
@@ -109,3 +110,73 @@ footer { color: var(--suave); font-size: 12px; border-top: 1px solid var(--borde
 
 .leaflet-popup-content { font-size: 13px; line-height: 1.45; }
 .dibujando .leaflet-container { cursor: crosshair; }
+
+/* ---- Piezas del plan sobre el mapa ---- */
+.pin {
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  font-weight: 700; font-size: 13px; color: white; border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,.45);
+}
+.pin.etapa { background: var(--c, var(--acento)); }
+.pin.puente { background: var(--naranja); font-size: 14px; }
+.leaflet-overlay-pane path, .leaflet-marker-pane > * { transition: opacity .25s; }
+.apagado { pointer-events: none !important; }
+
+.lista { list-style: none; margin: 8px 0 0; padding: 0; }
+.lista li { padding: 10px; border-radius: 8px; border: 1px solid var(--borde); border-left: 6px solid var(--c, var(--borde)); margin-bottom: 8px; line-height: 1.4; }
+button.ancho { width: 100%; min-height: 44px; font-weight: 600; }
+
+/* ---- Recorrido paso a paso: la página se desenfoca y oscurece; en el centro, la tarjeta ---- */
+body.recorriendo { background: #161d22; }
+body.recorriendo #panel,
+body.recorriendo .leaflet-control-container { filter: blur(3px) opacity(.45); pointer-events: none; user-select: none; }
+body.recorriendo .leaflet-tile-pane { filter: opacity(.5) saturate(.6); }
+body.recorriendo .leaflet-container { background: #161d22; }
+#panel, .leaflet-control-container, .leaflet-tile-pane { transition: filter .3s; }
+
+#recorrido { position: fixed; inset: 0; z-index: 2000; pointer-events: none; }
+#recorrido[hidden] { display: none; }
+.rec-tarjeta {
+  pointer-events: auto;
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(440px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow-y: auto;
+  background: white; border-radius: 16px; padding: 20px 24px 16px;
+  border-top: 8px solid var(--c, var(--acento));
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.rec-tarjeta.entra { animation: entra .3s ease-out; }
+@keyframes entra { from { opacity: .3; } to { opacity: 1; } }
+.rec-arriba { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--suave); font-size: 13px; font-weight: 600; }
+#rec-puntos { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+#rec-puntos i { width: 8px; height: 8px; border-radius: 50%; background: var(--borde); }
+#rec-puntos i.visto { background: var(--gris); }
+#rec-puntos i.actual { background: var(--c, var(--acento)); transform: scale(1.3); }
+.rec-ilustrativo { margin-top: 8px; font-size: 12.5px; font-weight: 600; color: #8a5a00; background: #fff6e5; border-radius: 6px; padding: 4px 8px; display: inline-block; }
+.rec-cifra-fila { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+#rec-cifra { font-size: 104px; font-weight: 800; line-height: 1; color: var(--c, var(--acento)); font-variant-numeric: tabular-nums; letter-spacing: -2px; }
+#rec-unidad { font-size: 20px; font-weight: 600; color: var(--texto); }
+#rec-titulo { font-size: 20px; margin: 10px 0 6px; display: block; }
+#rec-detalle { margin: 0; padding-left: 18px; color: var(--texto); line-height: 1.5; font-size: 14.5px; }
+#rec-detalle li { margin: 3px 0; }
+.rec-botones { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; margin-top: 16px; }
+.rec-botones button { min-height: 48px; font-size: 15px; font-weight: 600; margin: 0; width: 100%; }
+#rec-saltar { margin: 8px auto 0; text-align: center; min-height: 40px; color: var(--suave); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---- Pantalla pequeña: mapa arriba, panel abajo; la tarjeta del recorrido sube desde abajo ---- */
+@media (max-width: 700px) {
+  body { flex-direction: column; }
+  #mapa { flex: none; height: 45%; order: -1; }
+  #panel { width: 100%; height: 55%; border-right: none; border-top: 1px solid var(--borde); padding: 12px 16px 20px; }
+  .rec-tarjeta {
+    left: 0; right: 0; top: auto; bottom: 0; transform: none; width: 100%;
+    max-height: 60%; border-radius: 16px 16px 0 0; padding: 14px 16px 10px;
+  }
+  #rec-cifra { font-size: 96px; }
+  #rec-unidad { font-size: 18px; }
+  #rec-titulo { font-size: 18px; margin-top: 6px; }
+  #rec-detalle { font-size: 14px; }
+}
