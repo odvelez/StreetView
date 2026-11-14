@@ -33,6 +33,18 @@ Plan de pruebas: [blanco_plan_de_pruebas.md](blanco_plan_de_pruebas.md).
 | **H10** | `python herramientas/plan_etapas.py --obra … > salida.txt` en Windows | Acentos bien | «m�nimo», «desv�o»: con la salida redirigida, Python usa cp1252. Los archivos de `resultados/` sí salen bien en UTF-8 | **Karel** (`herramientas/plan_etapas.py`): `sys.stdout.reconfigure(encoding="utf-8")`. Menor |
 | **H11** | Informe de la terminal de la calle 72 | «1 etapa», «1 paso peatonal provisional» | «en **1 etapas**», «**1 pasos peatonales** provisionales» (Karel ya lo anotó) | **Karel** (`herramientas/plan_etapas.py`). Menor |
 
+## B2: qué se corrigió y qué se devolvió
+
+| Hallazgo | Estado |
+|---|---|
+| H5, H6, H7 | **Corregido** en B3 (`app.py`), con pruebas en `tests/test_app_robustez.py` |
+| H8 | **Corregido para la repetición** (caché de B3: la segunda vez El Salao tarda 5 ms en vez de 16 s). El primer cálculo sigue en unos 15 a 40 s |
+| H3, H4, H10, H11 | **Devuelto a Karel** (`src/etapas.py`, `herramientas/plan_etapas.py`); textos propuestos en `blanco_textos.md` |
+| H2 | **Devuelto a Lobo** (`web/index.html`) |
+| H1, H9 | **Para Oscar** (decisión sobre un dato de OpenStreetMap y sobre el commit «aaaskks») |
+
+No se cambió ninguna cifra ni ningún campo del JSON (solo se **agregaron** `aviso_zona` y `en_cache`).
+
 Los textos con jerga o poco claros (por ejemplo «algoritmo de Dijkstra» en el panel) van en
 [blanco_textos.md](blanco_textos.md) (B4).
 
