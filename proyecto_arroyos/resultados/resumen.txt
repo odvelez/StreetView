@@ -10,6 +10,8 @@ PEATONES (grafo no dirigido)
   Lluvia                         1238       70      10.9      763         -
   Lluvia + puente peatonal       1195       26       2.0      440         -
   Candidatos evaluados: 50
+  Pares sin camino: 0 con lluvia -> 0 con medida (0 recuperados)
+  Desvío medio sobre los mismos 14400 pares que tenían camino con lluvia: 69.7 m -> 26.1 m
   1. Calle 75D x Carrera 21A  <->  Calle 76 x Carrera 21  (paso nuevo, 48 m)  -> desvío 49 m
   2. Calle 66 x Carrera 22A  <->  Calle 67B x Carrera 22D  (cruce de la Carrera 22A, 173 m)  -> desvío 32 m
   3. Calle 67 x Carrera 23  <->  Carrera 22D  (cruce de la Calle 67, 132 m)  -> desvío 26 m
@@ -20,6 +22,8 @@ VEHÍCULOS (grafo dirigido, respeta sentidos viales)
   Lluvia                         1427      138      23.4     1580       240
   Lluvia + doble sentido         1421      132      23.4     1580       120
   Candidatos evaluados: 151
+  Pares sin camino: 240 con lluvia -> 120 con medida (120 recuperados)
+  Desvío medio sobre los mismos 28560 pares que tenían camino con lluvia: 137.5 m -> 132.3 m
   1. calle sin nombre: esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)  -> desvío 138 m
   2. calle sin nombre: Avenida Murillo -> Carrera 16 Sur (112 m)  -> desvío 132 m
 

@@ -1,0 +1,282 @@
+{
+ "zona (sin la orilla) / barrera_total": {
+  "modo": "barrera_total",
+  "esquinas": 1086,
+  "componentes": 7,
+  "componentes_mezcladas": 0,
+  "mayores": [
+   {
+    "esquinas": 567,
+    "lado_1": 567,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 508,
+    "lado_1": 0,
+    "lado_menos_1": 508
+   },
+   {
+    "esquinas": 5,
+    "lado_1": 5,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 3,
+    "lado_1": 3,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 1,
+    "lado_1": 1,
+    "lado_menos_1": 0
+   }
+  ],
+  "acuerdo_pct": 100.0,
+  "desacuerdos": 0,
+  "ejemplos": []
+ },
+ "zona (sin la orilla) / lluvia": {
+  "modo": "lluvia",
+  "esquinas": 1086,
+  "componentes": 7,
+  "componentes_mezcladas": 0,
+  "mayores": [
+   {
+    "esquinas": 567,
+    "lado_1": 567,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 508,
+    "lado_1": 0,
+    "lado_menos_1": 508
+   },
+   {
+    "esquinas": 5,
+    "lado_1": 5,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 3,
+    "lado_1": 3,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 1,
+    "lado_1": 1,
+    "lado_menos_1": 0
+   }
+  ],
+  "acuerdo_pct": 100.0,
+  "desacuerdos": 0,
+  "ejemplos": []
+ },
+ "todas a menos de 400 m (con la orilla) / barrera_total": {
+  "modo": "barrera_total",
+  "esquinas": 1229,
+  "componentes": 74,
+  "componentes_mezcladas": 0,
+  "mayores": [
+   {
+    "esquinas": 615,
+    "lado_1": 615,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 537,
+    "lado_1": 0,
+    "lado_menos_1": 537
+   },
+   {
+    "esquinas": 5,
+    "lado_1": 5,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 2,
+    "lado_1": 2,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 1,
+    "lado_1": 0,
+    "lado_menos_1": 1
+   }
+  ],
+  "acuerdo_pct": 100.0,
+  "desacuerdos": 0,
+  "ejemplos": []
+ },
+ "todas a menos de 400 m (con la orilla) / lluvia": {
+  "modo": "lluvia",
+  "esquinas": 1229,
+  "componentes": 73,
+  "componentes_mezcladas": 1,
+  "mayores": [
+   {
+    "esquinas": 1152,
+    "lado_1": 615,
+    "lado_menos_1": 537
+   },
+   {
+    "esquinas": 5,
+    "lado_1": 5,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 2,
+    "lado_1": 2,
+    "lado_menos_1": 0
+   },
+   {
+    "esquinas": 1,
+    "lado_1": 0,
+    "lado_menos_1": 1
+   },
+   {
+    "esquinas": 1,
+    "lado_1": 1,
+    "lado_menos_1": 0
+   }
+  ],
+  "acuerdo_pct": 56.31,
+  "desacuerdos": 537,
+  "ejemplos": [
+   {
+    "esquina": "11011024237",
+    "posicion": [
+     10.9171,
+     -74.7938973
+    ],
+    "nombre": "Calle 56A x Carrera 18",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11011198572",
+    "posicion": [
+     10.9174816,
+     -74.7993566
+    ],
+    "nombre": "Calle 63",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11011198573",
+    "posicion": [
+     10.9179586,
+     -74.8003559
+    ],
+    "nombre": "Calle 18C x Calle 65",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11011198578",
+    "posicion": [
+     10.9192613,
+     -74.7987515
+    ],
+    "nombre": "Calle 63",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11011216854",
+    "posicion": [
+     10.9198214,
+     -74.8002734
+    ],
+    "nombre": "Calle 64A",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11011216855",
+    "posicion": [
+     10.919825,
+     -74.7999894
+    ],
+    "nombre": "Calle 64",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11011216856",
+    "posicion": [
+     10.9198213,
+     -74.7996917
+    ],
+    "nombre": "Calle 63A",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11011216861",
+    "posicion": [
+     10.9193352,
+     -74.8014107
+    ],
+    "nombre": "Carrera 22D",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11013260879",
+    "posicion": [
+     10.9178762,
+     -74.8139131
+    ],
+    "nombre": "Calle 78D",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11013260880",
+    "posicion": [
+     10.9179204,
+     -74.8139555
+    ],
+    "nombre": "esquina cerca de Calle 78D",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11013260891",
+    "posicion": [
+     10.9175334,
+     -74.811412
+    ],
+    "nombre": "Calle 77 x Carrera 21C",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11013260892",
+    "posicion": [
+     10.9173597,
+     -74.8116314
+    ],
+    "nombre": "Calle 77D x Carrera 21C",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11554658353",
+    "posicion": [
+     10.9171765,
+     -74.8095354
+    ],
+    "nombre": "Carrera 19",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11554658757",
+    "posicion": [
+     10.9165007,
+     -74.8033381
+    ],
+    "nombre": "esquina cerca de Carrera 18",
+    "lado_producto_cruz": -1
+   },
+   {
+    "esquina": "11554658772",
+    "posicion": [
+     10.9180485,
+     -74.8029174
+    ],
+    "nombre": "Carrera 19 x Carrera 20",
+    "lado_producto_cruz": -1
+   }
+  ]
+ }
+}

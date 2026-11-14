@@ -1,0 +1,62 @@
+PLAN DE CANALIZACIÓN POR ETAPAS: Arroyo El Salao, Soledad (caso de estudio)
+Cauce de 2386 m en 3 etapas de hasta 1000 m; un puente peatonal temporal por cada 500 m de obra (mínimo uno).
+En total: 5 puentes peatonales, 3 cambios de sentido, 18 rutas alternas y 15 esquinas para controlar (14 sin semáforo registrado).
+Durante cada etapa se cierran todos los tramos que tocan el cauce dentro del tramo en obra, incluidos los puentes existentes.
+
+ETAPA 1: metro 0 al 975 (975 m)
+  Cierra 24 cruces (3 son puentes existentes); 46 tramos en total.
+  A pie: desvío medio 387 m -> 48 m con 2 de 2 puentes (máximo 1480 -> 583 m).
+     puente 1: Calle 76A 1 x Carrera 22B <-> Calle 76A x Carrera 22A (paso nuevo, 54 m, metro 644 del cauce)
+     puente 2: Carrera 21C <-> Calle 78D x Carrera 21C (paso nuevo, 29 m, metro 246 del cauce)
+  En carro: desvío medio 332 m; pares sin camino 60 -> 0; desvío medio sobre los mismos pares 332 -> 332 m.
+     doble sentido 1: Calle 77, Calle 77 -> Calle 77 x Carrera 22B (16 m, metro 431)
+     ruta alterna Calle 77             a pie 16 -> 1554
+     ruta alterna esquina cerca de Calle 78F a pie 8 -> 1065
+     ruta alterna Calle 75C            a pie 101 -> 741
+     ruta alterna Calle 75B            a pie 108 -> 550
+     ruta alterna Calle 75             carro 118 -> 483   a pie 83 -> 515
+     ruta alterna Calle 74             carro 152 -> 371
+     esquina a controlar: Calle 73 x Carrera 19A (3545 recorridos desviados, 61.1 %, SIN semáforo registrado)
+     esquina a controlar: Calle 73 x Carrera 21 (3521 recorridos desviados, 60.7 %, SIN semáforo registrado)
+     esquina a controlar: Calle 73A x Carrera 21 (3521 recorridos desviados, 60.7 %, SIN semáforo registrado)
+     esquina a controlar: Calle 73B x Carrera 21 (3521 recorridos desviados, 60.7 %, SIN semáforo registrado)
+     esquina a controlar: Calle 74 x Carrera 21 (3521 recorridos desviados, 60.7 %, SIN semáforo registrado)
+
+ETAPA 2: metro 975 al 1825 (850 m)
+  Cierra 24 cruces (1 son puentes existentes); 56 tramos en total.
+  A pie: desvío medio 129 m -> 28 m con 2 de 2 puentes (máximo 797 -> 372 m).
+     puente 1: Calle 72 <-> Calle 72 (cruce de la Calle 72, 11 m, metro 1181 del cauce)
+     puente 2: Calle 67 x Carrera 23 <-> Carrera 22D (cruce de la Calle 67, 132 m, metro 1608 del cauce)
+  En carro: desvío medio 287 m; pares sin camino 0 -> 0; desvío medio sobre los mismos pares 287 -> 279 m.
+     doble sentido 1: Avenida Circunvalar, Avenida Circunvalar -> Avenida Circunvalar (187 m, metro 1829)
+     ruta alterna Arroyo El Salao      carro 102 -> 1776   a pie 102 -> 1137
+     ruta alterna Carrera 22A          carro 173 -> 1761   a pie 173 -> 725
+     ruta alterna Carrera 22D          carro 169 -> 1675   a pie 169 -> 1164
+     ruta alterna Calle 72             carro 11 -> 897   a pie 11 -> 760
+     ruta alterna Calle 67A            carro 153 -> 1035   a pie 153 -> 1025
+     ruta alterna Calle 67             carro 189 -> 1004   a pie 132 -> 790
+     esquina a controlar: Calle 75 x Carrera 21 (4410 recorridos desviados, 72.5 %, SIN semáforo registrado)
+     esquina a controlar: Calle 75 x Carrera 21A (4410 recorridos desviados, 72.5 %, SIN semáforo registrado)
+     esquina a controlar: Calle 74 x Carrera 19A (3230 recorridos desviados, 53.1 %, SIN semáforo registrado)
+     esquina a controlar: Calle 74 x Carrera 21 (3230 recorridos desviados, 53.1 %, SIN semáforo registrado)
+     esquina a controlar: Carrera 21 (3230 recorridos desviados, 53.1 %, SIN semáforo registrado)
+
+ETAPA 3: metro 1825 al 2386 (561 m)
+  Cierra 26 cruces (5 son puentes existentes); 27 tramos en total.
+  A pie: desvío medio 219 m -> 56 m con 1 de 1 puentes (máximo 987 -> 478 m).
+     puente 1: esquina cerca de Calle 62 <-> Calle 62 x Carrera22B (cruce de la esquina cerca de Calle 62, 38 m, metro 1995 del cauce)
+  En carro: desvío medio 293 m; pares sin camino 644 -> 584; desvío medio sobre los mismos pares 293 -> 293 m.
+     doble sentido 1: Avenida Murillo, Avenida Murillo -> Avenida Murillo x Carrera 22A (52 m, metro 1880)
+     ruta alterna Calle 61             carro 120 -> 1895   a pie 120 -> 1107
+     ruta alterna esquina cerca de Calle 62 a pie 38 -> 1115
+     ruta alterna Avenida Murillo      a pie 14 -> 992
+     ruta alterna esquina sin nombre   a pie 14 -> 986
+     ruta alterna Calle 60             carro 132 -> sin ruta   a pie 132 -> 1036
+     ruta alterna Calle 59A            carro 177 -> sin ruta   a pie 46 -> 918
+     esquina a controlar: Calle 60 x Carrera 18 (3755 recorridos desviados, 72.9 %, SIN semáforo registrado)
+     esquina a controlar: Calle 63 x Carrera 18 (3243 recorridos desviados, 63.0 %, con semáforo)
+     esquina a controlar: Calle 59 x Carrera 18 (3193 recorridos desviados, 62.0 %, SIN semáforo registrado)
+     esquina a controlar: Carrera 18 (3101 recorridos desviados, 60.2 %, SIN semáforo registrado)
+     esquina a controlar: Calle 61 x Carrera 18 (3084 recorridos desviados, 59.9 %, SIN semáforo registrado)
+
+LÍMITES: no hay datos de volumen de tránsito (no se mide congestión, solo desvíos en metros y cuántos recorridos desviados pasan por cada esquina); no se diseñan carriles ni tiempos de semáforo; todo debe verificarse en terreno.

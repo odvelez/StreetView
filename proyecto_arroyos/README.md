@@ -76,8 +76,17 @@ src/geometria.py            cruces calle–arroyo, distancia y lado del cauce
 src/analisis.py             escenarios, desvíos, candidatos y selección voraz
 src/fuente.py               elige de dónde salen las calles de cada zona
 src/osm.py                  lectura y descarga de OpenStreetMap
+src/comparacion.py          heurística voraz contra fuerza bruta (k = 2)
+src/control.py              control del lado del arroyo por componentes conexas
+src/etapas.py               plan de canalización por etapas (cuántas etapas, puentes, cambios de sentido, rutas, esquinas a controlar, pasos para mostrar)
 tests/test_proyecto.py      casos de prueba
+tests/test_mejoras.py       pruebas del desvío fijo, la fuerza bruta y el control de lados
+tests/test_etapas.py         pruebas del plan por etapas
 herramientas/descargar_mapa.py   vuelve a descargar el mapa (solo para actualizarlo)
+herramientas/experimentos.py     intermediación, sensibilidad, control, histograma y voraz contra óptimo
+herramientas/diagnostico_sin_camino.py   por qué hay pares de vehículos sin camino con lluvia
+herramientas/plan_etapas.py        plan de canalización por etapas desde la terminal (resultados/plan_etapas.txt y .json)
+resultados/informe_cambios.md    qué se cambió, qué se encontró y qué falta
 documento/main.tex          documento en LaTeX
 ```
 

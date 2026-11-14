@@ -1,0 +1,56 @@
+{
+ "resumen": {
+  "peatones": {
+   "lluvia": {
+    "pares_con_camino": 14400,
+    "sin_camino": 0,
+    "media": 69.7,
+    "mediana": 26.7,
+    "p90": 212.6,
+    "p99": 490.7,
+    "maximo": 763.4,
+    "mejor_que_seco_pct": 0.0,
+    "sin_desvio_pct": 29.3,
+    "mayor_200_pct": 10.9
+   },
+   "medidas": {
+    "pares_con_camino": 14400,
+    "sin_camino": 0,
+    "media": 26.1,
+    "mediana": 1.1,
+    "p90": 93.0,
+    "p99": 245.4,
+    "maximo": 440.3,
+    "mejor_que_seco_pct": 9.6,
+    "sin_desvio_pct": 38.2,
+    "mayor_200_pct": 2.0
+   }
+  },
+  "vehiculos": {
+   "lluvia": {
+    "pares_con_camino": 28560,
+    "sin_camino": 240,
+    "media": 137.5,
+    "mediana": 33.7,
+    "p90": 404.2,
+    "p99": 1114.9,
+    "maximo": 1579.7,
+    "mejor_que_seco_pct": 0.0,
+    "sin_desvio_pct": 32.8,
+    "mayor_200_pct": 23.4
+   },
+   "medidas": {
+    "pares_con_camino": 28680,
+    "sin_camino": 120,
+    "media": 132.5,
+    "mediana": 33.7,
+    "p90": 404.2,
+    "p99": 1115.4,
+    "maximo": 1579.7,
+    "mejor_que_seco_pct": 0.4,
+    "sin_desvio_pct": 32.5,
+    "mayor_200_pct": 23.4
+   }
+  }
+ }
+}

@@ -26,6 +26,7 @@ FRACCION_SOBRE = 0.6   # fracción de la calle que debe ir por el cauce para dec
 UMBRAL_M = 200         # desvío que consideramos "grande"
 LUZ_MAX_M = 60         # longitud máxima de un puente peatonal nuevo (donde no hay calle)
 MAX_POR_LADO = 120     # esquinas de muestra por lado, para que el cálculo tarde segundos
+DESFASE_MUESTRA = 0    # corre la muestra: 0 es la oficial; otros valores sirven para medir su sensibilidad
 MAX_RUTAS = 15
 MEJORA_MIN = 0.02     # una medida se recomienda solo si baja el desvío medio al menos 2 %
 
@@ -93,7 +94,7 @@ def zona(red, arroyo, radio, g_pea, g_veh, inundadas):
         if len(lista) <= MAX_POR_LADO:
             return lista
         paso = len(lista) / MAX_POR_LADO
-        return [lista[int(i * paso)] for i in range(MAX_POR_LADO)]
+        return [lista[(int(i * paso) + DESFASE_MUESTRA) % len(lista)] for i in range(MAX_POR_LADO)]
 
     return lados, {k: muestra(v) for k, v in lados.items()}, info
 
@@ -127,6 +128,10 @@ class Metricas:
     desvio_medio_m: float
     pct_mayor_200m: float
     desvio_max_m: float
+    # Desvío medio solo sobre los pares que ya tenían camino con lluvia, antes de cualquier
+    # medida. Es un conjunto fijo: agregar una medida nunca lo hace subir, mientras que
+    # `desvio_medio_m` cambia de conjunto cuando una medida devuelve el camino a un par.
+    desvio_fijo_m: float = 0.0
 
     def objetivo(self):
         """Primero importa que nadie quede sin camino; después, el desvío medio."""
@@ -142,16 +147,19 @@ def tablas(g, origenes, objetivos=None):
     return {o: dijkstra(g, o, objetivos)[0] for o in origenes}
 
 
-def medir(F, R, base, pares, arcos=()):
+def medir(F, R, base, pares, arcos=(), ref=None):
     """Métricas de los pares, opcionalmente agregando arcos nuevos (x, y, peso).
+
+    `ref` es el conjunto de pares con camino en el escenario de referencia (lluvia sin
+    medidas). Con él se calcula `desvio_fijo_m`; sin él, es igual a `desvio_medio_m`.
 
     Con un arco nuevo x -> y, el camino a -> b puede ser a ~> x -> y ~> b, así que
         d_nuevo(a, b) = min(d(a, b), d(a, x) + peso + d(y, b))
     y no hace falta repetir Dijkstra: d(a, x) sale de la tabla F (desde a) y
     d(y, b) de la tabla R (Dijkstra desde b en el grafo invertido).
     """
-    n = sin = mayores = 0
-    suma = suma_desvio = maximo = 0.0
+    n = sin = mayores = n_ref = 0
+    suma = suma_desvio = suma_ref = maximo = 0.0
     for a, b in pares:
         Fa = F[a]
         d = Fa.get(b, INF)
@@ -168,10 +176,14 @@ def medir(F, R, base, pares, arcos=()):
         desvio = d - base[a][b]
         suma += d
         suma_desvio += desvio
+        if ref is None or (a, b) in ref:
+            n_ref += 1
+            suma_ref += desvio
         mayores += desvio > UMBRAL_M
         maximo = max(maximo, desvio)
     c = max(n, 1)
-    return Metricas(len(pares), sin, suma / c, suma_desvio / c, 100 * mayores / c, maximo)
+    return Metricas(len(pares), sin, suma / c, suma_desvio / c, 100 * mayores / c, maximo,
+                    suma_ref / max(n_ref, 1))
 
 
 class Evaluador:
@@ -285,28 +297,38 @@ def actualizar_tablas(g, F, R, arcos, objetivos):
     return F2, R2
 
 
-def voraz(g, origenes, base, pares, candidatos, k, F=None, R=None):
+def voraz(g, origenes, base, pares, candidatos, k, F=None, R=None, mejora_min=MEJORA_MIN, incompatibles=None):
     """Heurística voraz: k rondas; en cada una se agrega el candidato que más mejora.
 
     `candidatos` es una lista de (info, arcos). F y R son las tablas de Dijkstra del
     grafo inicial (si ya se calcularon, no se repiten). Devuelve [(info, metricas)]:
     las métricas de cada elegido son exactas para el grafo con todos los elegidos
     hasta ese momento, así que las del último son las del escenario final.
+
+    `mejora_min`: fracción mínima en que debe bajar el desvío medio (por defecto 2 %).
+    `incompatibles(info_elegido, info_candidato)`: si devuelve True, el candidato se descarta
+    por estar demasiado cerca de uno ya elegido (para repartir los puentes a lo largo del cauce).
     """
     g = g.copia()
     objetivos = set(origenes) | extremos(candidatos)
-    elegidos, usados = [], set()
+    elegidos, usados, ref = [], set(), None
     for _ in range(k):
         if F is None:
             F = tablas(g, origenes, objetivos)
             R = F if not g.dirigido else tablas(g.invertido(), origenes, objetivos)
+        if ref is None:
+            ref = {(a, b) for a, b in pares if F[a].get(b, INF) < INF}
         ev = Evaluador(F, R, base, pares)
         desvio = ev.suma / max(ev.n, 1)
         # Para recomendar algo debe devolver el camino a alguien o bajar el desvío al menos 2 %.
-        umbral = (ev.sin, desvio * (1 - MEJORA_MIN) - 0.5)
+        # Debe bajar al menos mejora_min del desvío más 0,5 m. Con abs() también sirve si el
+        # desvío medio es negativo (los pasos nuevos pueden quedar más cortos que la red seca).
+        umbral = (ev.sin, desvio - (abs(desvio) * mejora_min + 0.5))
         mejor = None
         for i, (info, arcos) in enumerate(candidatos):
             if i in usados:
+                continue
+            if incompatibles and any(incompatibles(e, info) for e, _ in elegidos):
                 continue
             obj = ev.objetivo(arcos)
             if obj < umbral and (mejor is None or obj < mejor[0]):
@@ -315,7 +337,7 @@ def voraz(g, origenes, base, pares, candidatos, k, F=None, R=None):
             break
         _, i, info, arcos = mejor
         # Métricas completas (máximo, % > 200 m) solo para el elegido.
-        elegidos.append((info, medir(F, R, base, pares, arcos)))
+        elegidos.append((info, medir(F, R, base, pares, arcos, ref)))
         usados.add(i)
         if len(elegidos) < k:
             F, R = actualizar_tablas(g, F, R, arcos, objetivos)
@@ -469,7 +491,9 @@ def extra(dato):
 
 
 # ------------------------------------------------------------------ principal
-def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrados=()):
+def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrados=(), contexto=None):
+    """Análisis completo. Si `contexto` es un dict, se llena con los grafos, tablas y candidatos
+    que se usaron (para los experimentos de herramientas/); no cambia el resultado."""
     lineas = orientar(lineas)
     arroyo = Arroyo(lineas, red.plano)
     contacto, inundadas = clasificar(red, arroyo, set(abiertos), set(cerrados))
@@ -503,7 +527,8 @@ def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrad
         return resultado
 
     def propuestas(elegidos):
-        return [dict(orden=i + 1, **info, desvio_medio_m=round(m.desvio_medio_m, 1), sin_camino=m.sin_camino)
+        return [dict(orden=i + 1, **info, desvio_medio_m=round(m.desvio_medio_m, 1), desvio_fijo_m=round(m.desvio_fijo_m, 1),
+                    sin_camino=m.sin_camino)
                 for i, (info, m) in enumerate(elegidos)]
 
     # Cada tabla de Dijkstra se calcula una sola vez y se para al llegar a los nodos
@@ -518,12 +543,13 @@ def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrad
     cand_p = candidatos_puente_peatonal(red, arroyo, cruces_p, lados_todos, pea_lluvia, luz_max)
     # Con lluvia hacen falta los dos lados: d(y, b) sale de la tabla de b (no dirigido: R = F).
     Fl = tablas(pea_lluvia, origenes, objetivos=set(origenes) | extremos(cand_p))
-    elegidos_p, _ = voraz(pea_lluvia, origenes, Fs, pares_p, cand_p, k, F=Fl, R=Fl)
+    elegidos_p, g_final_p = voraz(pea_lluvia, origenes, Fs, pares_p, cand_p, k, F=Fl, R=Fl)
     lluvia_p = medir(Fl, Fl, Fs, pares_p)
+    final_p = elegidos_p[-1][1] if elegidos_p else lluvia_p
     resultado["peatones"] = dict(
         seco=asdict(medir(Fs, Fs, Fs, pares_p)), lluvia=asdict(lluvia_p),
-        con_medida=asdict(elegidos_p[-1][1] if elegidos_p else lluvia_p), candidatos=len(cand_p),
-        propuestas=propuestas(elegidos_p))
+        con_medida=asdict(final_p), candidatos=len(cand_p),
+        recuperados=lluvia_p.sin_camino - final_p.sin_camino, propuestas=propuestas(elegidos_p))
 
     # ---- Vehículos: dirigido, pares en los dos sentidos.
     pares_v = [(a, b) for a in lados[1] for b in lados[-1]] + [(b, a) for a in lados[1] for b in lados[-1]]
@@ -533,15 +559,24 @@ def analizar(red, lineas, radio=400, luz_max=LUZ_MAX_M, k=1, abiertos=(), cerrad
     objetivos_v = set(origenes) | extremos(cand_v)
     Vl = tablas(veh_lluvia, origenes, objetivos_v)
     Rl = tablas(veh_lluvia.invertido(), origenes, objetivos_v)
-    elegidos_v, _ = voraz(veh_lluvia, origenes, Vs, pares_v, cand_v, k, F=Vl, R=Rl)
+    elegidos_v, g_final_v = voraz(veh_lluvia, origenes, Vs, pares_v, cand_v, k, F=Vl, R=Rl)
     lluvia_v = medir(Vl, Rl, Vs, pares_v)
+    final_v = elegidos_v[-1][1] if elegidos_v else lluvia_v
     resultado["vehiculos"] = dict(
         seco=asdict(medir(Vs, Vs, Vs, pares_v)), lluvia=asdict(lluvia_v),
-        con_medida=asdict(elegidos_v[-1][1] if elegidos_v else lluvia_v), candidatos=len(cand_v),
-        propuestas=propuestas(elegidos_v))
+        con_medida=asdict(final_v), candidatos=len(cand_v),
+        recuperados=lluvia_v.sin_camino - final_v.sin_camino, propuestas=propuestas(elegidos_v))
     if not cand_v:
         avisos.append("En OpenStreetMap no hay calles de un solo sentido registradas cerca de este "
                       "arroyo, así que no se puede proponer un cambio de sentido.")
 
     resultado["rutas"] = rutas_alternas(red, cruces_v, cruces_p, veh_lluvia, pea_lluvia)
+    if contexto is not None:
+        contexto.update(
+            red=red, arroyo=arroyo, contacto=contacto, inundadas=inundadas, lados=lados,
+            lados_todos=lados_todos, origenes=origenes,
+            peatones=dict(seco=pea_seco, lluvia=pea_lluvia, final=g_final_p, F_seco=Fs, F_lluvia=Fl,
+                          pares=pares_p, candidatos=cand_p),
+            vehiculos=dict(seco=veh_seco, lluvia=veh_lluvia, final=g_final_v, F_seco=Vs, F_lluvia=Vl,
+                           R_lluvia=Rl, pares=pares_v, candidatos=cand_v))
     return resultado

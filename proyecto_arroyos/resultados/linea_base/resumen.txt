@@ -1,0 +1,41 @@
+ARROYO: Arroyo El Salao, Soledad (caso de estudio)
+Longitud del cauce analizado: 2386 m
+Red vial: 5859 esquinas, 8827 tramos (OpenStreetMap, descargado con Overpass)
+Tramos bloqueados con lluvia: 120   Puentes: 9   Esquinas dentro del cauce: 68
+Zona de estudio (a 400 m del cauce): 578 en el lado norte, 508 en el lado sur; muestra de 120, 120 por lado
+
+PEATONES (grafo no dirigido)
+  Escenario                   Media m   Desvío  % >200 m    Máx m  Sin cam.
+  Seco                           1168        0       0.0        0         -
+  Lluvia                         1238       70      10.9      763         -
+  Lluvia + puente peatonal       1195       26       2.0      440         -
+  Candidatos evaluados: 50
+  1. Calle 75D x Carrera 21A  <->  Calle 76 x Carrera 21  (paso nuevo, 48 m)  -> desvío 49 m
+  2. Calle 66 x Carrera 22A  <->  Calle 67B x Carrera 22D  (cruce de la Carrera 22A, 173 m)  -> desvío 32 m
+  3. Calle 67 x Carrera 23  <->  Carrera 22D  (cruce de la Calle 67, 132 m)  -> desvío 26 m
+
+VEHÍCULOS (grafo dirigido, respeta sentidos viales)
+  Escenario                   Media m   Desvío  % >200 m    Máx m  Sin cam.
+  Seco                           1288        0       0.0        0         -
+  Lluvia                         1427      138      23.4     1580       240
+  Lluvia + doble sentido         1421      132      23.4     1580       120
+  Candidatos evaluados: 151
+  1. calle sin nombre: esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)  -> desvío 138 m
+  2. calle sin nombre: Avenida Murillo -> Carrera 16 Sur (112 m)  -> desvío 132 m
+
+RUTAS ALTERNAS (cruces que la lluvia cierra; metros en seco -> con lluvia)
+  Calle 61               carro 120 -> 1895   a pie 120 -> 217
+  Arroyo El Salao        carro 102 -> 1107   a pie 102 -> 957
+  Carrera 22D            carro 102 -> 1107   a pie 106 -> 934
+  Calle 59A              carro 177 -> 1155   a pie 46 -> 576
+  Carrera 22A            carro 173 -> 1092   a pie 173 -> 725
+  Calle 60               carro 132 -> 1048   a pie 132 -> 288
+  Calle 67A              carro 153 -> 1035   a pie 153 -> 1022
+  Calle 75B              a pie 108 -> 937
+  Calle 75               carro 118 -> 869   a pie 83 -> 903
+  Calle 67               carro 189 -> 1004   a pie 132 -> 790
+  Calle 75C              a pie 101 -> 835
+  Calle 74A              a pie 84 -> 688
+  Calle 74B              a pie 118 -> 721
+  Calle 74               carro 103 -> 652   a pie 103 -> 652
+  Calle 58A              a pie 50 -> 529

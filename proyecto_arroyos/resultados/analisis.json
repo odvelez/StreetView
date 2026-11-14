@@ -2700,7 +2700,8 @@
    "distancia_media_m": 1168.4615138888837,
    "desvio_medio_m": 0.0,
    "pct_mayor_200m": 0.0,
-   "desvio_max_m": 0.0
+   "desvio_max_m": 0.0,
+   "desvio_fijo_m": 0.0
   },
   "lluvia": {
    "pares": 14400,
@@ -2708,7 +2709,8 @@
    "distancia_media_m": 1238.1271180555568,
    "desvio_medio_m": 69.66560416666726,
    "pct_mayor_200m": 10.909722222222221,
-   "desvio_max_m": 763.3999999999999
+   "desvio_max_m": 763.3999999999999,
+   "desvio_fijo_m": 69.66560416666726
   },
   "con_medida": {
    "pares": 14400,
@@ -2716,9 +2718,11 @@
    "distancia_media_m": 1194.5920091776356,
    "desvio_medio_m": 26.130495288760997,
    "pct_mayor_200m": 1.9861111111111112,
-   "desvio_max_m": 440.3275448163866
+   "desvio_max_m": 440.3275448163866,
+   "desvio_fijo_m": 26.130495288760997
   },
   "candidatos": 50,
+  "recuperados": 0,
   "propuestas": [
    {
     "orden": 1,
@@ -2738,6 +2742,7 @@
      ]
     ],
     "desvio_medio_m": 48.8,
+    "desvio_fijo_m": 48.8,
     "sin_camino": 0
    },
    {
@@ -2774,6 +2779,7 @@
      ]
     ],
     "desvio_medio_m": 31.9,
+    "desvio_fijo_m": 31.9,
     "sin_camino": 0
    },
    {
@@ -2806,6 +2812,7 @@
      ]
     ],
     "desvio_medio_m": 26.1,
+    "desvio_fijo_m": 26.1,
     "sin_camino": 0
    }
   ]
@@ -2817,7 +2824,8 @@
    "distancia_media_m": 1287.6661909722307,
    "desvio_medio_m": 0.0,
    "pct_mayor_200m": 0.0,
-   "desvio_max_m": 0.0
+   "desvio_max_m": 0.0,
+   "desvio_fijo_m": 0.0
   },
   "lluvia": {
    "pares": 28800,
@@ -2825,7 +2833,8 @@
    "distancia_media_m": 1427.1806162465014,
    "desvio_medio_m": 137.51400210084367,
    "pct_mayor_200m": 23.43487394957983,
-   "desvio_max_m": 1579.7000000000005
+   "desvio_max_m": 1579.7000000000005,
+   "desvio_fijo_m": 137.51400210084367
   },
   "con_medida": {
    "pares": 28800,
@@ -2833,9 +2842,11 @@
    "distancia_media_m": 1421.3978661087895,
    "desvio_medio_m": 132.45240237099432,
    "pct_mayor_200m": 23.37866108786611,
-   "desvio_max_m": 1579.7000000000005
+   "desvio_max_m": 1579.7000000000005,
+   "desvio_fijo_m": 132.3440651260544
   },
   "candidatos": 151,
+  "recuperados": 120,
   "propuestas": [
    {
     "orden": 1,
@@ -2854,6 +2865,7 @@
      ]
     ],
     "desvio_medio_m": 137.6,
+    "desvio_fijo_m": 137.5,
     "sin_camino": 120
    },
    {
@@ -2985,6 +2997,7 @@
      ]
     ],
     "desvio_medio_m": 132.5,
+    "desvio_fijo_m": 132.3,
     "sin_camino": 120
    }
   ]

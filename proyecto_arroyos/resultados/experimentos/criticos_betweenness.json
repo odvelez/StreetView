@@ -1,0 +1,534 @@
+{
+ "top_seco": [
+  {
+   "esquina": "1882408906",
+   "nombre": "Avenida Murillo x Carrera 18",
+   "valor": 0.179916,
+   "distancia_cauce_m": 292,
+   "en_zona": true,
+   "posicion": [
+    10.9171296,
+    -74.7992192
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408906"
+  },
+  {
+   "esquina": "2236701401",
+   "nombre": "Avenida Murillo x Carrera 18",
+   "valor": 0.165696,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.9171341,
+    -74.7990281
+   ],
+   "osm": "https://www.openstreetmap.org/node/2236701401"
+  },
+  {
+   "esquina": "5413354998",
+   "nombre": "Carrera 18",
+   "valor": 0.157766,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.9171328,
+    -74.7990864
+   ],
+   "osm": "https://www.openstreetmap.org/node/5413354998"
+  },
+  {
+   "esquina": "950517568",
+   "nombre": "Calle 56 x Carrera 18",
+   "valor": 0.154514,
+   "distancia_cauce_m": 421,
+   "en_zona": false,
+   "posicion": [
+    10.9171075,
+    -74.7933192
+   ],
+   "osm": "https://www.openstreetmap.org/node/950517568"
+  },
+  {
+   "esquina": "950442834",
+   "nombre": "Carrera 17D x Carrera 18",
+   "valor": 0.138927,
+   "distancia_cauce_m": 416,
+   "en_zona": false,
+   "posicion": [
+    10.9170899,
+    -74.7934642
+   ],
+   "osm": "https://www.openstreetmap.org/node/950442834"
+  },
+  {
+   "esquina": "1879842413",
+   "nombre": "Calle 60 x Carrera 18",
+   "valor": 0.134322,
+   "distancia_cauce_m": 279,
+   "en_zona": true,
+   "posicion": [
+    10.9171107,
+    -74.797227
+   ],
+   "osm": "https://www.openstreetmap.org/node/1879842413"
+  },
+  {
+   "esquina": "9247173693",
+   "nombre": "Calle 63 x Carrera 18",
+   "valor": 0.125394,
+   "distancia_cauce_m": 293,
+   "en_zona": true,
+   "posicion": [
+    10.9171273,
+    -74.7993535
+   ],
+   "osm": "https://www.openstreetmap.org/node/9247173693"
+  },
+  {
+   "esquina": "9274144973",
+   "nombre": "Calle 63 x Carrera 18",
+   "valor": 0.125055,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.9171308,
+    -74.7989286
+   ],
+   "osm": "https://www.openstreetmap.org/node/9274144973"
+  },
+  {
+   "esquina": "1882408402",
+   "nombre": "Calle 69 x Carrera 15A",
+   "valor": 0.124738,
+   "distancia_cauce_m": 555,
+   "en_zona": false,
+   "posicion": [
+    10.9136567,
+    -74.8030015
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408402"
+  },
+  {
+   "esquina": "11759103819",
+   "nombre": "Carrera 18",
+   "valor": 0.123666,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.917135,
+    -74.7989899
+   ],
+   "osm": "https://www.openstreetmap.org/node/11759103819"
+  }
+ ],
+ "top_lluvia": [
+  {
+   "esquina": "1882408906",
+   "nombre": "Avenida Murillo x Carrera 18",
+   "valor": 0.202186,
+   "distancia_cauce_m": 292,
+   "en_zona": true,
+   "posicion": [
+    10.9171296,
+    -74.7992192
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408906"
+  },
+  {
+   "esquina": "2236701401",
+   "nombre": "Avenida Murillo x Carrera 18",
+   "valor": 0.197976,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.9171341,
+    -74.7990281
+   ],
+   "osm": "https://www.openstreetmap.org/node/2236701401"
+  },
+  {
+   "esquina": "5413354998",
+   "nombre": "Carrera 18",
+   "valor": 0.177653,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.9171328,
+    -74.7990864
+   ],
+   "osm": "https://www.openstreetmap.org/node/5413354998"
+  },
+  {
+   "esquina": "950517568",
+   "nombre": "Calle 56 x Carrera 18",
+   "valor": 0.164332,
+   "distancia_cauce_m": 421,
+   "en_zona": false,
+   "posicion": [
+    10.9171075,
+    -74.7933192
+   ],
+   "osm": "https://www.openstreetmap.org/node/950517568"
+  },
+  {
+   "esquina": "1879842413",
+   "nombre": "Calle 60 x Carrera 18",
+   "valor": 0.150073,
+   "distancia_cauce_m": 279,
+   "en_zona": true,
+   "posicion": [
+    10.9171107,
+    -74.797227
+   ],
+   "osm": "https://www.openstreetmap.org/node/1879842413"
+  },
+  {
+   "esquina": "9274144973",
+   "nombre": "Calle 63 x Carrera 18",
+   "valor": 0.149964,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.9171308,
+    -74.7989286
+   ],
+   "osm": "https://www.openstreetmap.org/node/9274144973"
+  },
+  {
+   "esquina": "11759103819",
+   "nombre": "Carrera 18",
+   "valor": 0.148503,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.917135,
+    -74.7989899
+   ],
+   "osm": "https://www.openstreetmap.org/node/11759103819"
+  },
+  {
+   "esquina": "950518889",
+   "nombre": "Calle 61 x Carrera 18",
+   "valor": 0.146424,
+   "distancia_cauce_m": 280,
+   "en_zona": true,
+   "posicion": [
+    10.9171297,
+    -74.797724
+   ],
+   "osm": "https://www.openstreetmap.org/node/950518889"
+  },
+  {
+   "esquina": "1879842416",
+   "nombre": "Carrera 18",
+   "valor": 0.146308,
+   "distancia_cauce_m": 292,
+   "en_zona": true,
+   "posicion": [
+    10.9171286,
+    -74.7988111
+   ],
+   "osm": "https://www.openstreetmap.org/node/1879842416"
+  },
+  {
+   "esquina": "1879842415",
+   "nombre": "Calle 62 x Carrera 18",
+   "valor": 0.146163,
+   "distancia_cauce_m": 289,
+   "en_zona": true,
+   "posicion": [
+    10.9171282,
+    -74.7981852
+   ],
+   "osm": "https://www.openstreetmap.org/node/1879842415"
+  }
+ ],
+ "mayor_aumento": [
+  {
+   "esquina": "1882409076",
+   "nombre": "Calle 72",
+   "valor": 0.062808,
+   "distancia_cauce_m": 4,
+   "en_zona": false,
+   "posicion": [
+    10.9182625,
+    -74.8050655
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409076",
+   "seco": 0.032125,
+   "lluvia": 0.094933
+  },
+  {
+   "esquina": "1882409081",
+   "nombre": "Calle 72",
+   "valor": 0.06271,
+   "distancia_cauce_m": 6,
+   "en_zona": false,
+   "posicion": [
+    10.9183639,
+    -74.8050451
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409081",
+   "seco": 0.032088,
+   "lluvia": 0.094798
+  },
+  {
+   "esquina": "1882409162",
+   "nombre": "Calle 72 x Carrera 22",
+   "valor": 0.056019,
+   "distancia_cauce_m": 69,
+   "en_zona": true,
+   "posicion": [
+    10.9189589,
+    -74.8050374
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409162",
+   "seco": 0.040363,
+   "lluvia": 0.096382
+  },
+  {
+   "esquina": "1882408993",
+   "nombre": "Calle 72 x Carrera 20",
+   "valor": 0.054088,
+   "distancia_cauce_m": 46,
+   "en_zona": true,
+   "posicion": [
+    10.9178789,
+    -74.8050355
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408993",
+   "seco": 0.043836,
+   "lluvia": 0.097925
+  },
+  {
+   "esquina": "1882408901",
+   "nombre": "Calle 64 x Carrera 18",
+   "valor": 0.044219,
+   "distancia_cauce_m": 299,
+   "en_zona": true,
+   "posicion": [
+    10.9171147,
+    -74.7999799
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408901",
+   "seco": 0.077135,
+   "lluvia": 0.121354
+  },
+  {
+   "esquina": "1882408896",
+   "nombre": "Calle 66 x Carrera 18",
+   "valor": 0.044201,
+   "distancia_cauce_m": 284,
+   "en_zona": true,
+   "posicion": [
+    10.9170714,
+    -74.8005919
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408896",
+   "seco": 0.076923,
+   "lluvia": 0.121123
+  },
+  {
+   "esquina": "1882408899",
+   "nombre": "Calle 65 x Carrera 18",
+   "valor": 0.042272,
+   "distancia_cauce_m": 289,
+   "en_zona": true,
+   "posicion": [
+    10.9170922,
+    -74.8002978
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408899",
+   "seco": 0.080494,
+   "lluvia": 0.122765
+  },
+  {
+   "esquina": "1882409204",
+   "nombre": "Calle 72 x Carrera 22",
+   "valor": 0.041802,
+   "distancia_cauce_m": 80,
+   "en_zona": true,
+   "posicion": [
+    10.9190597,
+    -74.8050392
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409204",
+   "seco": 0.027881,
+   "lluvia": 0.069683
+  },
+  {
+   "esquina": "1882408998",
+   "nombre": "Calle 71 x Carrera 20",
+   "valor": 0.036209,
+   "distancia_cauce_m": 54,
+   "en_zona": true,
+   "posicion": [
+    10.9178975,
+    -74.8047156
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408998",
+   "seco": 0.025337,
+   "lluvia": 0.061545
+  },
+  {
+   "esquina": "1882409004",
+   "nombre": "Calle 70 x Carrera 20",
+   "valor": 0.035835,
+   "distancia_cauce_m": 59,
+   "en_zona": true,
+   "posicion": [
+    10.9179165,
+    -74.8044238
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409004",
+   "seco": 0.024975,
+   "lluvia": 0.06081
+  }
+ ],
+ "mayor_aumento_en_zona": [
+  {
+   "esquina": "1882409162",
+   "nombre": "Calle 72 x Carrera 22",
+   "valor": 0.056019,
+   "distancia_cauce_m": 69,
+   "en_zona": true,
+   "posicion": [
+    10.9189589,
+    -74.8050374
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409162",
+   "seco": 0.040363,
+   "lluvia": 0.096382
+  },
+  {
+   "esquina": "1882408993",
+   "nombre": "Calle 72 x Carrera 20",
+   "valor": 0.054088,
+   "distancia_cauce_m": 46,
+   "en_zona": true,
+   "posicion": [
+    10.9178789,
+    -74.8050355
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408993",
+   "seco": 0.043836,
+   "lluvia": 0.097925
+  },
+  {
+   "esquina": "1882408901",
+   "nombre": "Calle 64 x Carrera 18",
+   "valor": 0.044219,
+   "distancia_cauce_m": 299,
+   "en_zona": true,
+   "posicion": [
+    10.9171147,
+    -74.7999799
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408901",
+   "seco": 0.077135,
+   "lluvia": 0.121354
+  },
+  {
+   "esquina": "1882408896",
+   "nombre": "Calle 66 x Carrera 18",
+   "valor": 0.044201,
+   "distancia_cauce_m": 284,
+   "en_zona": true,
+   "posicion": [
+    10.9170714,
+    -74.8005919
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408896",
+   "seco": 0.076923,
+   "lluvia": 0.121123
+  },
+  {
+   "esquina": "1882408899",
+   "nombre": "Calle 65 x Carrera 18",
+   "valor": 0.042272,
+   "distancia_cauce_m": 289,
+   "en_zona": true,
+   "posicion": [
+    10.9170922,
+    -74.8002978
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408899",
+   "seco": 0.080494,
+   "lluvia": 0.122765
+  },
+  {
+   "esquina": "1882409204",
+   "nombre": "Calle 72 x Carrera 22",
+   "valor": 0.041802,
+   "distancia_cauce_m": 80,
+   "en_zona": true,
+   "posicion": [
+    10.9190597,
+    -74.8050392
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409204",
+   "seco": 0.027881,
+   "lluvia": 0.069683
+  },
+  {
+   "esquina": "1882408998",
+   "nombre": "Calle 71 x Carrera 20",
+   "valor": 0.036209,
+   "distancia_cauce_m": 54,
+   "en_zona": true,
+   "posicion": [
+    10.9178975,
+    -74.8047156
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882408998",
+   "seco": 0.025337,
+   "lluvia": 0.061545
+  },
+  {
+   "esquina": "1882409004",
+   "nombre": "Calle 70 x Carrera 20",
+   "valor": 0.035835,
+   "distancia_cauce_m": 59,
+   "en_zona": true,
+   "posicion": [
+    10.9179165,
+    -74.8044238
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409004",
+   "seco": 0.024975,
+   "lluvia": 0.06081
+  },
+  {
+   "esquina": "1882409009",
+   "nombre": "Calle 69 x Carrera 20",
+   "valor": 0.035703,
+   "distancia_cauce_m": 67,
+   "en_zona": true,
+   "posicion": [
+    10.9179353,
+    -74.804135
+   ],
+   "osm": "https://www.openstreetmap.org/node/1882409009",
+   "seco": 0.025064,
+   "lluvia": 0.060768
+  },
+  {
+   "esquina": "2236701401",
+   "nombre": "Avenida Murillo x Carrera 18",
+   "valor": 0.032279,
+   "distancia_cauce_m": 291,
+   "en_zona": true,
+   "posicion": [
+    10.9171341,
+    -74.7990281
+   ],
+   "osm": "https://www.openstreetmap.org/node/2236701401",
+   "seco": 0.165696,
+   "lluvia": 0.197976
+  }
+ ],
+ "esquinas": 5443,
+ "en_comun_top": 7,
+ "suma_seco": 60.5264,
+ "suma_lluvia": 61.6927
+}

@@ -51,6 +51,11 @@ def informe(nombre, r):
         p.append(linea("Lluvia", x["lluvia"]))
         p.append(linea(f"Lluvia + {medida}", x["con_medida"]))
         p.append(f"  Candidatos evaluados: {x['candidatos']}")
+        ll, cm = x["lluvia"], x["con_medida"]
+        p.append(f"  Pares sin camino: {ll['sin_camino']} con lluvia -> {cm['sin_camino']} con medida "
+                 f"({x['recuperados']} recuperados)")
+        p.append(f"  Desvío medio sobre los mismos {ll['pares'] - ll['sin_camino']} pares que tenían camino con lluvia: "
+                 f"{ll['desvio_fijo_m']:.1f} m -> {cm['desvio_fijo_m']:.1f} m")
         if not x["propuestas"]:
             p.append(f"  Ningún {medida} reduce el desvío medio al menos 2 %.")
         for q in x["propuestas"]:

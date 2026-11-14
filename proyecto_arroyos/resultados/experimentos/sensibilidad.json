@@ -1,0 +1,673 @@
+{
+ "luz": [
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 28,
+   "candidatos_v": 151,
+   "pea_lluvia": 69.7,
+   "pea_final": 28.9,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75 x Carrera 19A <-> Calle 75A x Carrera 21A (83 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)"
+   ],
+   "veh_lluvia": 137.5,
+   "veh_fijo": 137.5,
+   "veh_final_fijo": 132.3,
+   "veh_pares": 28800,
+   "veh_sin": 240,
+   "veh_sin_final": 120,
+   "veh_pct200": 23.4,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> Carrera 16 Sur (112 m)"
+   ],
+   "luz_m": 20
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 41,
+   "candidatos_v": 151,
+   "pea_lluvia": 69.7,
+   "pea_final": 26.2,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75D <-> Calle 76 x Carrera 21 (34 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)"
+   ],
+   "veh_lluvia": 137.5,
+   "veh_fijo": 137.5,
+   "veh_final_fijo": 132.3,
+   "veh_pares": 28800,
+   "veh_sin": 240,
+   "veh_sin_final": 120,
+   "veh_pct200": 23.4,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> Carrera 16 Sur (112 m)"
+   ],
+   "luz_m": 40
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 69.7,
+   "pea_final": 26.1,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)"
+   ],
+   "veh_lluvia": 137.5,
+   "veh_fijo": 137.5,
+   "veh_final_fijo": 132.3,
+   "veh_pares": 28800,
+   "veh_sin": 240,
+   "veh_sin_final": 120,
+   "veh_pct200": 23.4,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> Carrera 16 Sur (112 m)"
+   ],
+   "luz_m": 60
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 76,
+   "candidatos_v": 151,
+   "pea_lluvia": 69.7,
+   "pea_final": 24.1,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Carrera 22 <-> Calle 68C 1 x Carrera 21B (62 m)"
+   ],
+   "veh_lluvia": 137.5,
+   "veh_fijo": 137.5,
+   "veh_final_fijo": 132.3,
+   "veh_pares": 28800,
+   "veh_sin": 240,
+   "veh_sin_final": 120,
+   "veh_pct200": 23.4,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> Carrera 16 Sur (112 m)"
+   ],
+   "luz_m": 80
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 101,
+   "candidatos_v": 151,
+   "pea_lluvia": 69.7,
+   "pea_final": 24.1,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Carrera 22 <-> Calle 68C 1 x Carrera 21B (62 m)"
+   ],
+   "veh_lluvia": 137.5,
+   "veh_fijo": 137.5,
+   "veh_final_fijo": 132.3,
+   "veh_pares": 28800,
+   "veh_sin": 240,
+   "veh_sin_final": 120,
+   "veh_pct200": 23.4,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> Carrera 16 Sur (112 m)"
+   ],
+   "luz_m": 100
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 196,
+   "candidatos_v": 151,
+   "pea_lluvia": 69.7,
+   "pea_final": 24.0,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 71 x Carrera 22C <-> Calle 68C 1 x Carrera 21B (135 m)"
+   ],
+   "veh_lluvia": 137.5,
+   "veh_fijo": 137.5,
+   "veh_final_fijo": 132.3,
+   "veh_pares": 28800,
+   "veh_sin": 240,
+   "veh_sin_final": 120,
+   "veh_pct200": 23.4,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> Carrera 16 Sur (112 m)"
+   ],
+   "luz_m": 150
+  }
+ ],
+ "muestra": [
+  {
+   "lados": {
+    "lado norte": 30,
+    "lado sur": 30
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 60.0,
+   "pea_final": 23.2,
+   "pea_pct200": 8.3,
+   "pea_puentes": [
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 74A x Carrera 21A <-> Calle 74 x Carrera 19A (84 m)",
+    "Calle 76A 1 x Carrera 22B <-> Calle 76A x Carrera 22A (54 m)"
+   ],
+   "veh_lluvia": 149.7,
+   "veh_fijo": 149.7,
+   "veh_final_fijo": 143.4,
+   "veh_pares": 1800,
+   "veh_sin": 30,
+   "veh_sin_final": 30,
+   "veh_pct200": 24.4,
+   "veh_medidas": [
+    "Avenida Murillo x Carrera 18 -> Avenida Murillo (7 m)"
+   ],
+   "tam": 30,
+   "desfase": 0
+  },
+  {
+   "lados": {
+    "lado norte": 30,
+    "lado sur": 30
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 57.6,
+   "pea_final": 19.6,
+   "pea_pct200": 6.7,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 59A <-> Calle 59B x Carrera 22E (46 m)"
+   ],
+   "veh_lluvia": 103.6,
+   "veh_fijo": 103.6,
+   "veh_final_fijo": 99.3,
+   "veh_pares": 1800,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 17.4,
+   "veh_medidas": [
+    "Carrera 24 -> Calle 80 x Carrera 24 (35 m)"
+   ],
+   "tam": 30,
+   "desfase": 1
+  },
+  {
+   "lados": {
+    "lado norte": 30,
+    "lado sur": 30
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 74.2,
+   "pea_final": 26.7,
+   "pea_pct200": 12.3,
+   "pea_puentes": [
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)"
+   ],
+   "veh_lluvia": 116.5,
+   "veh_fijo": 116.5,
+   "veh_final_fijo": 113.5,
+   "veh_pares": 1800,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 20.7,
+   "veh_medidas": [
+    "Calle 77 x Carrera 23B -> Calle 77 x Carrera 23A (32 m)"
+   ],
+   "tam": 30,
+   "desfase": 2
+  },
+  {
+   "lados": {
+    "lado norte": 30,
+    "lado sur": 30
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 79.9,
+   "pea_final": 30.9,
+   "pea_pct200": 12.1,
+   "pea_puentes": [
+    "Calle 74A x Carrera 21A <-> Calle 74 x Carrera 19A (84 m)",
+    "Calle 65A <-> Calle 65 (31 m)",
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)"
+   ],
+   "veh_lluvia": 142.9,
+   "veh_fijo": 142.9,
+   "veh_final_fijo": 142.9,
+   "veh_pares": 1800,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 26.1,
+   "veh_medidas": [],
+   "tam": 30,
+   "desfase": 3
+  },
+  {
+   "lados": {
+    "lado norte": 30,
+    "lado sur": 30
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 71.6,
+   "pea_final": 18.7,
+   "pea_pct200": 10.7,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 64A <-> Calle 64A x Carrera 23 (96 m)"
+   ],
+   "veh_lluvia": 125.9,
+   "veh_fijo": 125.9,
+   "veh_final_fijo": 125.9,
+   "veh_pares": 1800,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 24.8,
+   "veh_medidas": [],
+   "tam": 30,
+   "desfase": 4
+  },
+  {
+   "lados": {
+    "lado norte": 60,
+    "lado sur": 60
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 63.1,
+   "pea_final": 25.3,
+   "pea_pct200": 9.3,
+   "pea_puentes": [
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 75 x Carrera 19A <-> Calle 75A x Carrera 21A (83 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)"
+   ],
+   "veh_lluvia": 129.1,
+   "veh_fijo": 129.1,
+   "veh_final_fijo": 125.9,
+   "veh_pares": 7200,
+   "veh_sin": 60,
+   "veh_sin_final": 60,
+   "veh_pct200": 22.3,
+   "veh_medidas": [
+    "Avenida Murillo x Carrera 18 -> Avenida Murillo (7 m)"
+   ],
+   "tam": 60,
+   "desfase": 0
+  },
+  {
+   "lados": {
+    "lado norte": 60,
+    "lado sur": 60
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 62.5,
+   "pea_final": 22.6,
+   "pea_pct200": 8.1,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 59A <-> Calle 59B x Carrera 22E (46 m)"
+   ],
+   "veh_lluvia": 111.7,
+   "veh_fijo": 111.7,
+   "veh_final_fijo": 111.7,
+   "veh_pares": 7200,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 19.3,
+   "veh_medidas": [],
+   "tam": 60,
+   "desfase": 1
+  },
+  {
+   "lados": {
+    "lado norte": 60,
+    "lado sur": 60
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 83.2,
+   "pea_final": 27.7,
+   "pea_pct200": 13.5,
+   "pea_puentes": [
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 58C x Carrera 23 <-> Calle 58A (59 m)"
+   ],
+   "veh_lluvia": 131.4,
+   "veh_fijo": 131.4,
+   "veh_final_fijo": 131.4,
+   "veh_pares": 7200,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 22.2,
+   "veh_medidas": [],
+   "tam": 60,
+   "desfase": 2
+  },
+  {
+   "lados": {
+    "lado norte": 60,
+    "lado sur": 60
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 77.3,
+   "pea_final": 32.5,
+   "pea_pct200": 12.7,
+   "pea_puentes": [
+    "Calle 75 x Carrera 19A <-> Calle 75A x Carrera 21A (83 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)",
+    "Calle 59A <-> Calle 59B x Carrera 22E (46 m)"
+   ],
+   "veh_lluvia": 145.9,
+   "veh_fijo": 145.9,
+   "veh_final_fijo": 138.2,
+   "veh_pares": 7200,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 26.1,
+   "veh_medidas": [
+    "Avenida Circunvalar -> Avenida Circunvalar (187 m)"
+   ],
+   "tam": 60,
+   "desfase": 3
+  },
+  {
+   "lados": {
+    "lado norte": 60,
+    "lado sur": 60
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 68.2,
+   "pea_final": 21.6,
+   "pea_pct200": 10.5,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)"
+   ],
+   "veh_lluvia": 138.3,
+   "veh_fijo": 138.3,
+   "veh_final_fijo": 138.3,
+   "veh_pares": 7200,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 22.2,
+   "veh_medidas": [],
+   "tam": 60,
+   "desfase": 4
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 69.7,
+   "pea_final": 26.1,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)"
+   ],
+   "veh_lluvia": 137.5,
+   "veh_fijo": 137.5,
+   "veh_final_fijo": 132.3,
+   "veh_pares": 28800,
+   "veh_sin": 240,
+   "veh_sin_final": 120,
+   "veh_pct200": 23.4,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> Carrera 16 Sur (112 m)"
+   ],
+   "tam": 120,
+   "desfase": 0
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 67.6,
+   "pea_final": 22.4,
+   "pea_pct200": 9.9,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 74A x Carrera 21A <-> Calle 74 x Carrera 19A (84 m)"
+   ],
+   "veh_lluvia": 120.3,
+   "veh_fijo": 120.3,
+   "veh_final_fijo": 120.3,
+   "veh_pares": 28800,
+   "veh_sin": 120,
+   "veh_sin_final": 0,
+   "veh_pct200": 20.5,
+   "veh_medidas": [
+    "Avenida Murillo -> esquina cerca de Avenida Murillo (6 m)"
+   ],
+   "tam": 120,
+   "desfase": 1
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 76.4,
+   "pea_final": 28.3,
+   "pea_pct200": 12.1,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)"
+   ],
+   "veh_lluvia": 136.3,
+   "veh_fijo": 136.3,
+   "veh_final_fijo": 136.3,
+   "veh_pares": 28800,
+   "veh_sin": 120,
+   "veh_sin_final": 0,
+   "veh_pct200": 22.1,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (4 m)"
+   ],
+   "tam": 120,
+   "desfase": 2
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 70.0,
+   "pea_final": 27.0,
+   "pea_pct200": 10.9,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)"
+   ],
+   "veh_lluvia": 142.9,
+   "veh_fijo": 142.9,
+   "veh_final_fijo": 123.1,
+   "veh_pares": 28800,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 24.0,
+   "veh_medidas": [
+    "Avenida Circunvalar -> Avenida Circunvalar (187 m)",
+    "Avenida Circunvalar -> Avenida Circunvalar (80 m)",
+    "Avenida Circunvalar -> Avenida Murillo (245 m)"
+   ],
+   "tam": 120,
+   "desfase": 3
+  },
+  {
+   "lados": {
+    "lado norte": 120,
+    "lado sur": 120
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 67.5,
+   "pea_final": 25.3,
+   "pea_pct200": 10.4,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)",
+    "Calle 67 x Carrera 23 <-> Carrera 22D (132 m)"
+   ],
+   "veh_lluvia": 139.4,
+   "veh_fijo": 139.4,
+   "veh_final_fijo": 139.4,
+   "veh_pares": 28800,
+   "veh_sin": 0,
+   "veh_sin_final": 0,
+   "veh_pct200": 23.8,
+   "veh_medidas": [],
+   "tam": 120,
+   "desfase": 4
+  },
+  {
+   "lados": {
+    "lado norte": 240,
+    "lado sur": 240
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 72.8,
+   "pea_final": 28.6,
+   "pea_pct200": 11.5,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)"
+   ],
+   "veh_lluvia": 139.7,
+   "veh_fijo": 139.7,
+   "veh_final_fijo": 139.7,
+   "veh_pares": 115200,
+   "veh_sin": 720,
+   "veh_sin_final": 0,
+   "veh_pct200": 23.3,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (4 m)",
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "esquina cerca de Carrera 22D -> esquina cerca de Avenida Murillo (74 m)"
+   ],
+   "tam": 240,
+   "desfase": 0
+  },
+  {
+   "lados": {
+    "lado norte": 240,
+    "lado sur": 240
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 68.6,
+   "pea_final": 27.2,
+   "pea_pct200": 10.3,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 74A x Carrera 21A <-> Calle 74 x Carrera 19A (84 m)"
+   ],
+   "veh_lluvia": 131.3,
+   "veh_fijo": 131.3,
+   "veh_final_fijo": 131.3,
+   "veh_pares": 115200,
+   "veh_sin": 240,
+   "veh_sin_final": 0,
+   "veh_pct200": 22.3,
+   "veh_medidas": [
+    "Avenida Murillo -> esquina cerca de Avenida Murillo (6 m)"
+   ],
+   "tam": 240,
+   "desfase": 1
+  },
+  {
+   "lados": {
+    "lado norte": 578,
+    "lado sur": 508
+   },
+   "candidatos_p": 50,
+   "candidatos_v": 151,
+   "pea_lluvia": 70.0,
+   "pea_final": 27.6,
+   "pea_pct200": 10.8,
+   "pea_puentes": [
+    "Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (48 m)",
+    "Carrera 22D <-> Calle 67B x Carrera 22D (106 m)",
+    "Calle 66 x Carrera 22A <-> Calle 67B x Carrera 22D (173 m)"
+   ],
+   "veh_lluvia": 133.4,
+   "veh_fijo": 133.4,
+   "veh_final_fijo": 133.4,
+   "veh_pares": 587248,
+   "veh_sin": 2170,
+   "veh_sin_final": 508,
+   "veh_pct200": 22.6,
+   "veh_medidas": [
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (6 m)",
+    "Avenida Murillo -> esquina cerca de Avenida Murillo (6 m)",
+    "esquina cerca de Avenida Murillo -> Avenida Murillo (4 m)"
+   ],
+   "tam": 1000000,
+   "desfase": 0
+  }
+ ]
+}

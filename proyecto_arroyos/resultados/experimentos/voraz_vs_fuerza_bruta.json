@@ -1,0 +1,128 @@
+{
+ "peatones": {
+  "voraz": {
+   "indices": [
+    38,
+    15
+   ],
+   "objetivo": [
+    0,
+    31.865
+   ]
+  },
+  "optimo": {
+   "indices": [
+    15,
+    38
+   ],
+   "objetivo": [
+    0,
+    31.865
+   ]
+  },
+  "sin_camino_extra": 0,
+  "desvio_extra_m": 0.0,
+  "coinciden": true,
+  "candidatos": 50,
+  "parejas_probadas": 1225,
+  "segundos": 5.0,
+  "objetivo_optimo_desde_cero": [
+   0,
+   31.865
+  ],
+  "verificado": true,
+  "elegidos_voraz": [
+   {
+    "tipo": "nuevo",
+    "via": "",
+    "desde": "Calle 75D x Carrera 21A",
+    "hasta": "Calle 76 x Carrera 21",
+    "recorrido_m": 48
+   },
+   {
+    "tipo": "cruce",
+    "via": "Carrera 22A",
+    "desde": "Calle 66 x Carrera 22A",
+    "hasta": "Calle 67B x Carrera 22D",
+    "recorrido_m": 173
+   }
+  ],
+  "elegidos_optimo": [
+   {
+    "tipo": "cruce",
+    "via": "Carrera 22A",
+    "desde": "Calle 66 x Carrera 22A",
+    "hasta": "Calle 67B x Carrera 22D",
+    "recorrido_m": 173
+   },
+   {
+    "tipo": "nuevo",
+    "via": "",
+    "desde": "Calle 75D x Carrera 21A",
+    "hasta": "Calle 76 x Carrera 21",
+    "recorrido_m": 48
+   }
+  ]
+ },
+ "vehiculos": {
+  "voraz": {
+   "indices": [
+    109,
+    88
+   ],
+   "objetivo": [
+    120,
+    132.452
+   ]
+  },
+  "optimo": {
+   "indices": [
+    88,
+    109
+   ],
+   "objetivo": [
+    120,
+    132.452
+   ]
+  },
+  "sin_camino_extra": 0,
+  "desvio_extra_m": 0.0,
+  "coinciden": true,
+  "candidatos": 151,
+  "parejas_probadas": 11325,
+  "segundos": 36.6,
+  "objetivo_optimo_desde_cero": [
+   120,
+   132.452
+  ],
+  "verificado": true,
+  "elegidos_voraz": [
+   {
+    "via": "calle sin nombre",
+    "desde": "esquina cerca de Avenida Murillo",
+    "hasta": "Avenida Murillo",
+    "metros": 6
+   },
+   {
+    "via": "calle sin nombre",
+    "desde": "Avenida Murillo",
+    "hasta": "Carrera 16 Sur",
+    "metros": 112
+   }
+  ],
+  "elegidos_optimo": [
+   {
+    "via": "calle sin nombre",
+    "desde": "Avenida Murillo",
+    "hasta": "Carrera 16 Sur",
+    "metros": 112
+   },
+   {
+    "via": "calle sin nombre",
+    "desde": "esquina cerca de Avenida Murillo",
+    "hasta": "Avenida Murillo",
+    "metros": 6
+   }
+  ]
+ }
+}
