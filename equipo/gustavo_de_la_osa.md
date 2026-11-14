@@ -1,10 +1,11 @@
 # Gustavo de la Ossa: exposición y programación de apoyo
 
-**Tu turno: empiezas YA**, en paralelo con Karel y Lobo (no se pisan: todo lo que programas son archivos **nuevos** y tuyos).
+**Tu turno: empiezas YA, aparte del relevo** (Karel, Lobo y Blanco trabajan uno después de otro en la rama `obras`; tú no esperas a nadie porque todo lo que programas son archivos **nuevos** y tuyos, en tu rama `gustavo/apoyo`).
 1. Haz primero **G2** (el ejemplo de obra), porque Karel lo necesita. Súbelo y **avisa a Oscar y a Karel**.
 2. Después **G1** (esqueleto de diapositivas).
-3. Cuando Oscar avise que juntó la ruta `/api/plan` de Lobo: **G4** (pruebas de la API). **G3** (figuras) puedes hacerla en cualquier momento.
-4. **G5** (capturas) al final, cuando la pantalla de Lobo esté lista.
+3. Cuando **Karel entregue** (la ruta `/api/plan` ya estará en la rama `obras`): trae sus cambios a tu rama con `git fetch` y `git merge origin/obras`, y haz **G4** (pruebas de la API). **G3** (figuras) puedes hacerla en cualquier momento.
+4. **Karel necesita tu ejemplo de obra** (para su tarea R3): él traerá el archivo con `git checkout origin/gustavo/apoyo -- proyecto_arroyos/datos/ejemplos/obra_ilustrativa.json`, así que **sube G2 a tu rama apenas esté** y avísale.
+5. **G5** (capturas) al final, cuando la pantalla de Lobo esté lista (la rama `obras` ya tendrá su trabajo).
 
 Lee antes, 5 minutos: [cambio_a_obras.md](cambio_a_obras.md) (objetivo, formato del archivo de obra, reglas y orden de trabajo).
 

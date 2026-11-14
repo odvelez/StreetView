@@ -1,11 +1,14 @@
 # Sebastián Blanco: segunda ronda (probar, corregir y asegurar)
 
-**Tu turno: empiezas DESPUÉS.** Karel y Lobo van primero y Oscar junta sus ramas. **Oscar te avisa** cuando `main` esté integrado (sábado en la noche).
-Hasta entonces solo te preparas: lee el proyecto y escribe tu plan de pruebas en `equipo/entregas/blanco_plan_de_pruebas.md`.
+**Tu turno: eres el TERCERO.** Karel va primero, Lobo después, y tú al final, tú solo. **Lobo y Oscar te avisan «tu turno»** (sábado en la noche).
+1. **Mientras esperas** solo te preparas: lee el proyecto, corre la app y escribe tu plan de pruebas en `equipo/entregas/blanco_plan_de_pruebas.md`. **No edites archivos del proyecto hasta tu turno.**
+2. Cuando te avisen: `git fetch`, `git checkout obras`, `git pull`, y `python -m unittest` debe pasar.
+3. Haz las tareas, con commit y push a `obras` al terminar cada una.
+4. **Pasa la posta:** pruebas en verde, push, escribe `equipo/entregas/blanco_entrega.md` (qué probaste, qué corregiste, qué falta, qué te preocupa) y avisa a **Oscar**: «tu turno».
 
 Lee antes, 5 minutos: [cambio_a_obras.md](cambio_a_obras.md) (objetivo, reglas y orden de trabajo).
 
-## Lo que te toca (cuando Oscar avise)
+## Lo que te toca (cuando sea tu turno)
 
 | Tarea | Qué haces | Terminado cuando |
 |---|---|---|
@@ -18,11 +21,12 @@ Lee antes, 5 minutos: [cambio_a_obras.md](cambio_a_obras.md) (objetivo, reglas y
 
 - **No toques archivos ajenos sin avisar al dueño.** Antes de que Oscar te avise, no edites nada.
 - **44 pruebas en verde** antes de cada commit. No inventes datos ni cambies cifras.
-- Rama `blanco/ajustes`, a partir de lo que Oscar integre. Commits pequeños, mensaje en español. **Commit y push al terminar cada tarea.**
+- Rama `obras` (la misma de Karel y Lobo; ya terminaron). Commits pequeños, mensaje en español. **Commit y push al terminar cada tarea.**
+- **Si el tiempo aprieta,** corta B3 (robustez) primero.
 
 ## Metaprompt para tu Claude
 
-Pégalo en Claude Code, dentro de la carpeta del proyecto, **solo cuando Oscar te haya avisado**.
+Pégalo en Claude Code, dentro de la carpeta del proyecto, **solo cuando Lobo y Oscar te hayan avisado «tu turno»**.
 
 ```
 Eres el Claude que ayuda a Sebastián Blanco en el proyecto final de Matemáticas Discretas (MAT 4021,
@@ -30,12 +34,14 @@ Uninorte). Lee primero: equipo/cambio_a_obras.md, equipo/karel_silva.md y equipo
 qué hicieron), proyecto_arroyos/app.py, src/etapas.py (solo lectura) y resultados/linea_base/plan_etapas.txt.
 
 CONTEXTO: el proyecto pasó de "arroyos" a "hacer obras viales de la mejor forma" (una obra cierra calles; se
-divide en etapas y se proponen medidas temporales). Tu papel es la SEGUNDA RONDA: probar la app ya integrada,
-anotar fallos y corregir lo que sea tuyo. No edites archivos ajenos sin avisar al dueño: src/ y tests/ son de
-Karel; web/ y app.py son de Lobo; datos/, resultados/ y documento/ son de Oscar.
+divide en etapas y se proponen medidas temporales). Eres el TERCERO de un relevo en la rama obras (Karel y
+Lobo ya terminaron). Tu papel: probar la app terminada, anotar fallos y corregir lo que sea tuyo. No edites
+archivos ajenos sin avisar al dueño: src/ y tests/ son de Karel; web/ y app.py son de Lobo; datos/,
+resultados/ y documento/ son de Oscar. Antes de empezar: git checkout obras, git pull y python -m unittest
+(deben pasar todas). Lee también equipo/entregas/karel_entrega.md y lobo_entrega.md.
 
 TAREAS, en orden. Al terminar cada una: python -m unittest (deben pasar todas), commit con mensaje en español
-y push a la rama blanco/ajustes. Si algo falla, DETENTE y dime qué pasó.
+y push a la rama obras. Si algo falla, DETENTE y dime qué pasó.
   B1  Prueba la app integrada con python app.py y esta lista: python -m unittest pasa todo; python
       herramientas/plan_etapas.py da lo mismo que resultados/linea_base/plan_etapas.txt (luego git checkout --
       proyecto_arroyos/resultados); planificar una obra dibujada; planificar con --obra
@@ -55,7 +61,9 @@ y push a la rama blanco/ajustes. Si algo falla, DETENTE y dime qué pasó.
       texto propuesto en equipo/entregas/blanco_textos.md.
 
 REGLAS: no inventes datos ni cambies cifras. Al final de cada tarea resume en 3 líneas qué hiciste y qué
-probaste.
+probaste. Si el tiempo aprieta, corta B3 primero. AL TERMINAR: escribe equipo/entregas/blanco_entrega.md (qué
+probaste, qué corregiste, qué falta, qué te preocupa), haz commit y push, y dime "listo para pasar la posta a
+Oscar".
 ```
 
 ## Cómo empezar

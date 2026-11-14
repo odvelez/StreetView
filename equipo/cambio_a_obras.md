@@ -30,15 +30,17 @@ El proyecto **ya no trata de arroyos**. Trata de **cómo hacer obras de la mejor
 | puentes existentes | calles que la obra puede **mantener abiertas** (`cerrar_puentes`) |
 | capa azul de arroyos, «Marque el arroyo», `--arroyo`, `--listar` | se quitan de la pantalla y de la línea de comandos |
 
-## 4. Reparto nuevo
+## 4. Reparto: un relevo, una sola vez cada quien
 
-| Persona | Qué hace | Archivos propios | Rama |
+El trabajo de código se hace **como un relevo en una sola línea** (la rama `obras`): trabaja una persona a la vez, termina, sube y le pasa la posta a la siguiente. Así no hay que juntar ramas ni resolver choques. **Gustavo trabaja aparte** (sus archivos son nuevos y no chocan con nadie).
+
+| Turno | Persona | Qué hace | Archivos |
 |---|---|---|---|
-| **Karel Silva** | **Refactorización** del proyecto: de arroyo a obra, sin cambiar las cifras | `src/`, `main.py`, `herramientas/plan_etapas.py`, `herramientas/experimentos.py`, `tests/` | `karel/refactor-obras` |
-| **Santiago Lobo** | **Mejora gráfica**: menú, resultados y recorrido paso a paso, más la ruta `/api/plan` mínima | `web/`, `app.py` | `lobo/grafico` |
-| **Gustavo de la Ossa** | Exposición (diapositivas y guion) y programación de apoyo en archivos **nuevos** | `herramientas/figuras_plan.py`, `herramientas/eje_de_calle.py`, `datos/ejemplos/`, `tests/test_app.py`, `equipo/entregas/gustavo_*` | `gustavo/apoyo` |
-| **Sebastián Blanco** | **Segunda ronda**: integra y corrige cuando Karel y Lobo hayan subido | lo que haga falta, **después** de ellos | `blanco/ajustes` |
-| **Oscar Vélez** | Integrador: revisa, resuelve conflictos, limpia al final y deja la app lista | `README.md`, `resultados/`, `documento/` y archivos compartidos | `main` |
+| **1** | **Karel Silva** | **Refactorización** (de arroyo a obra, sin cambiar cifras) **y todo lo que hace falta para que la app responda con el plan**: la ruta `/api/plan` | `src/`, `main.py`, `herramientas/plan_etapas.py`, `herramientas/experimentos.py`, `tests/` y, en `app.py`, **solo** la ruta `/api/plan` |
+| **2** | **Santiago Lobo** | **Mejora gráfica**: menú, recorrido paso a paso, resultados y pantalla pequeña | `web/` y, si hace falta, `app.py` |
+| **3** | **Sebastián Blanco** | **Probar, corregir y asegurar** la app ya terminada | lo que haga falta, avisando al dueño |
+| **4** | **Oscar Vélez** | Recibe la posta, junta lo de Gustavo, limpia lo viejo y deja la app lista | `README.md`, `resultados/`, `documento/` y lo compartido |
+| aparte | **Gustavo de la Ossa** | Exposición (diapositivas y guion) y programación de apoyo | `herramientas/figuras_plan.py`, `herramientas/eje_de_calle.py`, `datos/ejemplos/`, `tests/test_app.py`, `equipo/entregas/gustavo_*` (rama `gustavo/apoyo`) |
 
 ## 5. Contrato `POST /api/plan` (no lo rompas)
 
@@ -62,13 +64,14 @@ Cada puente (`puentes[]`): `orden`, `tipo`, `via`, `desde`, `hasta`, `recorrido_
 
 ## 6. Reglas para no chocar (importantes)
 
-1. **Cada archivo tiene un solo dueño** (tabla de la sección 4). Si necesitas cambiar un archivo ajeno, no lo toques: escribe la petición en tu archivo `.md` y avisa a Oscar.
-2. **El JSON solo se agranda: agrega campos, no los quites ni los renombres.** Así la pantalla de Lobo no se rompe mientras Karel refactoriza. Karel puede **agregar** `eje` junto a `cauce`; el nombre viejo se quita al final, y lo hace Oscar.
-3. **No se borra nada** de `datos/` ni funciones que otro archivo todavía use (por ejemplo `fuente.arroyos_osm` o `/api/arroyos`). Oscar limpia al final.
-4. **Cada quien trabaja en su rama** y hace commits pequeños con mensajes claros en español. Antes de empezar: `git pull`. Nadie sube directo a `main`.
+1. **Una sola persona toca el código a la vez.** El que tiene el turno trabaja en la rama `obras`; los demás esperan su turno (mientras tanto pueden leer, correr la app y preparar). La excepción es Gustavo, que solo crea archivos nuevos en su rama.
+2. **La posta se pasa así:** (a) `python -m unittest` en verde; (b) commit y push a `obras`; (c) escribes tu nota de entrega `equipo/entregas/<tu_nombre>_entrega.md` (qué cambió, cómo se corre, qué falta, qué te preocupa); (d) avisas a la siguiente persona **y a Oscar**: «tu turno». La siguiente persona empieza con `git pull` y comprobando que las pruebas pasan.
+3. **El JSON solo se agranda: agrega campos, no los quites ni los renombres.** Karel puede **agregar** `eje` junto a `cauce`; el nombre viejo lo quita Oscar al final.
+4. **No se borra nada** de `datos/` ni funciones que otro archivo todavía use (por ejemplo `fuente.arroyos_osm` o `/api/arroyos`). Oscar limpia al final.
 5. **Las 44 pruebas deben pasar** antes de cada commit (`python -m unittest`).
 6. **No se inventan datos.** Sin fuente, queda como pendiente.
 7. `main.py` y `plan_etapas.py` **sobrescriben `resultados/`**. Después de correrlos, `git checkout -- proyecto_arroyos/resultados`, salvo que Oscar pida regenerarlos.
+8. **Nadie sube a `main`:** solo Oscar, al final.
 
 ## 7. Parámetros nuevos (los agrega Karel; los usa la pantalla después)
 
@@ -88,63 +91,63 @@ Para obras fuera de El Salao (lo hace Gustavo y lo lee Karel):
 
 `lineas` es una lista de líneas, cada una una lista de puntos `[lat, lon]`. Si `ilustrativo` es `true`, la pantalla muestra «Ejemplo ilustrativo, no es una obra real».
 
-## 9. Orden de trabajo (para que la app funcione y no haya choques)
+## 9. Orden de trabajo (el relevo)
 
-**Principio:** cada quien toca solo sus archivos y **nadie sube a `main`**. Oscar junta las ramas **en este orden** y, después de cada unión, corre `python -m unittest` y abre la app. Si algo falla, se devuelve a su dueño antes de seguir.
-
-| Paso | Cuándo | Quién | Qué | Para pasar al siguiente |
+| Paso | Cuándo (aproximado) | Quién | Qué | Pasa la posta cuando |
 |---|---|---|---|---|
-| **0** | Ya | Oscar | Sube la base (commit y push). Todos descargan el proyecto | Todos lo tienen |
-| **1** | Sábado, hasta mediodía | Karel, Lobo y Gustavo, **a la vez** (tocan archivos distintos) | Karel: R1 y R2. Lobo: L1 (`/api/plan`). Gustavo: G2 (ejemplo de obra) y G1 (esqueleto de diapositivas) | Cada uno hace push de su rama y avisa a Oscar |
-| **2** | Sábado, mediodía | Oscar | Junta en `main`, **en este orden**: Karel (R1+R2), Lobo (L1), Gustavo (G2). Corre las pruebas y prueba `/api/plan` con El Salao | Pruebas en verde y `/api/plan` responde 3 etapas |
-| **3** | Sábado, tarde | Karel, Lobo y Gustavo | Todos hacen `git pull` de `main` y siguen: Karel R3 a R5; Lobo L2 a L6; Gustavo G3 y G4 | Karel y Lobo hacen push y avisan |
-| **4** | Sábado, fin del día | Oscar | Junta: Karel (R3 a R5), Lobo (L2 a L6), Gustavo (G3 y G4). Corre pruebas y abre la app | La app funciona con El Salao y con el ejemplo de Gustavo |
-| **5** | Sábado noche y domingo temprano | Blanco | Prueba la app integrada y devuelve cada fallo a su dueño (B1 a B4) | Fallos corregidos |
-| **6** | Domingo, mañana | Oscar | Limpieza final (quitar lo de arroyo, el campo `cauce`, el alias `Arroyo` y los datos de arroyos), regenerar resultados, README y documento. Gustavo toma las capturas finales | App lista antes de las 18:00 |
+| **0** | Hecho | Oscar | Subió la base a `main` | — |
+| **1** | Sábado, desde la mañana | **Karel** | Crea la rama `obras` desde `main`. Hace R1 a R6 (refactor y `/api/plan`) | Pruebas en verde, push y nota de entrega |
+| **2** | Sábado, después de Karel | **Lobo** | `git pull` de `obras`. Hace la parte gráfica (L1 a L5) | Pruebas en verde, push y nota de entrega |
+| **3** | Sábado en la noche, después de Lobo | **Blanco** | `git pull` de `obras`. Prueba, devuelve fallos y corrige (B1 a B4) | Pruebas en verde, push y nota de entrega |
+| **4** | Domingo, mañana | **Oscar** | Junta la rama de Gustavo en `obras`, hace la limpieza final, regenera resultados, README y documento, y pasa `obras` a `main` | App lista antes de las 18:00 |
+| aparte | Todo el tiempo | **Gustavo** | G2 (ejemplo de obra) primero, porque Karel lo necesita en R3; luego G1, G3, G4 y G5 | Sube a `gustavo/apoyo` y avisa a Oscar |
 
-**Por qué este orden**
-- Karel va antes que Lobo porque la ruta de Lobo llama al código de Karel.
-- Gustavo entrega el ejemplo de obra antes de que Karel lo necesite (R3).
-- Blanco va al final porque prueba lo que los otros ya terminaron.
-- Oscar limpia al final porque quitar lo viejo mientras otros todavía lo leen rompería su trabajo.
+**La hora no manda, manda el relevo:** cada quien empieza cuando le toca, no antes. Mientras esperas puedes leer el proyecto, correr la app y preparar; **no edites archivos del proyecto hasta tu turno.**
 
-**Si alguien se atrasa:** no se espera. Oscar junta lo que esté listo, en el mismo orden; lo que falte pasa a la ronda siguiente. Lo **opcional se corta primero**: R6 y R7 (Karel), B3 (Blanco), G3 (Gustavo).
-**Si dos ramas tocan el mismo archivo** (no debería pasar): lo resuelve Oscar y avisa a los dos.
+**Mínimo para pasar la posta (si el tiempo aprieta):**
+- **Karel** puede entregar con R1, R2 y R6 hechos (la app responde con el plan y el código ya habla de obras). Lo demás (R3 a R5 y las opcionales) pasa a Oscar. Debe entregar **antes de la hora límite que Oscar le diga**, aunque no haya terminado todo.
+- **Lobo** puede entregar con el menú y el recorrido paso a paso (L1 y L2).
+- **Blanco** corta B3 (robustez) primero.
+
+**Por qué este orden:** Karel va primero porque cambia los nombres y el código que todos usan, y deja el servidor listo. Lobo va después porque su pantalla necesita ese servidor ya terminado. Blanco va al final porque prueba lo que los otros ya terminaron. Oscar cierra porque quitar lo viejo mientras otros lo leen rompería su trabajo.
+
+**Costo de este orden:** es más lento que trabajar en paralelo, porque Lobo y Blanco esperan. Los archivos de cada uno son distintos, así que si el tiempo se acaba se puede dejar que Lobo empiece antes (su pantalla no depende del código de Karel si usa `resultados/plan_etapas.json`). Esa decisión es de Oscar.
 
 ### Oscar: lo que tienes que hacer
 
-1. **Paso 0:** commit y push de la base.
-2. **Pasos 2 y 4:** juntar las ramas en el orden de la tabla, con las pruebas y la app después de cada unión.
-3. **Paso 6:** limpieza, resultados, README y documento.
+1. Avisar el orden al equipo y decirle a Karel su hora límite.
+2. Estar atento a cada «tu turno» y confirmar que las pruebas pasan antes de que siga el siguiente.
+3. **Paso 4:** juntar a Gustavo, limpiar y dejar la app lista.
 
 Metaprompt para tu Claude (pégalo en Claude Code, dentro de la carpeta del proyecto):
 
 ```
 Eres el Claude que ayuda a Oscar Vélez, integrador del proyecto final de Matemáticas Discretas
-(MAT 4021, Uninorte). Lee primero equipo/cambio_a_obras.md (sobre todo las secciones 5, 6 y 9) y los
-cuatro archivos personales de equipo/.
+(MAT 4021, Uninorte). Lee primero equipo/cambio_a_obras.md (secciones 5, 6 y 9) y los cuatro archivos
+personales de equipo/.
 
-Tu trabajo es JUNTAR las ramas del equipo en main, en este orden, y comprobar que la app funciona:
-  Paso 2: karel/refactor-obras (solo R1 y R2) -> lobo/grafico (solo L1) -> gustavo/apoyo (solo G2).
-  Paso 4: karel/refactor-obras (R3 a R5) -> lobo/grafico (L2 a L6) -> gustavo/apoyo (G3 y G4).
-  Paso 6: limpieza final.
+El trabajo de código es un RELEVO en la rama obras: Karel -> Lobo -> Blanco, uno a la vez. Gustavo trabaja
+aparte en gustavo/apoyo. Tu trabajo es VERIFICAR cada entrega y, al final, cerrar.
 
-Después de CADA unión:
-  1. Corre python -m unittest (dentro de proyecto_arroyos/). Deben pasar todas.
-  2. Corre python herramientas/plan_etapas.py y compara con resultados/linea_base/plan_etapas.txt:
-     las cifras de El Salao NO deben cambiar. Luego git checkout -- proyecto_arroyos/resultados.
-  3. Arranca python app.py y comprueba que POST /api/plan con El Salao responde 200 con 3 etapas y 9 pasos.
-  Si algo falla, DETENTE: no sigas con la siguiente rama. Dime qué falló, de quién es el archivo y qué
-  se le debe pedir a esa persona. No lo arregles tú si es un archivo ajeno.
+Cuando yo te diga "entregó <persona>":
+  1. git fetch y git checkout obras; git pull.
+  2. python -m unittest (dentro de proyecto_arroyos/): deben pasar todas.
+  3. python herramientas/plan_etapas.py y compara con resultados/linea_base/plan_etapas.txt: las cifras de
+     El Salao NO deben cambiar. Luego git checkout -- proyecto_arroyos/resultados.
+  4. python app.py y comprueba que POST /api/plan con El Salao responde 200 con 3 etapas y 9 pasos.
+  5. Lee equipo/entregas/<persona>_entrega.md y dime qué cambió, qué falta y qué riesgos ves.
+  Si algo falla, DETENTE: dime qué falló, de quién es el archivo y qué se le debe pedir. No lo arregles tú si
+  es un archivo ajeno.
 
-Reglas: no hagas push a main sin que yo lo confirme; si hay conflicto, muéstramelo antes de resolverlo;
-no borres datos; no inventes cifras ni fuentes.
+Cuando yo te diga "cierra" (paso 4): junta gustavo/apoyo en obras (archivos nuevos, no deberían chocar);
+quita lo que ya no se use (fuente.arroyos_osm, lineas_por_nombre, las rutas /api/arroyos, la clave cauce, el
+alias Arroyo, --arroyo y --listar); mueve datos/arroyos_area_metropolitana.json a datos/archivo_arroyos/;
+regenera resultados/ (main.py y herramientas/plan_etapas.py); actualiza README.md; y dime qué secciones de
+documento/main.tex cambian de tema (no edites main.tex: es de otra persona). Pasa obras a main SOLO si yo lo
+confirmo.
 
-Paso 6 (limpieza), solo cuando yo te lo pida: quitar lo que ya no se use (fuente.arroyos_osm,
-lineas_por_nombre, las rutas /api/arroyos, la clave cauce, el alias Arroyo, --arroyo y --listar), mover
-datos/arroyos_area_metropolitana.json a datos/archivo_arroyos/, regenerar resultados/ (main.py y
-herramientas/plan_etapas.py), actualizar README.md y avisar qué secciones de documento/main.tex cambian de
-tema. No edites main.tex: es de otra persona. Al terminar, resume qué se juntó, qué falló y qué falta.
+Reglas: no hagas push a main sin mi confirmación; si hay conflicto, muéstramelo antes de resolverlo; no
+borres datos; no inventes cifras ni fuentes. Al terminar, resume qué verificaste, qué falló y qué falta.
 ```
 
 ## 10. Decisiones ya tomadas y lo que queda como está
