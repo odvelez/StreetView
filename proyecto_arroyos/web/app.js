@@ -216,6 +216,9 @@ function limpiarPlan() {
   pedidoActual++;
   terminarRecorrido();
   estado.plan = null;
+  etapaVista = null;
+  quitarSeleccion();
+  leyenda.remove();
   capaPlan.clearLayers();
   piezas = [];
   capaObra.addTo(mapa);
@@ -470,9 +473,8 @@ function terminarRecorrido() {
   document.body.classList.remove("recorriendo");
   $("panel").inert = false;
   mapa.keyboard.enable();
-  resaltar(null);
-  const limites = limitesObra();
-  if (limites) irA(limites, { padding: [40, 40], maxZoom: 17, duration: 0.6 });
+  if (estado.plan && $("selector-etapa")) verEtapa(etapaVista);   // vuelve a la vista normal
+  else resaltar(null);
   $("resultados").scrollIntoView({ block: "start" });
   $("btn-repetir")?.focus({ preventScroll: true });
 }
@@ -492,25 +494,330 @@ document.addEventListener("keydown", (e) => {
 function mostrarPlan(d) {
   dibujarPlan(d);
   pintarResultados(d);
+  pintarLeyenda(d);
   iniciarRecorrido();
+}
+
+// ------------------------------------------------------------------ resultados en el panel
+const pl = (n, uno, varios) => `${fmt(n)} ${num(n) === 1 ? uno : varios}`;
+const avisosHtml = (xs) => lista(xs).map((a) => `<div class="aviso">${esc(a)}</div>`).join("");
+const CAPAS = ["etapas", "puentes", "sentidos", "rutas", "carga"];
+let etapaVista = null;   // null = todas
+
+function cifra(valor, texto, extra = "") {
+  return `<div class="cifra"><b>${valor}</b><span>${texto}</span>${extra ? `<small>${extra}</small>` : ""}</div>`;
 }
 
 function pintarResultados(d) {
   const r = $("resultados");
   const s = d.resumen ?? {};
+  const etapas = etapasDe(d);
+  const nEtapas = num(s.etapas) ?? etapas.length;
+  const largo = num(s.longitud_m) ?? num(d.obra?.longitud_m) ?? num(d.arroyo?.longitud_m);
+  const sinSem = num(s.esquinas_sin_semaforo);
   r.hidden = false;
-  let html = `<h2><span class="num">✓</span> Plan de la obra</h2>
-    <button id="btn-repetir" class="sec ancho" type="button">↺ Repetir el recorrido</button>
-    <p class="nota">${fmt(s.etapas)} etapas, ${fmt(s.puentes_peatonales)} pasos peatonales provisionales,
-      ${fmt(s.cambios_de_sentido)} cambios de sentido y ${fmt(s.rutas_alternas)} rutas alternas.</p>
-    <ul class="lista" id="lista-etapas">`;
-  etapasDe(d).forEach((e, i) => {
-    const n = numeroDe(e, i);
-    html += `<li style="--c:${colorEtapa(n)}"><b>Etapa ${n}</b> · del metro ${fmt(e.inicio_m)} al ${fmt(e.fin_m)}
-      ${lista(e.avisos).map((a) => `<div class="aviso">${esc(a)}</div>`).join("")}</li>`;
-  });
-  r.innerHTML = html + "</ul>";
+  r.innerHTML = `
+    <h2><span class="num">✓</span> Plan de la obra</h2>
+    ${estado.ejemplo ? `<p class="obra-nombre">${esc(estado.ejemplo.nombre)}</p>` : ""}
+    ${estado.ejemplo?.ilustrativo ? `<div class="aviso">Ejemplo ilustrativo, no es una obra real.</div>` : ""}
+    <div class="cifras" id="cifras">
+      ${cifra(fmt(nEtapas), num(nEtapas) === 1 ? "etapa de obra" : "etapas de obra")}
+      ${cifra(largo === null ? "—" : `${fmt(largo)} m`, "de obra")}
+      ${cifra(fmt(s.puentes_peatonales), num(s.puentes_peatonales) === 1 ? "paso peatonal provisional" : "pasos peatonales provisionales")}
+      ${cifra(fmt(s.cambios_de_sentido), num(s.cambios_de_sentido) === 1 ? "calle a doble sentido" : "calles a doble sentido")}
+      ${cifra(fmt(s.rutas_alternas), num(s.rutas_alternas) === 1 ? "ruta alterna" : "rutas alternas")}
+      ${cifra(fmt(s.esquinas_de_control), "esquinas para controlar", sinSem === null ? "" : `${fmt(sinSem)} sin semáforo`)}
+    </div>
+    <div class="botones dos">
+      <button id="btn-repetir" class="sec" type="button">↺ Repetir el recorrido</button>
+      <button id="btn-ver-todo" class="sec" type="button">Ver toda la obra</button>
+    </div>
+    ${lista(d.pasos).length ? "" : `<div class="aviso">El servidor no envió pasos para el recorrido.</div>`}
+    <h3>Etapas</h3>
+    <div id="selector-etapa" class="selector" role="tablist" aria-label="Etapa">
+      <button type="button" role="tab" data-etapa="">Todas</button>
+      ${etapas.map((e, i) => { const n = numeroDe(e, i); return `<button type="button" role="tab" data-etapa="${n}" style="--c:${colorEtapa(n)}">${n}</button>`; }).join("")}
+    </div>
+    <div id="detalle-etapa"></div>
+    <p class="nota">Cómo leer esto: para cada par de esquinas a lados opuestos de la obra se calcula el camino más
+      corto antes y durante la obra (algoritmo de Dijkstra); el desvío es la diferencia. No hay datos de volumen
+      de tránsito: no se mide congestión.</p>
+    <p class="nota">${d.fuente ? `Fuente del mapa: ${esc(d.fuente)}. ` : ""}${num(d.tiempos?.plan_s) !== null ? `Cálculo: ${d.tiempos.plan_s} s.` : ""}</p>`;
+
   $("btn-repetir").onclick = iniciarRecorrido;
+  $("btn-ver-todo").onclick = () => verEtapa(null);
+  $("selector-etapa").querySelectorAll("button").forEach((b) => {
+    b.onclick = () => verEtapa(b.dataset.etapa ? +b.dataset.etapa : null);
+  });
+  verEtapa(null, false);
+}
+
+// Muestra en el panel una etapa (o todas) y la resalta en el mapa.
+function verEtapa(n, mover = true) {
+  etapaVista = n;
+  quitarSeleccion();
+  const d = estado.plan;
+  const etapas = etapasDe(d);
+  $("selector-etapa").querySelectorAll("button").forEach((b) => {
+    const activo = (b.dataset.etapa ? +b.dataset.etapa : null) === n;
+    b.classList.toggle("activo", activo);
+    b.setAttribute("aria-selected", activo);
+  });
+  const caja = $("detalle-etapa");
+  if (n === null) {
+    caja.innerHTML = `<ul class="lista" id="lista-etapas">${etapas.map((e, i) => filaEtapa(e, numeroDe(e, i))).join("")}</ul>`;
+    caja.querySelectorAll("li[data-etapa]").forEach((li) => {
+      const ir = () => verEtapa(+li.dataset.etapa);
+      li.onclick = ir;
+      li.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); ir(); } };
+    });
+    resaltar(null);
+    if (mover) { const l = limitesObra(); if (l) irA(l, { padding: [40, 40], maxZoom: 17, duration: 0.5 }); }
+    return;
+  }
+  const e = etapas.find((x, i) => numeroDe(x, i) === n);
+  if (!e) return verEtapa(null, mover);
+  caja.innerHTML = tarjetaEtapa(e, n);
+  enlazar(caja, "[data-ruta]", (i) => mostrarRuta(lista(e.rutas)[i], n));
+  enlazar(caja, "[data-puente]", (i) => mostrarPieza(lista(e.peatones?.puentes)[i]?.forma, "puentes", n));
+  enlazar(caja, "[data-sentido]", (i) => mostrarPieza(lista(e.vehiculos?.medidas)[i]?.forma, "sentidos", n));
+  enlazar(caja, "[data-esquina]", (i) => mostrarPieza([lista(e.carga)[i]?.posicion], "carga", n));
+  resaltar(CAPAS, n);
+  const eje = ejeDe(e);
+  if (mover && eje.length) irA(L.latLngBounds(eje), { padding: [40, 40], maxZoom: 17, duration: 0.5 });
+}
+
+function filaEtapa(e, n) {
+  const ped = e.peatones, veh = e.vehiculos;
+  return `<li data-etapa="${n}" tabindex="0" style="--c:${colorEtapa(n)}" class="clic">
+    <div class="fila-tit"><b>Etapa ${n}</b><span>metro ${fmt(e.inicio_m)} al ${fmt(e.fin_m)} · ${fmt(e.longitud_m)} m</span></div>
+    <small>${pl(e.cruces_cerrados, "cruce cerrado", "cruces cerrados")} ·
+      ${pl(lista(ped?.puentes).length, "paso peatonal", "pasos peatonales")} ·
+      ${pl(lista(veh?.medidas).length, "cambio de sentido", "cambios de sentido")} ·
+      ${pl(lista(e.rutas).length, "ruta alterna", "rutas alternas")}</small>
+    ${avisosHtml(e.avisos)}${ped === null || veh === null ? `<div class="aviso">${ped === null ? "Sin datos de peatones" : "Sin datos de vehículos"} en esta etapa.</div>` : ""}
+  </li>`;
+}
+
+// Barra de antes / durante la obra / con las medidas, para el desvío medio.
+function comparacion(titulo, m0, m1, conQue, clase) {
+  if (!m0) return "";
+  const a = num(m0.desvio_medio_m), b = num(m1?.desvio_medio_m);
+  const max = Math.max(1, a ?? 0, b ?? 0);
+  const barra = (nombre, v, cls) => v === null ? "" : `
+    <div class="barra-fila"><span class="barra-nombre">${nombre}</span>
+      <span class="barra-pista"><span class="barra ${cls}" style="width:${Math.max(1.5, (100 * v) / max)}%"></span></span>
+      <span class="barra-valor">${fmt(v)} m</span></div>`;
+  const sin0 = num(m0.sin_camino), sin1 = num(m1?.sin_camino);
+  return `<div class="comparacion"><div class="comp-tit">${titulo}: desvío medio</div>
+    ${barra("Con la obra", a, "gris")}${barra(conQue, b, clase)}
+    ${sin0 ? `<div class="nota">Pares que se quedan sin camino: <b>${fmt(sin0)}${sin1 !== null ? ` → ${fmt(sin1)}` : ""}</b></div>` : ""}</div>`;
+}
+
+function tarjetaEtapa(e, n) {
+  const ped = e.peatones, veh = e.vehiculos;
+  const puentes = lista(ped?.puentes), medidas = lista(veh?.medidas), rutas = lista(e.rutas), carga = lista(e.carga);
+  const item = (attr, i, html) => `<li ${attr}="${i}" tabindex="0" class="clic">${html}</li>`;
+  let h = `<div class="tarjeta" style="--c:${colorEtapa(n)}">
+    <div class="tarjeta-tit"><span class="chip">Etapa ${n}</span>
+      metro ${fmt(e.inicio_m)} al ${fmt(e.fin_m)} · ${fmt(e.longitud_m)} m</div>
+    <p class="nota">Se cierran <b>${pl(e.cruces_cerrados, "cruce", "cruces")}</b>${num(e.puentes_existentes_cerrados) ? `, ${pl(e.puentes_existentes_cerrados, "de ellos un puente existente", "de ellos puentes existentes")}` : ""}.
+      ${num(e.recorridos_desviados) !== null ? `${fmt(e.recorridos_desviados)} recorridos de la muestra se desvían.` : ""}</p>
+    ${avisosHtml(e.avisos)}
+    ${ped === null ? `<div class="aviso">Esta etapa no trae datos de peatones.</div>` : comparacion("A pie", ped?.obra, ped?.con_puentes, `Con ${pl(puentes.length, "paso", "pasos")}`, "naranja")}
+    ${veh === null ? `<div class="aviso">Esta etapa no trae datos de vehículos.</div>` : comparacion("En carro o moto", veh?.obra, veh?.con_medidas, `Con ${pl(medidas.length, "cambio", "cambios")}`, "morado")}`;
+
+  if (puentes.length) {
+    h += `<h4><i class="ico puente"></i>Pasos peatonales provisionales</h4><ul class="lista mini-lista">${puentes.map((p, i) => item("data-puente", i,
+      `<b>${esc(p.orden ?? i + 1)}.</b> ${p.tipo === "cruce" ? `Cruce de la ${esc(p.via)}` : "Paso nuevo"}: entre ${esc(p.desde)} y ${esc(p.hasta)}
+       <small>${num(p.recorrido_m) !== null ? `${fmt(p.recorrido_m)} m` : ""}${num(p.desvio_medio_m) !== null ? ` · desvío a pie queda en ${fmt(p.desvio_medio_m)} m` : ""}</small>`)).join("")}</ul>`;
+  }
+  if (medidas.length) {
+    h += `<h4><i class="ico sentido"></i>Calles a doble sentido</h4><ul class="lista mini-lista">${medidas.map((m, i) => item("data-sentido", i,
+      `<b>${esc(m.orden ?? i + 1)}.</b> ${esc(m.via || "Calle sin nombre")} <small>de ${esc(m.desde)} a ${esc(m.hasta)}${num(m.metros) !== null ? ` · ${fmt(m.metros)} m` : ""}</small>`)).join("")}</ul>`;
+  }
+  if (rutas.length) {
+    const max = Math.max(1, ...rutas.flatMap((x) => [extra(x.carro), extra(x.pie)]));
+    h += `<h4><i class="ico ruta"></i>Rutas alternas para señalizar</h4>
+      <p class="nota">Cruces que la obra cierra y cuánto más hay que recorrer por el camino más corto que queda. Toque uno para verlo en el mapa.</p>
+      <div class="leyenda-mini"><span><i class="mini-barra carro"></i>En carro</span><span><i class="mini-barra pie"></i>A pie</span></div>
+      <ul class="lista mini-lista">${rutas.map((x, i) => item("data-ruta", i,
+      `<b>${esc(x.via || "Cruce")}</b>${miniBarra("En carro", x.carro, "carro", max)}${miniBarra("A pie", x.pie, "pie", max)}`)).join("")}</ul>`;
+  }
+  if (carga.length) {
+    h += `<h4><i class="ico esquina"></i>Esquinas que reciben más recorridos desviados</h4><ul class="lista mini-lista">${carga.map((c, i) => item("data-esquina", i,
+      `<i class="semaforo ${c.semaforo === true ? "si" : c.semaforo === false ? "no" : "nd"}"></i><b>${esc(c.nombre || "Esquina")}</b>
+       <small>${fmt(c.recorridos)} recorridos${num(c.porcentaje) !== null ? ` (${String(c.porcentaje).replace(".", ",")} %)` : ""} ·
+       ${c.semaforo === true ? "tiene semáforo" : c.semaforo === false ? "sin semáforo registrado" : "sin dato de semáforo"}</small>`)).join("")}</ul>`;
+  }
+  return h + "</div>";
+}
+
+function extra(dato) {
+  const a = num(dato?.seco_m), b = num(dato?.lluvia_m);
+  return a !== null && b !== null ? Math.max(0, b - a) : 0;
+}
+
+function miniBarra(quien, dato, clase, max) {
+  if (!dato) return "";
+  if (num(dato.lluvia_m) === null) {
+    return `<div class="mini"><span class="mini-nombre">${quien}</span><span class="mini-texto">no queda camino abierto</span></div>`;
+  }
+  const x = extra(dato);
+  return `<div class="mini" title="${quien}: ${fmt(dato.seco_m)} m antes de la obra, ${fmt(dato.lluvia_m)} m con la obra">
+    <span class="mini-nombre">${quien}</span>
+    <span class="mini-pista"><span class="mini-barra ${clase}" style="width:${Math.max(1.5, (100 * x) / max)}%"></span></span>
+    <span class="mini-valor">+${fmt(x)} m</span></div>`;
+}
+
+function enlazar(caja, selector, accion) {
+  caja.querySelectorAll(selector).forEach((li) => {
+    const attr = selector.slice(1, -1);
+    const elegir = () => {
+      const yaEstaba = li.classList.contains("sel");
+      if (yaEstaba) return verEtapa(etapaVista);   // segundo clic: volver a la etapa
+      quitarSeleccion();
+      li.classList.add("sel");
+      accion(+li.getAttribute(attr));
+    };
+    li.onclick = elegir;
+    li.onkeydown = (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); elegir(); } };
+  });
+}
+
+// ------------------------------------------------------------------ una ruta o pieza elegida en la lista
+const capaRuta = L.layerGroup().addTo(mapa);
+
+const detalle = L.control({ position: "topright" });
+detalle.onAdd = () => {
+  const d = L.DomUtil.create("div", "detalle");
+  d.hidden = true;
+  L.DomEvent.disableClickPropagation(d);
+  L.DomEvent.disableScrollPropagation(d);
+  return d;
+};
+detalle.addTo(mapa);
+
+function quitarSeleccion() {
+  capaRuta.clearLayers();
+  mapa.closePopup();
+  const caja = detalle.getContainer();
+  caja.hidden = true;
+  caja.innerHTML = "";
+  document.querySelectorAll("#resultados li.sel").forEach((x) => x.classList.remove("sel"));
+  if (estado.plan) resaltar(etapaVista === null ? null : CAPAS, etapaVista);
+}
+
+function pinRuta(p, texto, clase) {
+  return L.marker(p, {
+    keyboard: false,
+    icon: L.divIcon({ className: "", html: `<div class="pin ${clase}">${texto}</div>`, iconSize: [26, 26], iconAnchor: [13, 13] }),
+  }).addTo(capaRuta);
+}
+
+function lineaRuta(forma, color, { peso = 5, borde = "white", dash = null } = {}) {
+  L.polyline(forma, { color: borde, weight: peso + 4, opacity: 0.95, interactive: false, lineCap: "round", lineJoin: "round" }).addTo(capaRuta);
+  L.polyline(forma, { color, weight: peso, opacity: 1, dashArray: dash, interactive: false, lineCap: "round", lineJoin: "round" }).addTo(capaRuta);
+}
+
+function encuadrar(pts) {
+  if (!pts.length) return;
+  const ancho = mapa.getSize().x;
+  const der = ancho > 600 ? Math.min(330, ancho / 2) : 20;   // deja sitio al recuadro de detalle
+  irA(L.latLngBounds(pts), { paddingTopLeft: [40, 40], paddingBottomRight: [der, 40], maxZoom: 18, duration: 0.5 });
+}
+
+function filaDetalle(clase, quien, dato) {
+  if (!dato) return "";
+  const antes = num(dato.seco_m), con = num(dato.lluvia_m);
+  if (con === null) {
+    return `<div class="det-fila"><i class="${clase}"></i><span>${quien}</span><span>${fmt(antes)} m antes de la obra</span><b>no queda camino abierto</b></div>`;
+  }
+  const veces = antes > 0 ? con / antes : 0;
+  return `<div class="det-fila"><i class="${clase}"></i><span>${quien}</span>
+    <span>${fmt(antes)} m antes → ${fmt(con)} m con la obra</span>
+    <b>+${fmt(con - antes)} m${veces >= 1.5 ? ` <small>(${veces.toFixed(1).replace(".", ",")} veces)</small>` : ""}</b></div>`;
+}
+
+// Una ruta alterna: cruce cerrado en rojo, ruta en carro amarilla, ruta a pie verde punteada.
+function mostrarRuta(x, n) {
+  if (!x) return;
+  resaltar([], null);   // todo el plan atenuado: así el cruce y las dos rutas se distinguen
+  const datos = [["carro", "En carro", x.carro], ["pie", "A pie", x.pie]].filter(([, , d]) => d);
+  const todos = [];
+  const vistos = new Set();
+  let base = null;
+  for (const [, , d] of datos) {
+    const cerrado = puntos(d.cerrado);
+    if (cerrado.length < 2) continue;
+    base ??= { ...d, cerrado };
+    const clave = JSON.stringify(cerrado);
+    if (vistos.has(clave)) continue;
+    vistos.add(clave);
+    lineaRuta(cerrado, COLOR.rojo, { peso: 7 });
+    pinRuta(medio(cerrado), "✕", "cerrado").bindTooltip("Cruce cerrado por la obra", { direction: "top" });
+    todos.push(...cerrado);
+  }
+  const carro = puntos(x.carro?.forma), pie = puntos(x.pie?.forma);
+  if (carro.length >= 2) { lineaRuta(carro, COLOR.carro, { peso: 6, borde: COLOR.tinta }); todos.push(...carro); }
+  if (pie.length >= 2) { lineaRuta(pie, COLOR.pie, { peso: 4, dash: "2 8" }); todos.push(...pie); }
+  if (base) {
+    pinRuta(base.cerrado[0], "A", "extremo").bindTooltip(esc(base.desde || "Origen"), { direction: "top" });
+    pinRuta(base.cerrado[base.cerrado.length - 1], "B", "extremo").bindTooltip(esc(base.hasta || "Destino"), { direction: "top" });
+  }
+  mostrarDetalle(`
+    <div class="det-tit">${esc(x.via || "Cruce cerrado")}</div>
+    <div class="det-sub">Etapa ${n}. ${base ? `Cruce que la obra cierra, de <b>A</b> (${esc(base.desde)}) a <b>B</b> (${esc(base.hasta)}).` : ""}
+      Camino más corto que queda abierto:</div>
+    ${datos.map(([clase, quien, d]) => filaDetalle(clase, quien, d)).join("")}
+    <div class="det-leyenda"><span><i class="l-cerrado"></i>Cruce cerrado</span><span><i class="l-carro"></i>En carro</span><span><i class="l-pie"></i>A pie</span></div>
+    <div class="det-nota">Esto es lo que habría que señalizar. ${enlaceStreetView(base ? medio(base.cerrado) : null, "Ver el cruce en Street View")}</div>`);
+  encuadrar(todos);
+}
+
+function mostrarPieza(forma, capa, n) {
+  const pts = puntos(forma);
+  if (!pts.length) return;
+  resaltar([capa], n);
+  // Abre la ventana de la pieza (la que tiene popup) más cercana a su centro.
+  const centro = L.latLng(medio(pts));
+  const cand = piezas.filter((x) => x.capa === capa && x.etapa === n && x.layer.getPopup());
+  const pos = (l) => (l.getLatLng ? l.getLatLng() : L.latLngBounds(l.getLatLngs()).getCenter());
+  const elegida = cand.sort((a, b) => pos(a.layer).distanceTo(centro) - pos(b.layer).distanceTo(centro))[0];
+  encuadrar(pts.length === 1 ? [[pts[0][0] - 0.0015, pts[0][1] - 0.0015], [pts[0][0] + 0.0015, pts[0][1] + 0.0015]] : pts);
+  if (elegida) setTimeout(() => elegida.layer.openPopup(), sinMovimiento ? 0 : 550);
+}
+
+function mostrarDetalle(html) {
+  const caja = detalle.getContainer();
+  caja.innerHTML = `${html}<button class="ver-todo" type="button">Volver a la etapa</button>`;
+  caja.hidden = false;
+  caja.querySelector(".ver-todo").onclick = () => verEtapa(etapaVista);
+}
+
+// ------------------------------------------------------------------ leyenda del mapa
+const leyenda = L.control({ position: "bottomright" });
+leyenda.onAdd = () => {
+  const d = L.DomUtil.create("details", "leyenda");
+  L.DomEvent.disableClickPropagation(d);
+  return d;
+};
+
+function pintarLeyenda(d) {
+  if (!leyenda.getContainer()) leyenda.addTo(mapa);
+  const caja = leyenda.getContainer();
+  caja.open = window.innerWidth > 700;
+  const etapas = etapasDe(d);
+  caja.innerHTML = `<summary>Leyenda</summary>
+    <div>${etapas.map((e, i) => `<i class="cuadro" style="background:${colorEtapa(numeroDe(e, i))}"></i>`).join("")}Eje de la obra por etapa</div>
+    <div><i class="pin-mini puente"></i>Paso peatonal provisional</div>
+    <div><i class="linea" style="background:${COLOR.morado}"></i>Calle a doble sentido</div>
+    <div><i class="linea" style="background:${COLOR.rojo}"></i>Cruce cerrado</div>
+    <div><i class="linea ruta-carro"></i>Ruta alterna en carro</div>
+    <div><i class="linea ruta-pie"></i>Ruta alterna a pie</div>
+    <div class="sep"><i class="circ" style="background:${COLOR.rojo}"></i>Esquina sin semáforo</div>
+    <div><i class="circ" style="background:${COLOR.verde}"></i>Esquina con semáforo</div>
+    <div><i class="circ" style="background:${COLOR.gris}"></i>Sin dato de semáforo</div>`;
 }
 
 // http://localhost:5000/?ejemplo abre la página con El Salao ya planificado (útil en la presentación).
