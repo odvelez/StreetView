@@ -3,55 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Arroyos y desvíos</title>
+  <title>Obras por etapas</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
   <aside id="panel">
     <header>
-      <h1>Arroyos y desvíos</h1>
-      <p class="sub">Barranquilla y su área metropolitana. Marque un arroyo y el programa calcula
-        cuánto se alargan los recorridos cuando crece y qué medida temporal ayuda más mientras se canaliza.</p>
+      <h1>Obras por etapas</h1>
+      <p class="sub">Barranquilla y su área metropolitana. Defina una obra que cierra calles y el programa la
+        divide en etapas y propone medidas temporales para que la movilidad no se pare.</p>
     </header>
 
-    <section>
-      <h2><span class="num">1</span> Marque el arroyo</h2>
-      <label class="fila">Ir a
-        <select id="municipio">
-          <option value="">— elegir —</option>
-          <option value="10.9878,-74.8001,13">Barranquilla</option>
-          <option value="10.9185,-74.7677,14">Soledad</option>
-          <option value="10.8590,-74.7739,14">Malambo</option>
-          <option value="11.0103,-74.9547,14">Puerto Colombia</option>
-          <option value="10.8994,-74.8858,14">Galapa</option>
-        </select>
-      </label>
-      <p class="ayuda">Los arroyos de OpenStreetMap se ven en <b class="azul">azul claro</b>: haga clic en uno
-        para usarlo. Si el suyo no aparece, o corre por una calle, dibújelo.</p>
-      <div class="botones">
-        <button id="btn-dibujar" class="sec">Dibujar</button>
-        <button id="btn-deshacer" class="sec">Deshacer</button>
-        <button id="btn-borrar" class="sec">Borrar</button>
-      </div>
-      <p id="estado-dibujo" class="ayuda"></p>
-      <button id="btn-ejemplo" class="enlace">Cargar el ejemplo: arroyo El Salao (Soledad)</button>
-    </section>
+    <div id="menu">
+      <section id="paso-municipio" class="paso-menu">
+        <h2><span class="num">1</span> Elija el municipio</h2>
+        <label class="fila" for="municipio">Ir a
+          <select id="municipio">
+            <option value="">— elegir —</option>
+            <option value="10.9878,-74.8001,13">Barranquilla</option>
+            <option value="10.9185,-74.7677,14">Soledad</option>
+            <option value="10.8590,-74.7739,14">Malambo</option>
+            <option value="11.0103,-74.9547,14">Puerto Colombia</option>
+            <option value="10.8994,-74.8858,14">Galapa</option>
+          </select>
+        </label>
+      </section>
 
-    <section>
-      <h2><span class="num">2</span> Ajustes</h2>
-      <label class="fila">Zona a cada lado
-        <select id="radio"><option>300</option><option selected>400</option><option>500</option><option>600</option></select> m
-      </label>
-      <label class="fila">Puente peatonal nuevo hasta
-        <select id="luz"><option>40</option><option selected>60</option><option>80</option></select> m
-      </label>
-      <label class="fila">Medidas por tipo
-        <select id="k"><option selected>1</option><option>2</option><option>3</option></select>
-      </label>
-      <button id="btn-analizar" class="pri" disabled>Analizar</button>
-      <p id="estado" class="estado"></p>
-    </section>
+      <section id="paso-obra" class="paso-menu">
+        <h2><span class="num">2</span> Defina la obra</h2>
+        <p class="ayuda">Marque sobre el mapa el eje de la obra: la línea de calles que se van a cerrar.</p>
+        <div class="botones">
+          <button id="btn-dibujar" class="sec" type="button">Dibujar la obra</button>
+          <button id="btn-deshacer" class="sec" type="button">Deshacer</button>
+          <button id="btn-borrar" class="sec" type="button">Borrar</button>
+        </div>
+        <p id="estado-dibujo" class="ayuda" aria-live="polite"></p>
+        <p class="ayuda o">o use un ejemplo:</p>
+        <button id="btn-ejemplo" class="enlace" type="button">Cargar ejemplo: obra de canalización de El Salao</button>
+        <button id="btn-ejemplo-calle" class="enlace" type="button">Cargar ejemplo ilustrativo: 600 m de la calle 72</button>
+        <div id="aviso-ilustrativo" class="aviso" hidden>Ejemplo ilustrativo, no es una obra real.</div>
+      </section>
+
+      <section id="paso-planificar" class="paso-menu">
+        <h2><span class="num">3</span> Planifique</h2>
+        <details id="ajustes">
+          <summary>Ajustes</summary>
+          <label class="fila" for="etapa-max">Largo máximo de cada etapa
+            <span class="control"><select id="etapa-max">
+              <option>500</option><option>700</option><option selected>1000</option><option>1500</option>
+            </select> m</span>
+          </label>
+          <label class="fila" for="puente-cada">Un paso peatonal provisional cada
+            <span class="control"><select id="puente-cada">
+              <option>250</option><option selected>500</option><option>750</option>
+            </select> m</span>
+          </label>
+          <label class="fila check" for="cerrar-puentes">
+            <input type="checkbox" id="cerrar-puentes" checked>
+            La obra cierra también los puentes existentes
+          </label>
+        </details>
+        <button id="btn-planificar" class="pri" type="button" disabled>Planificar obra</button>
+        <p id="estado" class="estado" role="status" aria-live="polite"></p>
+      </section>
+    </div>
 
     <section id="resultados" hidden></section>
 
@@ -61,7 +77,29 @@
     </footer>
   </aside>
 
-  <main id="mapa"></main>
+  <main id="mapa" aria-label="Mapa"></main>
+
+  <div id="recorrido" role="dialog" aria-modal="true" aria-labelledby="rec-titulo" hidden>
+    <div class="rec-tarjeta">
+      <div class="rec-arriba">
+        <span id="rec-contador">Paso 1 de 1</span>
+        <span id="rec-puntos" aria-hidden="true"></span>
+      </div>
+      <div id="rec-ilustrativo" class="rec-ilustrativo" hidden>Ejemplo ilustrativo, no es una obra real</div>
+      <div class="rec-cifra-fila">
+        <span id="rec-cifra"></span>
+        <span id="rec-unidad"></span>
+      </div>
+      <h2 id="rec-titulo"></h2>
+      <ul id="rec-detalle"></ul>
+      <div id="rec-avisos"></div>
+      <div class="rec-botones">
+        <button id="rec-anterior" type="button">← Anterior</button>
+        <button id="rec-siguiente" class="pri" type="button">Siguiente →</button>
+      </div>
+      <button id="rec-saltar" class="enlace" type="button">Saltar recorrido (Esc)</button>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js"></script>
