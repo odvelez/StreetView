@@ -17,7 +17,7 @@ Dos cosas: (1) cambiar el código de «arroyo» a «obra» **sin cambiar ni una 
 | **R1** | La clase `Arroyo` pasa a `Obra` (deja el alias `Arroyo = Obra`). Agrega el parámetro `ancho_m` (por defecto 10) a `clasificar`, `analizar` y `plan_por_etapas`, al final y con valor por defecto | Con `ancho_m = 10` pasan todas las pruebas y los resultados son idénticos |
 | **R2** | Cambia los textos de `pasos_del_plan`, `main.py` y `plan_etapas.py`: nada de «arroyo», «cauce» ni «lluvia»; usa «obra», «eje de la obra», «toda la obra a la vez». **No quites ni renombres campos del JSON**; puedes **agregar** `eje` junto a `cauce` | Buscar esas palabras en `src/` solo encuentra El Salao, el alias, `fuente.arroyos_osm` y la clave `cauce` |
 | **R6** | **Ruta `POST /api/plan` en `app.py`** (es lo único que tocas de ese archivo). Pedido y respuesta: sección 5 de `cambio_a_obras.md`. Mismas validaciones y errores (JSON, 400 y 503) que `/api/analizar`. Campos nuevos: `etapa_max_m` (300 a 2000, por defecto 1000), `un_puente_cada_m` (200 a 1000, por defecto 500), `cerrar_puentes` (booleano, por defecto `true`), `ancho_m` (10 a 60, por defecto 10). Llama a `plan_por_etapas(...)` y devuelve el diccionario más `tiempos`, `recuadro` y `fuente` | Con la app corriendo, El Salao devuelve 200 con 3 etapas y 9 pasos |
-| **R3** | `fuente.lineas_de_archivo(ruta)` y la opción `--obra <archivo>` en `main.py` y `plan_etapas.py` (formato en la sección 8 de `cambio_a_obras.md`) | `plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json` funciona. El archivo lo hace Gustavo en su rama: tráelo con `git fetch` y `git checkout origin/gustavo/apoyo -- proyecto_arroyos/datos/ejemplos/obra_ilustrativa.json` (solo ese archivo). Si aún no está, haz uno propio de prueba y no lo subas |
+| **R3** | `fuente.lineas_de_archivo(ruta)` y la opción `--obra <archivo>` en `main.py` y `plan_etapas.py` (formato en la sección 8 de `cambio_a_obras.md`) | `plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json` funciona. El archivo lo crea Oscar y ya viene en `main` cuando creas la rama `obras`. Si por algo no está, haz uno propio de prueba y no lo subas |
 | **R4** | Parámetro `medicion="lados"` (igual que hoy) en `plan_por_etapas`; otro valor falla con mensaje claro | Hay prueba |
 | **R5** | Adapta los nombres en las pruebas y agrega: regresión de El Salao (mismos números que `resultados/linea_base/`), `ancho_m`, obra a lo largo de una calle (calcula el resultado **a mano** y escríbelo en un comentario), alias, `lineas_de_archivo` y `medicion` inválida | `python -m unittest` pasa todo (44 más las tuyas) |
 | R7 (opcional) | `medicion="afectados"`: medir el conjunto fijo de recorridos que quedan más largos o sin camino con la obra. Cambia las cifras: tabla antes y después en `equipo/entregas/karel_afectados.md`, apagado por defecto | Tabla hecha |
@@ -70,9 +70,8 @@ obras. Si una prueba falla o una cifra cambia, DETENTE y dime qué pasó. Orden:
       debe dar 200, 3 etapas y 9 pasos.
   R3  fuente.lineas_de_archivo(ruta) (formato en la sección 8 de cambio_a_obras.md) y la opción --obra
       <archivo> en main.py y plan_etapas.py. No borres --arroyo ni --listar (quedan obsoletos). El archivo de
-      ejemplo lo hace Gustavo en su rama: tráelo con git fetch y git checkout origin/gustavo/apoyo --
-      proyecto_arroyos/datos/ejemplos/obra_ilustrativa.json (solo ese archivo). Si aún no está, haz uno propio
-      de prueba y no lo subas.
+      ejemplo (datos/ejemplos/obra_ilustrativa.json) lo crea Oscar y ya viene en main. Si por algo no está,
+      haz uno propio de prueba y no lo subas.
   R4  Parámetro medicion="lados" (igual que hoy) en plan_por_etapas; otro valor falla con mensaje claro.
   R5  Adapta las pruebas y agrega: regresión de El Salao (mismos números que resultados/linea_base/),
       ancho_m (un ancho mayor cierra más o igual, nunca menos), obra a lo largo de una calle en el barrio

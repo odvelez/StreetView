@@ -39,8 +39,8 @@ El trabajo de código se hace **como un relevo en una sola línea** (la rama `ob
 | **1** | **Karel Silva** | **Refactorización** (de arroyo a obra, sin cambiar cifras) **y todo lo que hace falta para que la app responda con el plan**: la ruta `/api/plan` | `src/`, `main.py`, `herramientas/plan_etapas.py`, `herramientas/experimentos.py`, `tests/` y, en `app.py`, **solo** la ruta `/api/plan` |
 | **2** | **Santiago Lobo** | **Mejora gráfica**: menú, recorrido paso a paso, resultados y pantalla pequeña | `web/` y, si hace falta, `app.py` |
 | **3** | **Sebastián Blanco** | **Probar, corregir y asegurar** la app ya terminada | lo que haga falta, avisando al dueño |
-| **4** | **Oscar Vélez** | Recibe la posta, junta lo de Gustavo, limpia lo viejo y deja la app lista | `README.md`, `resultados/`, `documento/` y lo compartido |
-| aparte | **Gustavo de la Ossa** | Exposición (diapositivas y guion) y programación de apoyo | `herramientas/figuras_plan.py`, `herramientas/eje_de_calle.py`, `datos/ejemplos/`, `tests/test_app.py`, `equipo/entregas/gustavo_*` (rama `gustavo/apoyo`) |
+| **0 y 4** | **Oscar Vélez** | **Antes de Karel:** crea el ejemplo de obra que no es un arroyo. **Al final:** recibe la posta, escribe las pruebas de la API, junta lo de Gustavo, limpia lo viejo y deja la app lista | `herramientas/eje_de_calle.py`, `datos/ejemplos/`, `tests/test_app.py`, `README.md`, `resultados/`, `documento/` y lo compartido |
+| aparte | **Gustavo de la Ossa** | **Diapositivas** (guion y figuras) y un poco de programación: las figuras para las diapositivas | `herramientas/figuras_plan.py`, `equipo/entregas/gustavo_*` (rama `gustavo/apoyo`) |
 
 ## 5. Contrato `POST /api/plan` (no lo rompas)
 
@@ -82,7 +82,7 @@ Cada puente (`puentes[]`): `orden`, `tipo`, `via`, `desde`, `hasta`, `recorrido_
 
 ## 8. Formato de un archivo de obra
 
-Para obras fuera de El Salao (lo hace Gustavo y lo lee Karel):
+Para obras fuera de El Salao (lo hace Oscar y lo lee Karel):
 
 ```json
 {"nombre": "Obra ilustrativa en la calle 72", "ilustrativo": true,
@@ -96,11 +96,12 @@ Para obras fuera de El Salao (lo hace Gustavo y lo lee Karel):
 | Paso | Cuándo (aproximado) | Quién | Qué | Pasa la posta cuando |
 |---|---|---|---|---|
 | **0** | Hecho | Oscar | Subió la base a `main` | — |
-| **1** | Sábado, desde la mañana | **Karel** | Crea la rama `obras` desde `main`. Hace R1 a R6 (refactor y `/api/plan`) | Pruebas en verde, push y nota de entrega |
+| **0b** | Ya, **antes de que Karel cree la rama** | Oscar | Crea el ejemplo de obra que no es un arroyo (`herramientas/eje_de_calle.py` y `datos/ejemplos/obra_ilustrativa.json`) y lo sube a `main` | Archivo en `main` |
+| **1** | Sábado, desde la mañana | **Karel** | Crea la rama `obras` desde `main` (ya con el ejemplo de obra). Hace R1 a R6 (refactor y `/api/plan`) | Pruebas en verde, push y nota de entrega |
 | **2** | Sábado, después de Karel | **Lobo** | `git pull` de `obras`. Hace la parte gráfica (L1 a L5) | Pruebas en verde, push y nota de entrega |
 | **3** | Sábado en la noche, después de Lobo | **Blanco** | `git pull` de `obras`. Prueba, devuelve fallos y corrige (B1 a B4) | Pruebas en verde, push y nota de entrega |
-| **4** | Domingo, mañana | **Oscar** | Junta la rama de Gustavo en `obras`, hace la limpieza final, regenera resultados, README y documento, y pasa `obras` a `main` | App lista antes de las 18:00 |
-| aparte | Todo el tiempo | **Gustavo** | G2 (ejemplo de obra) primero, porque Karel lo necesita en R3; luego G1, G3, G4 y G5 | Sube a `gustavo/apoyo` y avisa a Oscar |
+| **4** | Domingo, mañana | **Oscar** | Escribe `tests/test_app.py` (pruebas de la API, incluida `/api/plan`), junta la rama de Gustavo en `obras`, hace la limpieza final, regenera resultados, README y documento, y pasa `obras` a `main` | App lista antes de las 18:00 |
+| aparte | Todo el tiempo | **Gustavo** | G1 (esqueleto de diapositivas) primero; luego G2 (figuras) y G3 (capturas, cuando la pantalla esté lista) | Sube a `gustavo/apoyo` y avisa a Oscar |
 
 **La hora no manda, manda el relevo:** cada quien empieza cuando le toca, no antes. Mientras esperas puedes leer el proyecto, correr la app y preparar; **no edites archivos del proyecto hasta tu turno.**
 
@@ -115,9 +116,10 @@ Para obras fuera de El Salao (lo hace Gustavo y lo lee Karel):
 
 ### Oscar: lo que tienes que hacer
 
-1. Avisar el orden al equipo y decirle a Karel su hora límite.
-2. Estar atento a cada «tu turno» y confirmar que las pruebas pasan antes de que siga el siguiente.
-3. **Paso 4:** juntar a Gustavo, limpiar y dejar la app lista.
+1. **Paso 0b (ya):** crear el ejemplo de obra (`herramientas/eje_de_calle.py` y `datos/ejemplos/obra_ilustrativa.json`) y subirlo a `main`, antes de que Karel cree la rama.
+2. Avisar el orden al equipo y decirle a Karel su hora límite.
+3. Estar atento a cada «tu turno» y confirmar que las pruebas pasan antes de que siga el siguiente.
+4. **Paso 4:** escribir `tests/test_app.py`, juntar a Gustavo, limpiar y dejar la app lista.
 
 Metaprompt para tu Claude (pégalo en Claude Code, dentro de la carpeta del proyecto):
 
@@ -127,7 +129,16 @@ Eres el Claude que ayuda a Oscar Vélez, integrador del proyecto final de Matem�
 personales de equipo/.
 
 El trabajo de código es un RELEVO en la rama obras: Karel -> Lobo -> Blanco, uno a la vez. Gustavo trabaja
-aparte en gustavo/apoyo. Tu trabajo es VERIFICAR cada entrega y, al final, cerrar.
+aparte en gustavo/apoyo (diapositivas y figuras). Tu trabajo es: (A) crear el ejemplo de obra antes del turno
+de Karel, (B) VERIFICAR cada entrega y (C) cerrar.
+
+(A) ANTES DEL TURNO DE KAREL, cuando yo te lo pida:
+  - Crea herramientas/eje_de_calle.py: dado --calle "Calle 72" --largo-m 600 --salida <archivo>, genera un
+    archivo JSON {"nombre", "ilustrativo": true, "lineas": [[[lat, lon], ...]]} uniendo los tramos de esa
+    calle (usa fuente.red_para(recuadro) y red.tramos: cada Tramo tiene via y forma) hasta el largo pedido.
+  - Crea datos/ejemplos/obra_ilustrativa.json con el nombre "Obra ilustrativa en la calle 72: no es una obra
+    real". Dibújalo con matplotlib para comprobarlo.
+  - Corre python -m unittest, haz commit y, SOLO si yo lo confirmo, push a main.
 
 Cuando yo te diga "entregó <persona>":
   1. git fetch y git checkout obras; git pull.
@@ -139,7 +150,10 @@ Cuando yo te diga "entregó <persona>":
   Si algo falla, DETENTE: dime qué falló, de quién es el archivo y qué se le debe pedir. No lo arregles tú si
   es un archivo ajeno.
 
-Cuando yo te diga "cierra" (paso 4): junta gustavo/apoyo en obras (archivos nuevos, no deberían chocar);
+Cuando yo te diga "cierra" (paso 4): primero escribe tests/test_app.py con app.test_client() de Flask, sin
+descargas reales (usa unittest.mock si hace falta): GET / da 200; GET /api/ejemplo trae lineas; POST
+/api/analizar sin líneas da 400; POST /api/plan con El Salao da 200 con etapas, resumen y pasos, y con
+parámetros fuera de rango da 400. Luego junta gustavo/apoyo en obras (archivos nuevos, no deberían chocar);
 quita lo que ya no se use (fuente.arroyos_osm, lineas_por_nombre, las rutas /api/arroyos, la clave cauce, el
 alias Arroyo, --arroyo y --listar); mueve datos/arroyos_area_metropolitana.json a datos/archivo_arroyos/;
 regenera resultados/ (main.py y herramientas/plan_etapas.py); actualiza README.md; y dime qué secciones de
