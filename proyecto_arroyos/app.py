@@ -9,6 +9,7 @@ Rutas:
   GET  /               la página (carpeta web/)
   GET  /api/arroyos    cauces de OpenStreetMap del área metropolitana
   GET  /api/ejemplo    el arroyo El Salao en Soledad, caso de estudio del documento
+  GET  /api/ejemplo_obra  obra ilustrativa en la calle 72 (datos/ejemplos/obra_ilustrativa.json)
   POST /api/analizar   recibe el arroyo marcado y devuelve el análisis (src/analisis.py)
   POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py)
 """
@@ -35,7 +36,7 @@ def error_inesperado(ex):
     if isinstance(ex, HTTPException):
         return ex
     app.logger.exception("Error al atender %s", request.path)
-    return jsonify(error="Ocurrió un error inesperado al analizar este arroyo. "
+    return jsonify(error="Ocurrió un error inesperado al planificar esta obra. "
                          "Pruebe con otro tramo o revise la consola donde corre app.py."), 500
 
 
@@ -57,6 +58,14 @@ def arroyos():
 @app.get("/api/ejemplo")
 def ejemplo():
     return jsonify(nombre="Arroyo El Salao (Soledad)", lineas=fuente.lineas_ejemplo())
+
+
+@app.get("/api/ejemplo_obra")
+def ejemplo_obra():
+    """Obra ilustrativa en la calle 72 (no es una obra real), para probar la pantalla fuera de El Salao."""
+    obra = fuente.leer_obra(RAIZ / "datos" / "ejemplos" / "obra_ilustrativa.json")
+    return jsonify(nombre=obra["nombre"], ilustrativo=obra["ilustrativo"],
+                   lineas=[[list(p) for p in l] for l in obra["lineas"]])
 
 
 @app.post("/api/analizar")
