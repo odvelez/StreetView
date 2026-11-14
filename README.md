@@ -9,7 +9,7 @@ Matemáticas Discretas, Universidad del Norte. Equipo: Oscar Vélez, Gustavo de 
 **Entrega:** domingo 15 de noviembre de 2026, 11:59 p. m. (hora de Bogotá), por Brightspace.
 **Se entrega:** el PDF en LaTeX y las diapositivas (10 minutos, 5 expositores, demo en vivo). Después viene la sustentación individual, que vale **40 %**: cada integrante debe poder explicar todo el proyecto, no solo su parte.
 
----
+------
 
 ## 1. Resumen del proyecto
 
