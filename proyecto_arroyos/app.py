@@ -74,7 +74,7 @@ def arroyos():
 
 @app.get("/api/ejemplo")
 def ejemplo():
-    return jsonify(nombre="Arroyo El Salao (Soledad)", lineas=fuente.lineas_ejemplo())
+    return jsonify(nombre="Canalización de El Salao (Soledad)", lineas=fuente.lineas_ejemplo())
 
 
 @app.get("/api/ejemplo_obra")
@@ -189,7 +189,7 @@ def _numero(pedido, clave, defecto, minimo, maximo):
 
 @app.post("/api/plan")
 def api_plan():
-    """Plan de obra por etapas. Pedido y respuesta: equipo/cambio_a_obras.md, sección 5."""
+    """Plan de obra por etapas. Pedido y respuesta: README.md, sección 5."""
     pedido = request.get_json(force=True, silent=True)
     if not isinstance(pedido, dict):
         return jsonify(error="El pedido debe ser un objeto JSON."), 400

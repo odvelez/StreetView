@@ -277,7 +277,7 @@ Sí hay **frases que conviene reescribir** (decisión de Persona 3, con estos re
 **Persona 2 (datos y verificación):**
 
 - [ ] **Street View de las esquinas A y B y de la rampa de 6 m.** Ver si B (junto a la avenida Murillo) es de verdad una rampa de un solo sentido y si invertirla es realista. Enlaces OSM en la sección 1.
-- [ ] **Street View de los cruces bloqueados** (lista en el README del equipo). Si alguno sí se puede pasar, marcarlo como abierto en la web y avisar a Persona 1 para volver a correr.
+- [ ] **Street View de los cruces bloqueados** (lista en el README). Si alguno sí se puede pasar, marcarlo como abierto en la web y avisar a Persona 1 para volver a correr.
 - [ ] Población afectada, noticias del 4 de noviembre, canalización anunciada, emergencias previas: **con fuente**. No hay nada de esto en el código.
 - [ ] Confirmar si la calle 72 (la que más gana intermediación con lluvia) coincide con lo que se vio o se reportó.
 

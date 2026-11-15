@@ -68,7 +68,7 @@ def lineas_ejemplo():
 
 
 def leer_obra(ruta):
-    """Lee un archivo de obra (formato de equipo/cambio_a_obras.md, sección 8):
+    """Lee un archivo de obra (formato de README.md, sección 2):
 
         {"nombre": "...", "ilustrativo": true, "lineas": [[[lat, lon], [lat, lon], ...], ...]}
 

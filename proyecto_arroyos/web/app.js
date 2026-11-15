@@ -1,5 +1,5 @@
 // Planificar una obra por etapas: el usuario define el eje de la obra, el servidor (POST /api/plan)
-// la divide en etapas y aquí se muestra el plan. Contrato del JSON: equipo/cambio_a_obras.md, sección 5.
+// la divide en etapas y aquí se muestra el plan. Contrato del JSON: README.md, sección 5.
 // Lo que llega del servidor puede traer campos de más o de menos: nada aquí debe romperse si falta uno.
 
 const COLOR = {

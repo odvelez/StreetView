@@ -7,7 +7,7 @@ Uso (desde proyecto_arroyos/):
 Toma los tramos con ese nombre de las calles ya descargadas de OpenStreetMap (por defecto, las de la
 zona de El Salao), los une empezando por un extremo del tramo continuo más largo y sigue siempre lo más
 recto posible hasta completar el largo pedido. Guarda el eje de la obra con el formato de
-equipo/cambio_a_obras.md (sección 8). **Es un ejemplo ilustrativo: no es una obra real**, y el archivo lo dice.
+README.md (sección 2). **Es un ejemplo ilustrativo: no es una obra real**, y el archivo lo dice.
 """
 import argparse
 import json

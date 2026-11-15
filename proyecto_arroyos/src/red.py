@@ -25,6 +25,14 @@ SIN_PEATONES = {"motorway", "motorway_link"}
 PRIVADO = {"private", "no"}
 
 
+def _nombre_de_via(nombre):
+    """Una calle de OSM llamada como el arroyo ("Arroyo El Salao") es una vía local junto
+    al eje de la obra; con ese nombre la pantalla parecería hablar del arroyo."""
+    if nombre.lower().startswith("arroyo "):
+        return "Vía local junto al eje (en OSM: " + nombre + ")"
+    return nombre
+
+
 @dataclass
 class Tramo:
     id: int
@@ -109,7 +117,7 @@ class Red:
                 self.pos[parte[-1]] = nodos[parte[-1]]
                 self.tramos.append(Tramo(
                     id=len(self.tramos), u=parte[0], v=parte[-1], metros=round(metros, 1),
-                    via=tags.get("name", ""), clase=tags.get("highway", ""), forma=forma,
+                    via=_nombre_de_via(tags.get("name", "")), clase=tags.get("highway", ""), forma=forma,
                     vehicular=veh, peatonal=pea, sentido=sentido_de(tags) if veh else 0,
                     puente=tags.get("bridge", "no") not in ("no", "") or tags.get("man_made") == "bridge"))
 

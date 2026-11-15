@@ -30,7 +30,7 @@ VEHÍCULOS (grafo dirigido, respeta sentidos viales)
 
 RUTAS ALTERNAS (cruces que la obra cierra; metros sin obra -> con la obra)
   Calle 61               carro 120 -> 1895   a pie 120 -> 217
-  Arroyo El Salao        carro 102 -> 1107   a pie 102 -> 957
+  Vía local junto al eje (en OSM: Arroyo El Salao) carro 102 -> 1107   a pie 102 -> 957
   Carrera 22D            carro 102 -> 1107   a pie 106 -> 934
   Calle 59A              carro 177 -> 1155   a pie 46 -> 576
   Carrera 22A            carro 173 -> 1092   a pie 173 -> 725

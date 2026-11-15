@@ -1987,7 +1987,7 @@
    },
    "rutas": [
     {
-     "via": "Arroyo El Salao",
+     "via": "Vía local junto al eje (en OSM: Arroyo El Salao)",
      "carro": {
       "seco_m": 102,
       "lluvia_m": 1776,
