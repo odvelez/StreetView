@@ -40,9 +40,9 @@ Una obra que cierra calles obliga a quienes viven alrededor a dar vueltas. Este 
 \subsection{Motivación}
 El 4 de noviembre de 2026, una creciente súbita del arroyo El Salao, en Soledad (Atlántico), arrastró a tres personas a la altura de la carrera 21 con calle 74, en el barrio Los Cedros (Infobae, 2026). Vecinos de Los Cedros y Las Moras afirman que cruzan esa zona a diario por falta de alternativas (El Tiempo, 2026). Este hecho es la motivación del proyecto, no su tema: no se analiza la emergencia ni las decisiones de quienes estaban allí.
 
-La respuesta habitual a un arroyo peligroso es canalizarlo, y una canalización es una obra larga que cierra durante meses las calles y los puentes que hoy lo cruzan. \completar{canalización de El Salao anunciada: entidad, fecha y costo, con enlace a la fuente} \completar{emergencias anteriores en El Salao, con fuente}
+La respuesta habitual a un arroyo peligroso es canalizarlo, y una canalización es una obra larga que cierra durante meses las calles y los puentes que hoy lo cruzan. La Corporación Autónoma Regional del Atlántico (CRA) informó que las obras de canalización y recuperación ambiental del arroyo, iniciadas en 2015, llevaban un 93~\% de avance en septiembre de 2022 (CRA, 2022) y las entregó el 22 de septiembre de 2023 (CRA, 2023). En noviembre de 2026, la Alcaldía de Soledad inició obras de muros de contención, adecuación del talud y limpieza del cauce en el sector Las Moras I (El Heraldo, 2026a). El costo de estas obras no se pudo verificar en fuentes públicas. Antes de la emergencia del 4 de noviembre, el 18 de octubre de 2026, una creciente del arroyo arrastró un taxi en el barrio Villa Estadio, sin heridos (El Heraldo, 2026b).
 
-\textbf{A quién afecta.} \completar{habitantes de los barrios del sector, con cifra y fuente (DANE o Alcaldía de Soledad)}.
+\textbf{A quién afecta.} No encontramos una cifra de habitantes para el sector de El Salao: el DANE no la publica desagregada. Como referencia, el municipio de Soledad tenía 535.984 habitantes en el censo de 2018 (DANE, 2018).
 
 \subsection{Pregunta}
 Al planificar una obra que cierra calles, ¿cómo se divide en etapas y qué medidas temporales reducen más el desvío de quienes la rodean?
@@ -238,7 +238,7 @@ La conclusión es clara: con medidas temporales, el problema peatonal mejora muc
 \item Se usa una muestra de esquinas sin ponderar por población ni por destinos.
 \item La heurística voraz no garantiza el óptimo.
 \item Se supone que cada etapa cierra también los puentes existentes de su tramo. Si se mantuvieran abiertos, el desvío a pie con la obra sería de 68, 56 y 36 m (\path{resultados/informe_cambios.md}). Es el supuesto que más pesa en las cifras.
-\item La calidad de OpenStreetMap depende de quién lo edita. \completar{cómo se confirmó cada cruce cerrado en Street View (calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje)} \completar{confirmar en Street View la calle de 6 m junto a la avenida Murillo; si es un error de OpenStreetMap, dejarlo como limitación}
+\item La calidad de OpenStreetMap depende de quién lo edita. Los cruces que el modelo cierra (por ejemplo, calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje) y la calle sin nombre de 6 m de largo junto a la avenida Murillo salen de OpenStreetMap y están pendientes de verificar en Street View o en terreno.
 \end{itemize}
 
 \section{Conclusiones}
@@ -256,9 +256,19 @@ El código, los datos guardados, los resultados y las instrucciones para reprodu
 
 \section*{Referencias}
 \begin{referencias}
+Corporación Autónoma Regional del Atlántico. (2022, 22 de septiembre). \textit{En un 93\% avanzan obras de canalización de arroyo el Salao en Soledad}. \url{https://www.crautonoma.gov.co/prensa/noticias/en-un-93-avanzan-obras-de-canalizacion-de-arroyo-el-salao-en-soledad}
+
+Corporación Autónoma Regional del Atlántico. (2023, 22 de septiembre). \textit{C.R.A entregó recuperación ambiental y paisajística del arroyo el Salao, en Soledad}. \url{https://www.crautonoma.gov.co/prensa/noticias/c-r-a-entrego-recuperacion-ambiental-y-paisajistica-del-arroyo-el-salao-en-soledad}
+
+Departamento Administrativo Nacional de Estadística. (2018). \textit{Censo Nacional de Población y Vivienda 2018}. \url{https://www.dane.gov.co/files/censo2018/informacion-tecnica/CNPV-2018-VIHOPE-v2.xls}
+
 Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. \textit{Numerische Mathematik, 1}, 269--271.
 
 El Tiempo. (2026, 5 de noviembre). \textit{Atlántico | `La gente pasa porque le toca': comunidad de Soledad exige soluciones tras muerte de abuelo y desaparición de su nieta en arroyo El Salao}. \url{https://www.eltiempo.com/colombia/barranquilla/atlantico-la-gente-pasa-porque-le-toca-comunidad-de-soledad-exige-soluciones-tras-muerte-de-abuelo-y-desaparicion-de-su-nieta-en-arroyo-el-salao-3598769}
+
+El Heraldo. (2026a, 12 de noviembre). \textit{Tras décadas de espera, Las Moras I comienza a ver obras para protegerse del arroyo El Salao}. \url{https://www.elheraldo.co/atlantico/barranquilla/2026/11/12/tras-decadas-de-espera-las-moras-i-comienza-a-ver-obras-para-protegerse-del-arroyo-el-salao/}
+
+El Heraldo. (2026b, 18 de octubre). \textit{Emergencias por lluvias: un taxi fue arrastrado por arroyo El Salao en Soledad y varios barrios en Galapa resultaron afectados por inundaciones}. \url{https://www.elheraldo.co/atlantico/2026/10/18/emergencias-por-lluvias-un-taxi-fue-arrastrado-por-arroyo-el-salao-en-soledad-y-varios-barrios-en-galapa-resultaron-afectados-por-inundaciones/}
 
 Infobae. (2026, 4 de noviembre). \textit{Dos menores y un adulto fueron arrastrados por un arroyo en medio de fuerte aguacero en Soledad, Atlántico}. \url{https://www.infobae.com/colombia/2026/11/04/dos-menores-y-un-adulto-fueron-arrastrados-por-un-arroyo-en-medio-de-fuerte-aguacero-en-soledad-atlantico/}
 

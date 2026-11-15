@@ -125,14 +125,11 @@ proyecto_arroyos/
 
 **Entrega (Brightspace):** subir `proyecto_arroyos/documento/main.pdf` y `proyecto_arroyos/documento/diapositivas.pdf`. Los dos tienen el enlace al repositorio y se compilan con `pdflatex main.tex` y `pdflatex diapositivas.tex` (dos veces cada uno) desde `documento/`.
 
-**Pendiente de fuente** (en `main.tex` aparecen en rojo como `\completar{}`; sin fuente verificable no se escribe ninguna cifra):
-1. Habitantes de los barrios del sector, con cifra y fuente (DANE o Alcaldía de Soledad).
-2. Canalización de El Salao anunciada: entidad, fecha y costo, con enlace.
-3. Emergencias anteriores en El Salao, con fuente.
-4. Cómo se confirmó en Street View cada cruce cerrado (calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje, que en OSM se llama «Arroyo El Salao»).
-5. Confirmar en Street View la calle sin nombre de 6 m junto a la avenida Murillo; si es un error de OSM, dejarlo como limitación.
+**Pendiente de verificar** (en `main.tex` ya están escritos como «pendiente de verificar», sin recuadros rojos):
+1. Cruces cerrados de El Salao (calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje, que en OSM se llama «Arroyo El Salao»): confirmar en Street View que cruzan el arroyo.
+2. La calle sin nombre de 6 m de **largo** junto a la avenida Murillo: confirmar en Street View que existe; si es un error de OSM, queda como limitación.
 
-Al completar uno, se borra el `\completar{}`, se recompila `main.pdf` y se hace commit.
+**Fuentes del documento sin abrir todavía.** Los datos de la canalización (CRA, 2022 y 2023; El Heraldo, 12 de noviembre de 2026), del taxi arrastrado (El Heraldo, 18 de octubre de 2026) y de la población de Soledad (DANE, censo 2018, 535.984 habitantes) salieron de dos informes de IA. Antes de la sustentación hay que abrir los enlaces de la bibliografía y confirmar que dicen eso. No hay cifra de habitantes del sector ni costo de la obra con fuente.
 
 **Antes de la sustentación (lunes 16, 3:47 p. m.)**
 - Ensayo cronometrado de los 10 minutos con `documento/guion.txt` y la demo en el mismo computador que se va a usar.

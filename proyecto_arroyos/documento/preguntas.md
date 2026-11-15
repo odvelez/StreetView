@@ -36,7 +36,7 @@ Cuatro: pasos peatonales provisionales (uno por cada 500 m de obra, mínimo uno 
 Costaría y tardaría casi lo mismo que la obra. Solo proponemos medidas temporales.
 
 **¿Cuántas personas afecta?**
-No tenemos una cifra con fuente verificable. Está pendiente en el documento y no la decimos.
+No hay cifra del sector de El Salao: el DANE no la publica desagregada. Solo podemos decir que Soledad tenía 535.984 habitantes en el censo de 2018.
 
 ---
 
