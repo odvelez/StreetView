@@ -183,7 +183,7 @@ def _numero(pedido, clave, defecto, minimo, maximo):
     v = float(pedido.get(clave, defecto))
     if not math.isfinite(v):
         raise ValueError(clave)
-    v = min(max(v, minimo), maximo)
+    v = float(min(max(v, minimo), maximo))   # float: min/max pueden devolver el límite como int
     return int(v) if v.is_integer() else v
 
 
