@@ -324,6 +324,8 @@ EXPERIMENTOS = dict(voraz=exp_voraz, criticos=exp_criticos, sensibilidad=exp_sen
                     control=exp_control, histograma=exp_histograma)
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):  # acentos bien en Windows con salida redirigida
+        sys.stdout.reconfigure(encoding="utf-8")
     pedidos = sys.argv[1:] or list(EXPERIMENTOS)
     desconocidos = [p for p in pedidos if p not in EXPERIMENTOS]
     if desconocidos:

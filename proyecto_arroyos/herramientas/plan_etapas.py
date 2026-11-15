@@ -20,7 +20,7 @@ sys.path.insert(0, str(RAIZ))
 
 from src import fuente
 from src.analisis import TOLERANCIA_M
-from src.etapas import ETAPA_MAX_M, MEDICIONES, UN_PUENTE_CADA_M, plan_por_etapas
+from src.etapas import ETAPA_MAX_M, MEDICIONES, UN_PUENTE_CADA_M, plan_por_etapas, plural
 
 SALIDA = RAIZ / "resultados"
 
@@ -28,11 +28,15 @@ SALIDA = RAIZ / "resultados"
 def informe(nombre, plan):
     r = plan["resumen"]
     p = [f"PLAN DE OBRA POR ETAPAS: {nombre}",
-         f"Obra de {r['longitud_m']} m a lo largo de su eje en {r['etapas']} etapas de hasta "
+         f"Obra de {r['longitud_m']} m a lo largo de su eje en {r['etapas']} "
+         f"{plural(r['etapas'], 'etapa', 'etapas')} de hasta "
          f"{plan['parametros']['etapa_max_m']} m; un paso peatonal provisional por cada "
          f"{plan['parametros']['un_puente_cada_m']} m de obra (mínimo uno).",
-         f"En total: {r['puentes_peatonales']} pasos peatonales provisionales, {r['cambios_de_sentido']} cambios de sentido, "
-         f"{r['rutas_alternas']} rutas alternas y {r['esquinas_de_control']} esquinas para controlar "
+         f"En total: {r['puentes_peatonales']} "
+         f"{plural(r['puentes_peatonales'], 'paso peatonal provisional', 'pasos peatonales provisionales')}, "
+         f"{r['cambios_de_sentido']} {plural(r['cambios_de_sentido'], 'cambio', 'cambios')} de sentido, "
+         f"{r['rutas_alternas']} {plural(r['rutas_alternas'], 'ruta alterna', 'rutas alternas')} y "
+         f"{r['esquinas_de_control']} {plural(r['esquinas_de_control'], 'esquina', 'esquinas')} para controlar "
          f"({r['esquinas_sin_semaforo']} sin semáforo registrado).",
          f"Durante cada etapa se cierran todos los tramos que tocan la franja de obra ({plan['parametros']['ancho_m']:g} m "
          "desde el eje) dentro del tramo en obra"
@@ -40,15 +44,18 @@ def informe(nombre, plan):
             else "; los puentes existentes se mantienen abiertos.")]
     for e in plan["etapas"]:
         p.append(f"\nETAPA {e['numero']}: metro {e['inicio_m']} al {e['fin_m']} ({e['longitud_m']} m)")
-        p.append(f"  Cierra {e['cruces_cerrados']} cruces ({e['puentes_existentes_cerrados']} son puentes existentes); "
-                 f"{len(e['tramos_cerrados'])} tramos en total.")
+        pex = e["puentes_existentes_cerrados"]
+        p.append(f"  Cierra {e['cruces_cerrados']} {plural(e['cruces_cerrados'], 'cruce', 'cruces')} "
+                 f"({pex} {plural(pex, 'es un puente existente', 'son puentes existentes')}); "
+                 f"{len(e['tramos_cerrados'])} {plural(len(e['tramos_cerrados']), 'tramo', 'tramos')} en total.")
         pe, ve = e["peatones"], e["vehiculos"]
         if not pe:
             p += [f"  AVISO: {a}" for a in e["avisos"]]
             continue
         o, c = pe["obra"], pe["con_puentes"]
         p.append(f"  A pie: desvío medio {o['desvio_medio_m']:.0f} m -> {c['desvio_medio_m']:.0f} m con "
-                 f"{len(pe['puentes'])} de {e['puentes_necesarios']} pasos peatonales (máximo {o['desvio_max_m']:.0f} -> "
+                 f"{len(pe['puentes'])} de {e['puentes_necesarios']} "
+                 f"{plural(e['puentes_necesarios'], 'paso peatonal', 'pasos peatonales')} (máximo {o['desvio_max_m']:.0f} -> "
                  f"{c['desvio_max_m']:.0f} m).")
         for q in pe["puentes"]:
             donde = f"cruce de la {q['via']}" if q["tipo"] == "cruce" else "paso nuevo"
@@ -80,6 +87,9 @@ def informe(nombre, plan):
 
 
 def main():
+    # En Windows, con la salida redirigida a un archivo, los acentos salen mal sin esto.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Plan de obra por etapas.")
     ap.add_argument("--obra", help="archivo JSON con el eje de la obra (por defecto, la canalización de El Salao)")
     ap.add_argument("--arroyo", help="(obsoleto) nombre de un arroyo en OpenStreetMap")

@@ -223,8 +223,9 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
         puentes=_formato_propuestas(elegidos_p))
     if len(elegidos_p) < resultado["puentes_necesarios"]:
         resultado["avisos"].append(
-            f"Por el largo de la etapa corresponden {resultado['puentes_necesarios']} pasos peatonales, pero solo "
-            f"{len(elegidos_p)} reduce el desvío.")
+            f"Por el largo de la etapa corresponden {resultado['puentes_necesarios']} "
+            f"{plural(resultado['puentes_necesarios'], 'paso peatonal', 'pasos peatonales')}, pero solo "
+            f"{len(elegidos_p)} {plural(len(elegidos_p), 'reduce', 'reducen')} el desvío.")
 
     # ---- vehículos
     pares_v = [(a, b) for a in muestra[1] for b in muestra[-1]] + [(b, a) for a in muestra[1] for b in muestra[-1]]
@@ -341,8 +342,21 @@ def _limites(puntos, margen=0.0015):
     return [[min(lats) - margen, min(lons) - margen], [max(lats) + margen, max(lons) + margen]]
 
 
-def _plural(n, uno, varios):
+def plural(n, uno, varios):
+    """«1 paso peatonal», «2 pasos peatonales»: elige la forma según n."""
     return uno if n == 1 else varios
+
+
+_plural = plural
+
+
+def _de_ellos_puentes(n):
+    """Final de la frase de cruces cerrados: cuántos son puentes existentes."""
+    if not n:
+        return "."
+    if n == 1:
+        return ", uno de ellos es un puente existente."
+    return f", {n} de ellos son puentes existentes."
 
 
 def pasos_del_plan(plan):
@@ -394,7 +408,7 @@ def pasos_del_plan(plan):
         p, v = x["peatones"], x["vehiculos"]
         detalle = [f"Tramo del metro {x['inicio_m']} al {x['fin_m']} ({x['longitud_m']} m). "
                    f"Se cierran {x['cruces_cerrados']} {_plural(x['cruces_cerrados'], 'cruce', 'cruces')}"
-                   + (f", {x['puentes_existentes_cerrados']} de ellos puentes existentes." if x["puentes_existentes_cerrados"] else ".")]
+                   + _de_ellos_puentes(x["puentes_existentes_cerrados"])]
         if p:
             detalle.append(f"A pie: el desvío medio pasa de {p['obra']['desvio_medio_m']:.0f} m a "
                            f"{p['con_puentes']['desvio_medio_m']:.0f} m con {len(p['puentes'])} "
@@ -402,7 +416,8 @@ def pasos_del_plan(plan):
         if v:
             detalle.append(f"En carro: desvío medio de {v['obra']['desvio_medio_m']:.0f} m"
                            + (f"; {v['obra']['sin_camino']} pares sin camino" if v['obra']['sin_camino'] else "")
-                           + (f"; {len(v['medidas'])} cambio(s) de sentido." if v["medidas"] else "."))
+                           + (f"; {len(v['medidas'])} {plural(len(v['medidas']), 'cambio', 'cambios')} de sentido."
+                              if v["medidas"] else "."))
         detalle += x["avisos"]
         puntos = x["eje"] or todo
         pasos.append(dict(

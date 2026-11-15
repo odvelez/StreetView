@@ -164,4 +164,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):  # acentos bien en Windows con salida redirigida
+        sys.stdout.reconfigure(encoding="utf-8")
     main()

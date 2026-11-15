@@ -2,7 +2,7 @@
 import unittest
 
 from src.analisis import tablas, voraz
-from src.etapas import cortes, numero_de_etapas, plan_por_etapas, puentes_por_longitud
+from src.etapas import _de_ellos_puentes, cortes, numero_de_etapas, plan_por_etapas, plural, puentes_por_longitud
 from src.geometria import Obra, Plano
 from src.grafo import Grafo
 from tests.test_proyecto import barrio_de_prueba
@@ -142,6 +142,28 @@ class PlanEnElBarrio(unittest.TestCase):
         for p in plan["pasos"]:
             self.assertTrue({"id", "titulo", "cifra", "unidad", "detalle", "capas", "foco"} <= set(p))
             self.assertEqual(len(p["foco"]), 2)
+
+
+class Textos(unittest.TestCase):
+    def test_plurales(self):
+        self.assertEqual(plural(1, "etapa", "etapas"), "etapa")
+        self.assertEqual(plural(3, "etapa", "etapas"), "etapas")
+        self.assertEqual(plural(0, "paso", "pasos"), "pasos")
+        self.assertEqual(_de_ellos_puentes(0), ".")
+        self.assertEqual(_de_ellos_puentes(1), ", uno de ellos es un puente existente.")
+        self.assertEqual(_de_ellos_puentes(3), ", 3 de ellos son puentes existentes.")
+
+    def test_informe_sin_plurales_rotos(self):
+        import sys
+        from pathlib import Path
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "herramientas"))
+        from plan_etapas import informe
+        red, lineas = barrio_de_prueba()
+        texto = informe("Prueba", plan_por_etapas(red, lineas, etapa_max_m=2000))
+        self.assertIn(" en 1 etapa de hasta ", texto)
+        self.assertNotIn("(s)", texto)
+        self.assertNotIn("1 pasos", texto)
+        self.assertNotIn("1 etapas", texto)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ Salida: resumen en pantalla y archivos en resultados/ (resumen.txt, analisis.jso
 """
 import argparse
 import json
+import sys
 import time
 from collections import Counter
 from pathlib import Path
@@ -198,4 +199,6 @@ def main():
 
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):  # acentos bien en Windows con salida redirigida
+        sys.stdout.reconfigure(encoding="utf-8")
     main()

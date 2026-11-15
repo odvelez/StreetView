@@ -520,6 +520,7 @@ function pintarResultados(d) {
     <h2><span class="num">✓</span> Plan de la obra</h2>
     ${estado.ejemplo ? `<p class="obra-nombre">${esc(estado.ejemplo.nombre)}</p>` : ""}
     ${estado.ejemplo?.ilustrativo ? `<div class="aviso">Ejemplo ilustrativo, no es una obra real.</div>` : ""}
+    ${d.aviso_zona ? `<div class="aviso" id="aviso-zona">${esc(d.aviso_zona)}</div>` : ""}
     <div class="cifras" id="cifras">
       ${cifra(fmt(nEtapas), num(nEtapas) === 1 ? "etapa de obra" : "etapas de obra")}
       ${cifra(largo === null ? "—" : `${fmt(largo)} m`, "de obra")}
@@ -539,9 +540,9 @@ function pintarResultados(d) {
       ${etapas.map((e, i) => { const n = numeroDe(e, i); return `<button type="button" role="tab" data-etapa="${n}" style="--c:${colorEtapa(n)}">${n}</button>`; }).join("")}
     </div>
     <div id="detalle-etapa"></div>
-    <p class="nota">Cómo leer esto: para cada par de esquinas a lados opuestos de la obra se calcula el camino más
-      corto antes y durante la obra (algoritmo de Dijkstra); el desvío es la diferencia. No hay datos de volumen
-      de tránsito: no se mide congestión.</p>
+    <p class="nota">Cómo leer esto: se toman esquinas a los dos lados de la obra y, para ir de una a otra, se busca
+      el recorrido más corto por las calles, sin la obra y con ella. El desvío es cuántos metros más hay que
+      recorrer. No hay datos de cuántos carros pasan: no se mide congestión.</p>
     <p class="nota">${d.fuente ? `Fuente del mapa: ${esc(d.fuente)}. ` : ""}${num(d.tiempos?.plan_s) !== null ? `Cálculo: ${d.tiempos.plan_s} s.` : ""}</p>`;
 
   $("btn-repetir").onclick = iniciarRecorrido;
@@ -611,7 +612,7 @@ function comparacion(titulo, m0, m1, conQue, clase) {
   const sin0 = num(m0.sin_camino), sin1 = num(m1?.sin_camino);
   return `<div class="comparacion"><div class="comp-tit">${titulo}: desvío medio</div>
     ${barra("Con la obra", a, "gris")}${barra(conQue, b, clase)}
-    ${sin0 ? `<div class="nota">Pares que se quedan sin camino: <b>${fmt(sin0)}${sin1 !== null ? ` → ${fmt(sin1)}` : ""}</b></div>` : ""}</div>`;
+    ${sin0 ? `<div class="nota">Recorridos que se quedan sin salida: <b>${fmt(sin0)}${sin1 !== null ? ` → ${fmt(sin1)}` : ""}</b></div>` : ""}</div>`;
 }
 
 function tarjetaEtapa(e, n) {
@@ -621,8 +622,8 @@ function tarjetaEtapa(e, n) {
   let h = `<div class="tarjeta" style="--c:${colorEtapa(n)}">
     <div class="tarjeta-tit"><span class="chip">Etapa ${n}</span>
       metro ${fmt(e.inicio_m)} al ${fmt(e.fin_m)} · ${fmt(e.longitud_m)} m</div>
-    <p class="nota">Se cierran <b>${pl(e.cruces_cerrados, "cruce", "cruces")}</b>${num(e.puentes_existentes_cerrados) ? `, ${pl(e.puentes_existentes_cerrados, "de ellos un puente existente", "de ellos puentes existentes")}` : ""}.
-      ${num(e.recorridos_desviados) !== null ? `${fmt(e.recorridos_desviados)} recorridos de la muestra se desvían.` : ""}</p>
+    <p class="nota">Se cierran <b>${pl(e.cruces_cerrados, "cruce", "cruces")}</b>${num(e.puentes_existentes_cerrados) ? `, ${pl(e.puentes_existentes_cerrados, "de ellos es un puente existente", "de ellos son puentes existentes")}` : ""}.
+      ${num(e.recorridos_desviados) !== null ? `${fmt(e.recorridos_desviados)} de los recorridos medidos se desvían.` : ""}</p>
     ${avisosHtml(e.avisos)}
     ${ped === null ? `<div class="aviso">Esta etapa no trae datos de peatones.</div>` : comparacion("A pie", ped?.obra, ped?.con_puentes, `Con ${pl(puentes.length, "paso", "pasos")}`, "naranja")}
     ${veh === null ? `<div class="aviso">Esta etapa no trae datos de vehículos.</div>` : comparacion("En carro o moto", veh?.obra, veh?.con_medidas, `Con ${pl(medidas.length, "cambio", "cambios")}`, "morado")}`;

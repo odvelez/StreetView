@@ -59,4 +59,6 @@ def main(radio=400):
                       f"sentido {t.sentido}, {contacto.get(t.id, ('libre',))[0]}")
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):  # acentos bien en Windows con salida redirigida
+        sys.stdout.reconfigure(encoding="utf-8")
     main()
