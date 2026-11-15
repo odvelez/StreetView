@@ -4,7 +4,8 @@ Uso:  python herramientas/descargar_mapa.py
 
 Escribe:
   datos/calles_area_metropolitana.json.gz   calles (vías para carros y peatones)
-  datos/arroyos_area_metropolitana.json     cauces con su nombre
+  datos/archivo_arroyos/arroyos_area_metropolitana.json   cauces con su nombre (archivo histórico;
+                                                          el programa ya no lo usa)
 
 Solo hace falta ejecutarlo para ACTUALIZAR el mapa: los archivos ya vienen en el
 proyecto. Los servidores públicos de Overpass rechazan consultas grandes, así que
@@ -98,7 +99,8 @@ def main():
                     tunel=x["tags"].get("tunnel", "") or x["tags"].get("location", ""),
                     coords=[[round(p["lat"], 6), round(p["lon"], 6)] for p in x["geometry"]])
                for x in agua["elements"] if not x.get("tags", {}).get("name", "").startswith("Río Magdalena")]
-    destino = osm.DATOS / "arroyos_area_metropolitana.json"
+    destino = osm.DATOS / "archivo_arroyos" / "arroyos_area_metropolitana.json"
+    destino.parent.mkdir(exist_ok=True)
     destino.write_text(json.dumps(dict(fuente=f"OpenStreetMap (ODbL), descargado el {hoy}", recuadro=list(RECUADRO),
                                        arroyos=arroyos), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"Arroyos: {len(arroyos)} tramos -> {destino}", flush=True)
