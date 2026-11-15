@@ -1,7 +1,14 @@
 # Obras viales por etapas (MAT 4021, Matemáticas Discretas, Uninorte)
 
 Equipo: Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santiago Lobo.
-**Entrega:** domingo 15 de noviembre de 2026, 11:59 p. m., por Brightspace: PDF en LaTeX y diapositivas (10 minutos, 5 expositores, demo en vivo). La sustentación individual vale **40 %**: cada integrante debe poder explicar todo el proyecto.
+**Entrega (Brightspace, domingo 15 de noviembre de 2026, 11:59 p. m.):** dos PDF: (1) el documento escrito (paper) en LaTeX y (2) las diapositivas **hechas en Beamer**. Tanto el documento como las diapositivas deben incluir el **enlace al repositorio** (https://github.com/odvelez/StreetView). La sustentación individual vale **40 %**: cada integrante debe poder explicar todo el proyecto.
+
+**Sustentación** (programación oficial del profesor): lunes 16 de noviembre (2:00 a 4:00 p. m.; grupos 1 a 7, citación desde las 2:05 y cada 17 min) o miércoles 18 (2:00 a 3:00 p. m.; grupos 8 a 10, citaciones 2:05, 2:22 y 2:39). **Anote aquí la hora de citación del grupo: _pendiente_.**
+- Estar **afuera del salón 10 minutos antes** de la hora y dejar todo listo; al entrar se empieza enseguida (solo hay 2 minutos entre grupos).
+- **10 minutos** de presentación con temporizador proyectado; al terminar se corta. Todos participan de forma equitativa.
+- **5 minutos de preguntas**, al grupo o a una persona en particular.
+- Probar antes el ejecutable y la proyección: si algo falla por falta de preparación, **no hay tiempo adicional** y baja la nota.
+- El profesor debe poder **ejecutar y reproducir el proyecto desde este README** sin problemas: el repositorio debe tener todo el código y la documentación clara.
 
 Este es el único README del repositorio. Todo el código está en `proyecto_arroyos/`.
 
@@ -14,6 +21,8 @@ Este es el único README del repositorio. Todo el código está en `proyecto_arr
 **Modelo:** las esquinas son nodos y las cuadras son aristas con peso en metros. Hay un grafo **no dirigido** para peatones y uno **dirigido** para vehículos (respeta los sentidos viales). La obra quita las aristas que toca. Dijkstra mide el desvío, programación dinámica decide los cortes de las etapas, una heurística voraz elige las medidas y para cada cruce cerrado se calcula una ruta alterna.
 
 ## 2. Cómo se usa
+
+**Para quien califica:** clone el repositorio, entre a `proyecto_arroyos/`, instale los requisitos y corra `python app.py` (o `python -m unittest` para verificar). No se necesita internet para El Salao: las calles ya están guardadas en `datos/cache/`.
 
 Requisitos: Python 3.10 o superior y `pip install -r requirements.txt` (Flask para la web; matplotlib solo para `mapa.png`). Los algoritmos usan solo la biblioteca estándar. Todo desde `proyecto_arroyos/`.
 
@@ -99,12 +108,12 @@ proyecto_arroyos/
 ## 7. Lo que falta (en orden)
 
 **Bloquea la entrega**
-1. **Documento.** `documento/main.tex` sigue hablando de arroyos y lluvia y tiene **8 `\completar{}`**. El centro del documento pasa a ser el plan por etapas; las cifras de la simulación con lluvia siguen siendo válidas como «toda la obra a la vez». Completar: cifra de habitantes del sector con fuente (DANE o Alcaldía de Soledad), noticias del 4 de noviembre y canalización anunciada (fecha y costo) y emergencias anteriores, cómo se confirmó cada cruce, el caso de prueba hecho a mano y las conclusiones propias. Sin fuente, dejar «pendiente de verificar»; no inventar datos.
-2. **Diapositivas:** entregadas por Gustavo por WhatsApp. Falta revisar que usen las cifras de la sección 4 y el tema de obras (no de arroyos), y repartir quién expone qué (problema 1:30; mapa a grafo 2:00; Dijkstra, voraz y pruebas 2:00; resultados con el hallazgo honesto 2:00; demo en vivo 2:00; límites y cierre 0:30).
+1. **Documento.** Debe incluir el enlace al repositorio. `documento/main.tex` sigue hablando de arroyos y lluvia y tiene **8 `\completar{}`**. El centro del documento pasa a ser el plan por etapas; las cifras de la simulación con lluvia siguen siendo válidas como «toda la obra a la vez». Completar: cifra de habitantes del sector con fuente (DANE o Alcaldía de Soledad), noticias del 4 de noviembre y canalización anunciada (fecha y costo) y emergencias anteriores, cómo se confirmó cada cruce, el caso de prueba hecho a mano y las conclusiones propias. Sin fuente, dejar «pendiente de verificar»; no inventar datos.
+2. **Diapositivas en Beamer (PDF):** Gustavo las pasó por WhatsApp; deben estar en Beamer, con el enlace al repositorio, y subirse como PDF a Brightspace. Falta revisar que usen las cifras de la sección 4 y el tema de obras (no de arroyos), y repartir quién expone qué (problema 1:30; mapa a grafo 2:00; Dijkstra, voraz y pruebas 2:00; resultados con el hallazgo honesto 2:00; demo en vivo 2:00; límites y cierre 0:30).
 3. **Figuras** (opcional si las diapositivas ya traen las suyas; `herramientas/figuras_plan.py`): leer `resultados/plan_etapas.json` y guardar PNG en `resultados/figuras/`: mapa con el eje por etapa (colores Okabe-Ito), pasos peatonales en naranja, cambios de sentido en morado y esquinas sin semáforo en rojo; y barras del desvío a pie con la obra frente a con los pasos, por etapa. Con leyenda y «© colaboradores de OpenStreetMap».
 4. **Pruebas de la API** (opcional, ya hay 18 en `test_app_robustez.py`; `tests/test_app.py`, con `app.test_client()` y sin descargas reales): `GET /` da 200; `/api/ejemplo` trae `lineas`; `/api/analizar` sin líneas da 400; `/api/plan` con El Salao da 200 con `etapas`, `resumen` y `pasos`, con parámetros fuera de rango da 400 y con Overpass caído da 503. Ya existen `tests/test_app_robustez.py` con 18 pruebas parecidas; pueden completarse o reutilizarse.
 5. **Capturas** de la app (1600 × 900; celular 390 × 844) para las diapositivas. Los `id` de la pantalla son `#menu`, `#paso-municipio`, `#paso-obra`, `#paso-planificar`, `#ajustes`, `#btn-planificar`, `#recorrido`, `#resultados`, `#cifras`, `#selector-etapa`, `#detalle-etapa`.
-6. **Ensayo cronometrado** de los 10 minutos y preparar las preguntas de la sustentación (sección 8).
+6. **Ensayo cronometrado** de los 10 minutos (con la demo y el ejecutable probados en el computador y el proyector del salón, o en uno igual), llegar 10 minutos antes y preparar las preguntas de la sustentación (sección 8).
 
 **Limpieza del código (solo Oscar, al final)**
 - Quitar `fuente.arroyos_osm`, `lineas_por_nombre`, la ruta `/api/arroyos`, la clave `cauce` (queda `eje`), el alias `Arroyo`, el alias `recorte_del_cauce`, `--arroyo` y `--listar`; mover `datos/arroyos_area_metropolitana.json` a `datos/archivo_arroyos/`. Quedan palabras viejas en claves del JSON (`arroyo`, `cauce`, `lluvia`, `lluvia_m`) y en el `User-Agent` de `osm.py`; quitarlas rompe el contrato, así que hay que cambiar a la vez pantalla, pruebas y `resultados/linea_base/`.
