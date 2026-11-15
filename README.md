@@ -94,15 +94,15 @@ proyecto_arroyos/
 | Karel | Refactor de arroyo a obra y `/api/plan` | Hecho (R1 a R6). Opcionales sin hacer: `medicion="afectados"` y pasos peatonales casi perpendiculares |
 | Lobo | Pantalla: menú, recorrido, resultados, pantalla pequeña | Hecho |
 | Blanco | Pruebas, robustez de `app.py`, revisión de textos | Hecho |
-| Gustavo | Diapositivas, `herramientas/figuras_plan.py`, `tests/test_app.py` | **No entregó nada**; ver sección 7 |
+| Gustavo | Diapositivas, `herramientas/figuras_plan.py`, `tests/test_app.py` | **Diapositivas entregadas** (por WhatsApp, no están en el repositorio). Sin entregar: figuras y pruebas de la API; ver sección 7 |
 
 ## 7. Lo que falta (en orden)
 
 **Bloquea la entrega**
 1. **Documento.** `documento/main.tex` sigue hablando de arroyos y lluvia y tiene **8 `\completar{}`**. El centro del documento pasa a ser el plan por etapas; las cifras de la simulación con lluvia siguen siendo válidas como «toda la obra a la vez». Completar: cifra de habitantes del sector con fuente (DANE o Alcaldía de Soledad), noticias del 4 de noviembre y canalización anunciada (fecha y costo) y emergencias anteriores, cómo se confirmó cada cruce, el caso de prueba hecho a mano y las conclusiones propias. Sin fuente, dejar «pendiente de verificar»; no inventar datos.
-2. **Diapositivas** (Gustavo, o quien las tome): guion de 10 minutos y 5 expositores (problema 1:30; mapa a grafo 2:00; Dijkstra, voraz y pruebas 2:00; resultados con el hallazgo honesto 2:00; demo en vivo 2:00; límites y cierre 0:30). Cada cifra con su archivo de origen.
-3. **Figuras** (`herramientas/figuras_plan.py`): leer `resultados/plan_etapas.json` y guardar PNG en `resultados/figuras/`: mapa con el eje por etapa (colores Okabe-Ito), pasos peatonales en naranja, cambios de sentido en morado y esquinas sin semáforo en rojo; y barras del desvío a pie con la obra frente a con los pasos, por etapa. Con leyenda y «© colaboradores de OpenStreetMap».
-4. **Pruebas de la API** (`tests/test_app.py`, con `app.test_client()` y sin descargas reales): `GET /` da 200; `/api/ejemplo` trae `lineas`; `/api/analizar` sin líneas da 400; `/api/plan` con El Salao da 200 con `etapas`, `resumen` y `pasos`, con parámetros fuera de rango da 400 y con Overpass caído da 503. Ya existen `tests/test_app_robustez.py` con 18 pruebas parecidas; pueden completarse o reutilizarse.
+2. **Diapositivas:** entregadas por Gustavo por WhatsApp. Falta revisar que usen las cifras de la sección 4 y el tema de obras (no de arroyos), y repartir quién expone qué (problema 1:30; mapa a grafo 2:00; Dijkstra, voraz y pruebas 2:00; resultados con el hallazgo honesto 2:00; demo en vivo 2:00; límites y cierre 0:30).
+3. **Figuras** (opcional si las diapositivas ya traen las suyas; `herramientas/figuras_plan.py`): leer `resultados/plan_etapas.json` y guardar PNG en `resultados/figuras/`: mapa con el eje por etapa (colores Okabe-Ito), pasos peatonales en naranja, cambios de sentido en morado y esquinas sin semáforo en rojo; y barras del desvío a pie con la obra frente a con los pasos, por etapa. Con leyenda y «© colaboradores de OpenStreetMap».
+4. **Pruebas de la API** (opcional, ya hay 18 en `test_app_robustez.py`; `tests/test_app.py`, con `app.test_client()` y sin descargas reales): `GET /` da 200; `/api/ejemplo` trae `lineas`; `/api/analizar` sin líneas da 400; `/api/plan` con El Salao da 200 con `etapas`, `resumen` y `pasos`, con parámetros fuera de rango da 400 y con Overpass caído da 503. Ya existen `tests/test_app_robustez.py` con 18 pruebas parecidas; pueden completarse o reutilizarse.
 5. **Capturas** de la app (1600 × 900; celular 390 × 844) para las diapositivas. Los `id` de la pantalla son `#menu`, `#paso-municipio`, `#paso-obra`, `#paso-planificar`, `#ajustes`, `#btn-planificar`, `#recorrido`, `#resultados`, `#cifras`, `#selector-etapa`, `#detalle-etapa`.
 6. **Ensayo cronometrado** de los 10 minutos y preparar las preguntas de la sustentación (sección 8).
 
