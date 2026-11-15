@@ -53,6 +53,11 @@ class Paginas(Base):
         self.assertTrue(d["lineas"])
         self.assertTrue(all(len(l) >= 2 for l in d["lineas"]))
 
+    def test_ruta_vieja_de_arroyos_ya_no_existe(self):
+        r = self.cliente.get("/api/arroyos")
+        self.assertEqual(r.status_code, 404)
+        self.assertTrue(r.is_json)
+
     def test_ejemplo_de_obra_es_ilustrativo(self):
         d = self.cliente.get("/api/ejemplo_obra").get_json()
         self.assertTrue(d["ilustrativo"])

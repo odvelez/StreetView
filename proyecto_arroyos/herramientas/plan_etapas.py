@@ -5,8 +5,6 @@ Uso (desde proyecto_arroyos/):
     python herramientas/plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json
     python herramientas/plan_etapas.py --etapa-max 700 --un-puente-cada 400 --ancho 20
 
-Obsoleta (se quita en la limpieza final): --arroyo "Arroyo Don Juan".
-
 Guarda resultados/plan_etapas.json (para la web) y resultados/plan_etapas.txt (informe).
 """
 import argparse
@@ -92,7 +90,6 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Plan de obra por etapas.")
     ap.add_argument("--obra", help="archivo JSON con el eje de la obra (por defecto, la canalización de El Salao)")
-    ap.add_argument("--arroyo", help="(obsoleto) nombre de un arroyo en OpenStreetMap")
     ap.add_argument("--radio", type=float, default=400)
     ap.add_argument("--luz", type=float, default=60, help="largo máximo de un paso peatonal provisional nuevo")
     ap.add_argument("--etapa-max", type=float, default=ETAPA_MAX_M, help="largo máximo de una etapa, en metros")
@@ -104,8 +101,6 @@ def main():
     ap.add_argument("--mantener-puentes", action="store_true",
                     help="la obra no cierra los puentes que ya existen en el tramo")
     args = ap.parse_args()
-    if args.obra and args.arroyo:
-        ap.error("use --obra o --arroyo, no los dos")
 
     if args.obra:
         try:
@@ -115,10 +110,6 @@ def main():
         nombre, lineas = datos["nombre"], datos["lineas"]
         if datos["ilustrativo"] and "no es una obra real" not in nombre.lower():
             nombre += " (ejemplo ilustrativo, no es una obra real)"
-    elif args.arroyo:
-        nombre, lineas = args.arroyo, fuente.lineas_por_nombre(args.arroyo)
-        if not lineas:
-            raise SystemExit(f"No hay ningún arroyo llamado «{args.arroyo}».")
     else:
         nombre, lineas = "Canalización del arroyo El Salao, Soledad (caso de estudio)", fuente.lineas_ejemplo()
     recuadro, lado = fuente.recuadro_de(lineas, args.radio)

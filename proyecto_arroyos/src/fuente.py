@@ -105,12 +105,3 @@ def lineas_de_archivo(ruta):
     """Líneas [(lat, lon), ...] del eje de la obra guardada en `ruta` (ver `leer_obra`)."""
     return leer_obra(ruta)["lineas"]
 
-
-def arroyos_osm():
-    return json.loads((osm.DATOS / "arroyos_area_metropolitana.json").read_text(encoding="utf-8"))["arroyos"]
-
-
-def lineas_por_nombre(nombre):
-    """Todos los tramos de OpenStreetMap con ese nombre (sin distinguir mayúsculas)."""
-    n = nombre.strip().lower()
-    return orientar([a["coords"] for a in arroyos_osm() if a["nombre"].lower() == n])

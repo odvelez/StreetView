@@ -8,8 +8,6 @@ Ejemplos:
   python main.py --radio 500 --k 3 --luz 80                 # otros ajustes
   python main.py --ancho 20                                 # franja de obra más ancha (por defecto 10 m)
 
-Obsoletas (se quitan en la limpieza final): --arroyo "Arroyo Don Juan" y --listar.
-
 Entrada: datos/ (calles de OpenStreetMap y ejes de obra).
 Salida: resumen en pantalla y archivos en resultados/ (resumen.txt, analisis.json, mapa.png).
 """
@@ -17,7 +15,6 @@ import argparse
 import json
 import sys
 import time
-from collections import Counter
 from pathlib import Path
 
 from src import fuente
@@ -141,8 +138,6 @@ def dibujar(r, ruta):
 def main():
     ap = argparse.ArgumentParser(description="Desvíos que causa una obra vial y medidas temporales mientras dura.")
     ap.add_argument("--obra", help="archivo JSON con el eje de la obra (por defecto, la canalización de El Salao)")
-    ap.add_argument("--arroyo", help="(obsoleto) nombre de un arroyo en OpenStreetMap")
-    ap.add_argument("--listar", action="store_true", help="(obsoleto) lista los arroyos con nombre disponibles")
     ap.add_argument("--radio", type=float, default=400, help="metros a cada lado del eje de la obra (por defecto 400)")
     ap.add_argument("--luz", type=float, default=60,
                     help="largo máximo de un paso peatonal provisional nuevo (por defecto 60)")
@@ -152,17 +147,10 @@ def main():
     ap.add_argument("--sin-mapa", action="store_true", help="no genera resultados/mapa.png")
     args = ap.parse_args()
 
-    if args.listar:
-        conteo = Counter(a["nombre"] for a in fuente.arroyos_osm() if a["nombre"])
-        for nombre, n in sorted(conteo.items()):
-            print(f"{nombre}  ({n} tramos)")
-        return
     if not (100 <= args.radio <= 800) or not (1 <= args.k <= 3) or not (10 <= args.luz <= 150):
         ap.error("--radio entre 100 y 800, --k entre 1 y 3, --luz entre 10 y 150")
     if not (10 <= args.ancho <= 60):
         ap.error("--ancho entre 10 y 60")
-    if args.obra and args.arroyo:
-        ap.error("use --obra o --arroyo, no los dos")
 
     if args.obra:
         try:
@@ -172,10 +160,6 @@ def main():
         nombre, lineas = datos["nombre"], datos["lineas"]
         if datos["ilustrativo"] and "no es una obra real" not in nombre.lower():
             nombre += " (ejemplo ilustrativo, no es una obra real)"
-    elif args.arroyo:
-        nombre, lineas = args.arroyo, fuente.lineas_por_nombre(args.arroyo)
-        if not lineas:
-            raise SystemExit(f"No hay ningún arroyo llamado «{args.arroyo}». Use --listar para ver los nombres.")
     else:
         nombre, lineas = "Canalización del arroyo El Salao, Soledad (caso de estudio)", fuente.lineas_ejemplo()
 

@@ -132,8 +132,6 @@ def recorte_del_eje(lineas, obra, p0, p1):
     return [list(p) for p in puntos]
 
 
-recorte_del_cauce = recorte_del_eje   # nombre anterior
-
 
 # ----------------------------------------------------------------- una etapa
 def _punto_medio(forma):

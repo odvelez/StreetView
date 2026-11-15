@@ -1,4 +1,4 @@
-"""Servidor web: mapa interactivo de arroyos de Barranquilla y su área metropolitana.
+"""Servidor web: planificar por etapas una obra vial que cierra calles (Barranquilla y su área metropolitana).
 
 Uso:
   pip install flask
@@ -7,10 +7,9 @@ Uso:
 
 Rutas:
   GET  /               la página (carpeta web/)
-  GET  /api/arroyos    cauces de OpenStreetMap del área metropolitana
-  GET  /api/ejemplo    el arroyo El Salao en Soledad, caso de estudio del documento
+  GET  /api/ejemplo    eje de la canalización de El Salao en Soledad, caso de estudio del documento
   GET  /api/ejemplo_obra  obra ilustrativa en la calle 72 (datos/ejemplos/obra_ilustrativa.json)
-  POST /api/analizar   recibe el arroyo marcado y devuelve el análisis (src/analisis.py)
+  POST /api/analizar   recibe el eje de una obra y devuelve el análisis de toda la obra a la vez (src/analisis.py)
   POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py)
 """
 import hashlib
@@ -65,11 +64,6 @@ def inicio():
 @app.get("/<path:archivo>")
 def estaticos(archivo):
     return send_from_directory(WEB, archivo)
-
-
-@app.get("/api/arroyos")
-def arroyos():
-    return send_from_directory(osm.DATOS, "arroyos_area_metropolitana.json")
 
 
 @app.get("/api/ejemplo")

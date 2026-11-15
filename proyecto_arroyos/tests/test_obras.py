@@ -3,7 +3,7 @@
 - Regresión: El Salao da los mismos números que resultados/linea_base/.
 - `ancho_m`: una franja más ancha cierra lo mismo o más, nunca menos.
 - Obra a lo largo de una calle del barrio miniatura, resuelta a mano.
-- Alias `Arroyo = Obra`, `fuente.lineas_de_archivo` y `medicion` inválida.
+- Ya no existe el alias `Arroyo`; `fuente.lineas_de_archivo` y `medicion` inválida.
 """
 import json
 import math
@@ -14,7 +14,8 @@ from pathlib import Path
 from src import fuente
 from src.analisis import TOLERANCIA_M, analizar
 from src.etapas import plan_por_etapas
-from src.geometria import Arroyo, Obra, Plano
+from src import geometria
+from src.geometria import Obra, Plano
 from tests.test_proyecto import barrio_de_prueba
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -158,10 +159,11 @@ class ObraALoLargoDeUnaCalle(unittest.TestCase):
 
 
 class NombresNuevos(unittest.TestCase):
-    def test_alias_arroyo_es_obra(self):
-        self.assertIs(Arroyo, Obra)
+    def test_sin_alias_viejo_arroyo(self):
+        # El alias `Arroyo = Obra` se quitó en la limpieza final; la clase es Obra.
+        self.assertFalse(hasattr(geometria, "Arroyo"))
         plano = Plano(10.0)
-        self.assertAlmostEqual(Arroyo([[(10.0, -74.0), (10.001, -74.0)]], plano).longitud(), 110.6, places=6)
+        self.assertAlmostEqual(Obra([[(10.0, -74.0), (10.001, -74.0)]], plano).longitud(), 110.6, places=6)
 
     def test_plan_tiene_los_nombres_nuevos_y_los_viejos(self):
         red, eje = barrio_de_prueba()

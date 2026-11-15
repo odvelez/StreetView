@@ -122,9 +122,6 @@ class Obra:
         return mejor
 
 
-# Nombre anterior (el proyecto empezó con arroyos). Oscar lo quita en la limpieza final.
-Arroyo = Obra
-
 
 def orientar(lineas):
     """Ordena y orienta los tramos para que todos sigan el mismo sentido del eje.
