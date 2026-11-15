@@ -3,7 +3,7 @@
 Equipo: Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santiago Lobo.
 **Entrega (Brightspace, domingo 15 de noviembre de 2026, 11:59 p. m.):** dos PDF: (1) el documento escrito (paper) en LaTeX y (2) las diapositivas **hechas en Beamer**. Tanto el documento como las diapositivas deben incluir el **enlace al repositorio** (https://github.com/odvelez/StreetView). La sustentación individual vale **40 %**: cada integrante debe poder explicar todo el proyecto.
 
-**Sustentación** (programación oficial del profesor): lunes 16 de noviembre (2:00 a 4:00 p. m.; grupos 1 a 7, citación desde las 2:05 y cada 17 min) o miércoles 18 (2:00 a 3:00 p. m.; grupos 8 a 10, citaciones 2:05, 2:22 y 2:39). **Anote aquí la hora de citación del grupo: _pendiente_.**
+**Sustentación** (programación oficial del profesor): lunes 16 de noviembre (2:00 a 4:00 p. m.; grupos 1 a 7, citación desde las 2:05 y cada 17 min) o miércoles 18 (2:00 a 3:00 p. m.; grupos 8 a 10, citaciones 2:05, 2:22 y 2:39). **Somos el grupo 7: lunes 16 de noviembre, citación a las 3:47 p. m. (estar afuera del salón desde las 3:37).**
 - Estar **afuera del salón 10 minutos antes** de la hora y dejar todo listo; al entrar se empieza enseguida (solo hay 2 minutos entre grupos).
 - **10 minutos** de presentación con temporizador proyectado; al terminar se corta. Todos participan de forma equitativa.
 - **5 minutos de preguntas**, al grupo o a una persona en particular.
@@ -89,6 +89,8 @@ proyecto_arroyos/
   resultados/          salidas generadas; linea_base/ son las cifras de referencia de El Salao
   tests/               81 pruebas (regresión contra linea_base, API, robustez, etapas, obras)
   documento/main.tex   documento en LaTeX
+  documento/Obras viales por etapas El Salao.pptx   diapositivas de Gustavo (PowerPoint; falta pasarlas a Beamer)
+  documento/guion.txt  guion de la presentación
 ```
 
 **Contrato `POST /api/plan`** (no romperlo: el JSON solo se agranda). Pedido: `{lineas, radio, luz_max, etapa_max_m (300–2000, 1000), un_puente_cada_m (200–1000, 500), cerrar_puentes (true), ancho_m (10–60, 10), medicion ("lados"), abiertos, cerrados}`. Respuesta: `obra`, `parametros`, `semaforos_conocidos`, `resumen`, `etapas[]` (con `eje`, `tramos_cerrados`, `peatones`, `vehiculos`, `rutas[]`, `carga[]`), `pasos[]`, `tiempos`, `recuadro`, `fuente`, `aviso_zona` y `en_cache`. Errores en JSON: 400 (pedido inválido o zona demasiado grande) y 503 (no se pudo descargar el mapa). Ejemplo real: `resultados/plan_etapas.json`.
