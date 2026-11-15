@@ -1,26 +1,81 @@
-Guion por orador, diapositiva por diapositiva
-Es texto para decir en voz alta, con sus palabras. Las cifras son las del repositorio; no las cambien al ensayar.
-Oscar (0:00–2:00): apertura, problema e idea
-Diapositiva 1, Portada (0:20). «Buenas tardes. Somos Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santiago Lobo. Les presentamos cómo planificar una obra que cierra calles, usando grafos, con el caso de la canalización del arroyo El Salao en Soledad, Atlántico.»
-Diapositiva 2, Problema (1:10). «El 4 de noviembre, un arroyo se llevó a personas en Soledad. La prensa lo documentó y lo tratamos con respeto: no usamos nombres ni decimos qué ruta debieron tomar. La pregunta nuestra es otra: cuando se canalice un arroyo, la obra va a cerrar calles que hoy lo cruzan. ¿Cómo evitamos que el barrio quede partido en dos y la gente tenga que dar vueltas enormes?»
-Diapositiva 3, Idea (0:30). «La idea cabe en una frase: modelar las calles como un grafo, quitar las cuadras que la obra cierra y medir cuánto se alarga cada recorrido. Con eso dividimos la obra en etapas y elegimos medidas temporales: pasos peatonales provisionales, cambios de sentido, rutas alternas y control en esquinas. Karel les explica cómo.»
-Karel (2:00–4:00): del mapa al grafo y los algoritmos
-Diapositiva 4, Grafo (1:00). «Gracias, Oscar. Cada esquina es un nodo y cada cuadra es una arista. Sacamos de OpenStreetMap 5.859 esquinas y 8.827 tramos de calle. Hacemos dos grafos: uno para peatones, sin dirección, porque a pie se puede ir en contravía, y otro para carros, con dirección. La obra quita las aristas de las cuadras que cruzan la franja, incluidos los puentes que ya existen. Quitar la arista, y no subirle el peso, evita inventar un número: la cuadra simplemente no se puede pasar.»
-Diapositiva 5, Algoritmos (1:00). «Para medir usamos Dijkstra, hecho a mano en src/grafo.py. El desvío de un par de esquinas es la distancia con la obra menos la distancia en seco. Para elegir dónde poner un paso peatonal usamos una heurística voraz: en cada ronda se prueba cada candidato y se queda el que más baja el desvío. Lo hicimos rápido con una fórmula: la nueva distancia entre a y b es el mínimo entre la anterior y ir de a a un extremo, cruzar, y seguir hasta b. Así pasamos de unos 36 segundos a 6–8, con los mismos resultados; hay pruebas que lo comparan. Para cortar la obra en etapas usamos programación dinámica. Gustavo les cuenta qué salió.»
-Gustavo (4:00–6:00): el plan de El Salao y los resultados a pie
-Diapositiva 6, Plan (1:00). «El cauce mide 2.386 metros. Lo dividimos en tres etapas de 975, 850 y 561 metros, para cerrar un tramo a la vez. El plan propone 5 pasos peatonales provisionales, 3 cambios de sentido, 18 rutas alternas y 15 esquinas a controlar. De esas 15, 14 no tienen semáforo registrado. En el mapa ven cada etapa en un color y dónde va cada medida.»
-Diapositiva 7, A pie (1:00). «Así bajó el desvío medio de un peatón con los pasos provisionales: de 387 a 48 metros en la etapa 1, de 129 a 28 en la 2 y de 219 a 56 en la 3. Si la obra mantiene abiertos los puentes que ya existen, los desvíos son todavía menores: 68, 56 y 36 metros. A pie, el plan funciona. Sebastián les cuenta qué pasa en carro.»
-Si sobra tiempo, diapositiva 9, Rutas: «Por cada cruce cerrado hay una ruta alterna para señalizar. Ejemplo: en la etapa 3, el cruce de la calle 61 pasa de 120 a 1.895 metros en carro. Y estas son las esquinas que más recorridos desviados reciben.»
-Sebastián (6:00–7:15): carro y qué tan firme es
-Diapositiva 8, Carro (1:00). «Aquí va el hallazgo honesto. En carro, el cambio de sentido ayuda poco: el desvío medio con la obra queda en 332, 287 y 293 metros. ¿Por qué no baja? Porque la medida le devuelve el camino a pares de esquinas que antes no tenían ninguno, y esos pares entran al promedio con recorridos largos. En la etapa 1, los pares sin camino pasan de 60 a 0, y eso es una mejora real aunque el promedio no lo muestre. Lo que sí se sostiene en carro es señalizar rutas alternas y controlar esquinas.»
-Diapositiva 10, Confianza (0:15). «Comprobamos que no sea casualidad. Con 48 pruebas automáticas, el algoritmo voraz coincide con la fuerza bruta: para dos pasos elige el mismo par entre 1.225 combinaciones, y para direcciones entre 11.325. El lado de cada esquina respecto al cauce se verificó contra componentes conexas, con 100 % de acuerdo en 1.229 esquinas. Y el primer paso peatonal se mantiene estable si la luz considerada es de 60 metros o más. Santiago les muestra la herramienta.»
-Santiago (7:15–9:15): demostración en vivo
-Diapositiva 11, Demo (2:00). Santiago habla más tiempo porque es la parte que se ve y la que más convence. Dividan la demo en cinco momentos y narren cada clic.
-1.  Presentación de la pantalla (0:20). «La aplicación es una página web: el servidor es Flask en Python y el mapa usa Leaflet con calles de OpenStreetMap. Yo me encargué de esta pantalla. Está pensada para que alguien sin conocimientos de grafos pueda planificar una obra en tres pasos: elegir el municipio, definir la obra y planificar.»
-2.  Cargar el ejemplo (0:25). «Pulso ‘Cargar ejemplo: obra de canalización de El Salao’. Aparece el eje de la obra sobre el mapa. Abajo están los ajustes: largo máximo de etapa, un paso peatonal cada cierta distancia, y si la obra cierra los puentes que ya existen.»
-3.  Planificar y recorrer el plan (0:40). «Pulso ‘Planificar obra’. La pantalla se oscurece y aparece una tarjeta con la cifra grande de cada paso: cuántas etapas, cuántos metros, cuántos pasos peatonales. Avanzo con la flecha derecha. En cada paso el mapa se acerca y resalta solo lo que importa: las etapas en colores, los pasos peatonales en naranja, los cambios de sentido en morado, las esquinas a controlar en rojo si no tienen semáforo registrado. Es el mismo plan que Gustavo les mostró, pero ahora lo ven calle por calle.»
-4.  Ruta alterna (0:20). «Si hago clic en un cruce cerrado, el mapa dibuja dos rutas: la del carro en amarillo y la de a pie en verde punteado. Fíjense en las distancias: con la obra, un cruce que quedaba a 120 metros pasa a casi 1.900 en carro. Hay enlace a Street View para verificar en terreno.»
-5.  Corregir una calle y otra obra (0:15). «Si OpenStreetMap tiene un error, puedo corregir ese cruce a mano y volver a planificar. Y como la herramienta no está amarrada a El Salao, se puede dibujar otra obra, por ejemplo un arroyo de Barranquilla, y obtener un plan nuevo en segundos.»
-Cierre de Santiago: «Lo que ven es el resultado de todo lo anterior funcionando junto: el grafo de Karel, el plan de Gustavo y las pruebas de Sebastián. Oscar cierra con lo que no mide.» Si la demo falla, usen las capturas de pantalla y narren lo mismo sobre ellas.
-Oscar (9:15–10:00): límites y conclusiones
-Diapositiva 12, Límites (0:20). «Lo que este plan no mide: no hay datos de tránsito, así que no medimos congestión, solo desvíos en metros. No diseñamos carriles ni tiempos de semáforo. Suponemos que la obra cierra los puentes existentes. Los datos son una muestra de esquinas sobre OpenStreetMap, que puede estar incompleto. Y todo hay que verificarlo en terreno antes de proponerlo.»
+GUION DE LA PRESENTACIÓN (10:00 exactos, 5 expositores, 2:00 cada uno)
+Grupo 7. Lunes 16 de noviembre, 3:47 p. m. Estar afuera del salón desde las 3:37.
+Diapositivas: documento/diapositivas.pdf (15 diapositivas). Es texto para decir en voz alta, con sus palabras.
+Las cifras son las del repositorio; no las cambien al ensayar. Entre corchetes va el archivo de donde sale cada cifra.
+Archivos: [plan] = resultados/plan_etapas.txt   [resumen] = resultados/resumen.txt
+          [informe] = resultados/informe_cambios.md   [exp] = resultados/experimentos/
+Respeto con el 4 de noviembre: sin nombres de víctimas y sin decir qué ruta debieron tomar.
+
+Reparto
+  Oscar      0:00–2:00   diapositivas 1 a 3    problema e idea
+  Karel      2:00–4:00   diapositivas 4 a 6    grafo, algoritmos y caso a mano
+  Gustavo    4:00–6:00   diapositivas 7 a 9    plan de El Salao y resultados a pie
+  Sebastián  6:00–8:00   diapositivas 10 a 12  carro, comprobaciones y límites
+  Santiago   8:00–10:00  diapositivas 13 a 15  demostración, conclusiones y cierre
+
+------------------------------------------------------------------------------------------
+OSCAR (0:00–2:00)
+
+Diapositiva 1, Portada (0:00–0:20)
+«Buenas tardes. Somos Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santiago Lobo, del grupo 7. Les presentamos cómo planificar una obra que cierra calles, usando grafos, con la canalización del arroyo El Salao, en Soledad, como ejemplo. Todo el código está en el repositorio que ven en pantalla.»
+
+Diapositiva 2, El problema (0:20–1:20)
+«El 4 de noviembre, una creciente de El Salao dejó víctimas en Soledad. La prensa lo documentó [Infobae y El Tiempo, citados en documento/main.tex] y lo tratamos con respeto. Ese hecho es la motivación, no el tema. Los vecinos de los dos lados cruzan a diario, y la respuesta habitual es canalizar el arroyo. Pero una canalización es una obra larga que cierra durante meses las calles y los puentes que lo cruzan. Nuestra pregunta es: al planificar una obra que cierra calles, ¿cómo se divide en etapas y qué medidas temporales reducen más el desvío de quienes la rodean? En el mapa, la obra mide 2.386 metros y la red tiene 5.859 esquinas y 8.827 tramos de calle [resumen].»
+
+Diapositiva 3, La idea (1:20–2:00)
+«La obra se hace por etapas: en cada una solo se cierran los cruces de ese tramo. El número de etapas es el largo dividido por 1.000 metros, redondeado hacia arriba. Para cada etapa proponemos cuatro medidas temporales: pasos peatonales provisionales, uno por cada 500 metros; cambios de sentido; rutas alternas señalizadas; y control en las esquinas con más recorridos desviados [src/etapas.py]. No proponemos puentes vehiculares, porque costarían y tardarían casi lo mismo que la obra. Karel les explica cómo se calcula.»
+
+------------------------------------------------------------------------------------------
+KAREL (2:00–4:00)
+
+Diapositiva 4, Del mapa al grafo (2:00–2:45)
+«Gracias, Oscar. Cada esquina es un nodo y cada cuadra es una arista, con su largo en metros como peso. Los datos son de OpenStreetMap. Hacemos dos grafos: uno para peatones, no dirigido, porque a pie se puede ir en contravía, y otro para vehículos, dirigido, que respeta los sentidos. La obra quita las aristas de las cuadras a menos de 10 metros del eje, incluidos los puentes que ya existen. Quitamos la arista en lugar de subirle el peso porque un peso de penalización sería un número inventado. El desvío de un par de esquinas es la distancia con la obra menos la distancia sin obra.»
+
+Diapositiva 5, Cómo se calcula (2:45–3:25)
+«Medimos con Dijkstra, hecho a mano en src/grafo.py. Para elegir medidas usamos una heurística voraz: en cada ronda se queda el candidato que más baja el desvío medio. Para no repetir Dijkstra con cada candidato usamos la fórmula de arco nuevo: la nueva distancia es el mínimo entre la anterior y ir hasta un extremo, cruzar y seguir. Así pasamos de unos 36 segundos a entre 6 y 8, con los mismos resultados [README, sección 3]. Y para cortar la obra en etapas usamos programación dinámica sobre cortes cada 25 metros, para que ninguna etapa concentre demasiados cruces.»
+
+Diapositiva 6, Caso a mano (3:25–4:00)
+«Un ejemplo pequeño: seis esquinas y tres cruces. La etapa cierra dos. El desvío medio de los nueve pares es 970 entre 9, unos 108 metros. Si el paso provisional va en B–E, baja a 18,9; si va en A–D, a 28,9. El voraz elige B–E porque está en el centro y sirve a más pares. Una prueba automática da exactamente estas cifras [tests/test_app.py, documento/main.tex sección 4]. Gustavo les muestra el plan real.»
+
+------------------------------------------------------------------------------------------
+GUSTAVO (4:00–6:00)
+
+Diapositiva 7, El plan para El Salao (4:00–4:40)
+«La obra de 2.386 metros queda en tres etapas, de 975, 850 y 561 metros. El plan propone 5 pasos peatonales provisionales, 3 cambios de sentido, 18 rutas alternas y 15 esquinas a controlar; 14 de ellas no tienen semáforo registrado en OpenStreetMap [plan]. En el mapa ven cada etapa en un color, los pasos en naranja, los cambios de sentido en morado y las esquinas sin semáforo en rojo [resultados/figuras/plan_mapa.png].»
+
+Diapositiva 8, A pie (4:40–5:20)
+«Así baja el desvío medio a pie con los pasos provisionales: de 387 a 48 metros en la etapa 1, de 129 a 28 en la 2 y de 219 a 56 en la 3 [plan]. El supuesto que más pesa es que cada etapa cierra también los puentes existentes. Si se mantuvieran abiertos, el desvío a pie con la obra sería de 68, 56 y 36 metros [informe, sección 7]. A pie, el plan funciona.»
+
+Diapositiva 9, Rutas y esquinas (5:20–6:00)
+«Por cada cruce cerrado hay una ruta alterna para señalizar. Por ejemplo, en la etapa 3 el cruce de la calle 61 pasa de 120 a 1.895 metros en carro, y en la etapa 2 la carrera 22A de 173 a 1.761 [plan]. Las esquinas que más recorridos desviados reciben son la calle 60 con carrera 18, con el 72,9 %, y la calle 75 con carrera 21, con el 72,5 % [plan]. Son candidatas a semáforo o agente, no una recomendación firme. Sebastián les cuenta qué pasa en carro.»
+
+------------------------------------------------------------------------------------------
+SEBASTIÁN (6:00–8:00)
+
+Diapositiva 10, En carro (6:00–6:50)
+«Aquí va el hallazgo honesto. En carro, el desvío medio con la obra es de 332, 287 y 293 metros por etapa, y con el cambio de sentido queda en 332, 279 y 293 [plan]. Casi no baja. ¿Por qué? Porque la medida sobre todo le da salida a pares de esquinas que no tenían camino: en la etapa 1, los pares sin camino pasan de 60 a 0 [plan], y esos pares entran al promedio con recorridos largos. Además, con otra muestra de esquinas cambia la calle recomendada [informe]. Conclusión: con medidas temporales, el problema peatonal mejora mucho y el vehicular casi no. En carro, lo que se sostiene es señalizar rutas y controlar esquinas.»
+
+Diapositiva 11, Comprobaciones (6:50–7:30)
+«Comprobamos que no fuera casualidad. Con dos medidas, el voraz elige la misma pareja que la fuerza bruta entre 1.225 parejas de pasos y entre 11.325 de cambios de sentido [exp/voraz_vs_fuerza_bruta.md]. Con luz de 60 metros o más, el primer paso peatonal es siempre el mismo y el desvío final queda entre 24 y 26 metros [exp/sensibilidad.md]. El lado de cada esquina coincide al 100 % con las componentes conexas, en 1.229 esquinas [exp/control_lados.md]. Y todas las pruebas automáticas pasan.»
+
+Diapositiva 12, Límites (7:30–8:00)
+«Lo que este plan no mide: no hay datos de tránsito, así que no medimos congestión, solo metros. No diseñamos carriles ni semáforos. Suponemos que la obra cierra los puentes existentes. Usamos una muestra de esquinas sobre OpenStreetMap, que puede estar incompleto. El voraz no garantiza el óptimo. Y todo se debe verificar en terreno. Santiago les muestra la herramienta.»
+
+------------------------------------------------------------------------------------------
+SANTIAGO (8:00–10:00)
+
+Diapositiva 13, Demostración en vivo (8:00–9:25). Tener abierta antes http://localhost:5000/?ejemplo (el primer plan tarda entre 15 y 40 s; la segunda vez sale del caché).
+1. (0:15) «La aplicación es una página web: Flask en Python y el mapa con Leaflet. Está pensada para que alguien sin conocimientos de grafos planifique una obra en tres pasos: municipio, obra y planificar.»
+2. (0:20) «Cargo el ejemplo de El Salao. Aparece el eje de la obra y abajo los ajustes: largo máximo de etapa, un paso peatonal cada cierta distancia y si la obra cierra los puentes existentes.»
+3. (0:30) «Pulso Planificar. Cada paso muestra una cifra grande: etapas, metros, pasos peatonales. Avanzo con la flecha. El mapa resalta lo que importa: etapas en colores, pasos en naranja, cambios de sentido en morado y esquinas sin semáforo en rojo.»
+4. (0:20) «Si hago clic en un cruce cerrado, se dibuja la ruta en carro y a pie. El cruce de la calle 61 pasa de 120 a casi 1.900 metros en carro. Hay enlace a Street View para verificar en terreno.»
+Si la demo falla, narrar lo mismo sobre las diapositivas 7 a 9.
+
+Diapositiva 14, Conclusiones (9:25–9:50)
+«Para cerrar: una obra que cierra calles se modela como quitar aristas, y su efecto como el desvío que mide Dijkstra. A pie, los pasos provisionales funcionan: de 387 a 48 metros en la etapa más difícil. En carro, cambiar sentidos ayuda poco; se sostiene señalizar rutas y controlar esquinas. Y dividir la obra en etapas sirve para cualquier obra, no solo para El Salao.»
+
+Diapositiva 15, Gracias (9:50–10:00)
+«El código, los datos y las pruebas están en el repositorio. Muchas gracias; quedamos atentos a sus preguntas.»
+
+------------------------------------------------------------------------------------------
+Para las preguntas: documento/preguntas.md. Cada integrante debe poder explicar todo el proyecto.
