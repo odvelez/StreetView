@@ -17,3 +17,7 @@ Thumbs.db
 *.vrb
 *.fls
 *.fdb_latexmk
+
+# Entornos virtuales
+.venv/
+venv/

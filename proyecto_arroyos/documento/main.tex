@@ -10,7 +10,7 @@
 \usepackage{etoolbox}
 \AtBeginEnvironment{tabular}{\small}
 \newenvironment{referencias}{\par\raggedright\setlength{\leftskip}{1.27cm}\setlength{\parindent}{-1.27cm}\setlength{\parskip}{0.5em}}{\par}
-\graphicspath{{../resultados/figuras/}{../resultados/}{./}}
+\graphicspath{{../resultados/figuras/}}
 \newcommand{\completar}[1]{\textbf{\textcolor{red}{[COMPLETAR: #1]}}}
 \newcommand{\repo}{\url{https://github.com/odvelez/StreetView}}
 \doublespacing
@@ -177,16 +177,15 @@ Etapa & Tramo (m) & Cruces cerrados & Pasos & A pie: obra $\to$ pasos & Máx. a 
 
 \begin{figure}[H]
 \centering
-\IfFileExists{../resultados/figuras/plan_mapa.png}{\includegraphics[width=\textwidth]{plan_mapa.png}}{\includegraphics[width=\textwidth]{mapa.png}}
+\includegraphics[width=\textwidth]{plan_mapa.png}
 \caption{Plan por etapas de El Salao: eje de la obra por etapa, pasos peatonales provisionales (naranja), cambios de sentido (morado) y esquinas a controlar sin semáforo registrado (rojo). Datos © colaboradores de OpenStreetMap.}
 \end{figure}
 
-\IfFileExists{../resultados/figuras/desvio_a_pie.png}{%
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{desvio_a_pie.png}
 \caption{Desvío medio a pie por etapa, con la obra y con los pasos peatonales provisionales.}
-\end{figure}}{}
+\end{figure}
 
 \textbf{Pasos peatonales.} En la etapa 1 se eligen dos pasos nuevos: entre la calle 76A con carrera 22B y la calle 76A con carrera 22A (54 m) y en la carrera 21C (29 m). En la etapa 2, los cruces de la calle 72 (11 m) y de la calle 67 (132 m). En la etapa 3, un cruce cerca de la calle 62 (38 m). Parte de la mejora viene de pasos nuevos que son atajos: algunos pares quedan incluso más cortos que sin la obra, así que el desvío medio mezcla recorridos recuperados con atajos nuevos.
 
