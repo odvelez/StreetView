@@ -4,12 +4,15 @@
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
 \usepackage[margin=2.54cm]{geometry}
-\usepackage{amsmath,amssymb,graphicx,booktabs,setspace,xcolor,float}
+\usepackage{amsmath,amssymb,graphicx,booktabs,setspace,xcolor,float,tikz}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
+\usepackage{etoolbox}
+\AtBeginEnvironment{tabular}{\small}
 \newenvironment{referencias}{\par\raggedright\setlength{\leftskip}{1.27cm}\setlength{\parindent}{-1.27cm}\setlength{\parskip}{0.5em}}{\par}
-\graphicspath{{../resultados/}{./}}
+\graphicspath{{../resultados/figuras/}{../resultados/}{./}}
 \newcommand{\completar}[1]{\textbf{\textcolor{red}{[COMPLETAR: #1]}}}
+\newcommand{\repo}{\url{https://github.com/odvelez/StreetView}}
 \doublespacing
 \setlength{\parindent}{1.27cm}
 
@@ -18,107 +21,239 @@
 \begin{titlepage}
 \centering
 \vspace*{4cm}
-{\bfseries Puentes y desvíos: análisis de la red vial frente al arroyo El Salao en Soledad, Atlántico\par}
+{\bfseries Obras viales por etapas: cómo planificar una obra que cierra calles, con la canalización del arroyo El Salao en Soledad como ejemplo\par}
 \vspace{2cm}
-Oscar Velez, Gustavo de la Ossa, Karel Silva, Sebastián Blanco y Santiago Lobo\par
+Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santiago Lobo\par
 \vspace{1cm}
 Universidad del Norte\par
 Matemáticas Discretas (MAT 4021)\par
 MSc Iván Gómez\par
 15 de noviembre de 2026\par
+\vspace{1.5cm}
+Repositorio: \repo\par
 \end{titlepage}
 
 \section*{Resumen}
-Se modeló la red vial alrededor del arroyo El Salao, en Soledad, con datos de OpenStreetMap, como dos grafos ponderados por la longitud de cada tramo: uno no dirigido para peatones y uno dirigido para vehículos, que respeta los sentidos viales. La red tiene 5.859 intersecciones y 8.827 tramos. Con lluvia se bloquean 120 tramos que cruzan o recorren el cauce de 2.386 m. Cruzar a pie se alarga en promedio 70 m; tres puentes peatonales reducen ese desvío a 26 m. En vehículos el desvío medio es de 138 m y 240 pares de esquinas quedan sin camino; habilitar doble sentido en una calle baja el desvío a 132 m y devuelve el camino a la mitad de esos pares. \completar{confirmar en Street View los cruces antes de cerrar las cifras}
+Una obra que cierra calles obliga a quienes viven alrededor a dar vueltas. Este trabajo propone una forma de planificarla por etapas y de elegir medidas temporales que reduzcan ese desvío: pasos peatonales provisionales, cambios de sentido, rutas alternas señalizadas y control en esquinas. La red vial se modela con datos de OpenStreetMap como dos grafos ponderados por la longitud de cada cuadra: uno no dirigido para peatones y uno dirigido para vehículos. La obra quita las aristas que toca. Con Dijkstra se mide el desvío, con programación dinámica se eligen los cortes entre etapas y con una heurística voraz se eligen las medidas. En el ejemplo de la canalización de El Salao (2.386 m, red de 5.859 esquinas y 8.827 tramos), el plan tiene 3 etapas, 5 pasos peatonales provisionales, 3 cambios de sentido, 18 rutas alternas y 15 esquinas a controlar. A pie, el desvío medio baja de 387 a 48 m en la etapa más difícil. En carro, los cambios de sentido casi no bajan el desvío medio: con medidas temporales el problema peatonal mejora mucho y el vehicular casi no. El código, los datos y las pruebas están en \repo.
 
 \section{Introducción}
-\subsection{Problema e impacto}
-El 4 de noviembre de 2026, una creciente súbita del arroyo El Salao arrastró a un adulto mayor y a dos niñas a la altura de la carrera 21 con calle 74, en el barrio Los Cedros (Infobae, 2026). Vecinos de Los Cedros y Las Moras afirman que cruzan esa zona a diario por falta de alternativas y piden un puente elevado (El Tiempo, 2026).
+\subsection{Motivación}
+El 4 de noviembre de 2026, una creciente súbita del arroyo El Salao, en Soledad (Atlántico), arrastró a tres personas a la altura de la carrera 21 con calle 74, en el barrio Los Cedros (Infobae, 2026). Vecinos de Los Cedros y Las Moras afirman que cruzan esa zona a diario por falta de alternativas (El Tiempo, 2026). Este hecho es la motivación del proyecto, no su tema: no se analiza la emergencia ni las decisiones de quienes estaban allí.
 
-\textbf{A quién afecta:} \completar{habitantes de los barrios del sector, con cifra y fuente}.
+La respuesta habitual a un arroyo peligroso es canalizarlo, y una canalización es una obra larga que cierra durante meses las calles y los puentes que hoy lo cruzan. \completar{canalización de El Salao anunciada: entidad, fecha y costo, con enlace a la fuente} \completar{emergencias anteriores en El Salao, con fuente}
 
-\textbf{Evidencia:} \completar{resumir noticias, canalización anunciada y emergencias previas}.
+\textbf{A quién afecta.} \completar{habitantes de los barrios del sector, con cifra y fuente (DANE o Alcaldía de Soledad)}.
 
-\textbf{Qué se puede medir:} la longitud de los recorridos entre ambos lados del arroyo en tiempo seco y con lluvia, y cuánto baja ese desvío con cada medida temporal.
+\subsection{Pregunta}
+Al planificar una obra que cierra calles, ¿cómo se divide en etapas y qué medidas temporales reducen más el desvío de quienes la rodean?
 
 \subsection{Objetivos}
-Cuantificar el desvío que causa la lluvia entre los dos lados del arroyo, para peatones y para vehículos, y determinar qué medida temporal reduce más ese desvío: un puente peatonal, habilitar doble sentido en una calle de un solo sentido, o señalizar una ruta alterna.
+\begin{enumerate}
+\item Modelar la red vial alrededor de una obra como grafos, para peatones y para vehículos.
+\item Medir cuánto se alarga cada recorrido entre los dos lados de la obra cuando se cierran las calles que la cruzan.
+\item Dividir la obra en etapas y, para cada una, elegir pasos peatonales provisionales, cambios de sentido, rutas alternas y esquinas a controlar.
+\item Aplicarlo a la canalización de El Salao y contar con honestidad qué funciona y qué no.
+\end{enumerate}
 
-\section{Modelación}
-Para peatones se usa un grafo no dirigido y ponderado $G_P=(V,E_P,w)$, donde $V$ son las intersecciones, $E_P$ los tramos que pueden recorrer a pie y $w(e)$ la longitud del tramo en metros. Para vehículos se usa un grafo dirigido $G_V=(V,A,w)$, donde cada arco $u\to v$ es un sentido permitido de un tramo. Sea $B$ el conjunto de tramos bloqueados con lluvia. Los escenarios de lluvia son $G_P\setminus B$ y $G_V\setminus B$.
-
-Se toman como zona de estudio las esquinas a más de 10 m y a menos de 400 m del cauce, a cada lado. Para cada par $(a,b)$ con $a$ en un lado y $b$ en el otro, con camino en tiempo seco, el desvío es
-\begin{equation}
-\Delta(a,b)=d_{\text{lluvia}}(a,b)-d(a,b),
-\end{equation}
-donde $d$ es la distancia mínima en el grafo completo y $d_{\text{lluvia}}$ la distancia en el grafo sin $B$. En vehículos se consideran los pares en los dos sentidos. Por la cantidad de pares, se usa una muestra de 120 esquinas por lado; con ella hay hasta 14.400 pares por sentido.
-
-\textbf{Criterio de bloqueo.} Un tramo pertenece a $B$ si (i) corta el cauce y no es un puente, (ii) va sobre el cauce, es decir, al menos el 60 \% de sus puntos está a menos de 10 m del cauce, o (iii) toca una esquina que está a menos de 10 m del cauce. Los tramos que OpenStreetMap marca como puente no se bloquean. \completar{explicar cómo se confirmó cada cruce en Street View}
-
-\textbf{Simplificaciones.} La lluvia es un escenario binario: no se modelan caudal ni duración. Los puentes peatonales nuevos tienen una luz máxima de 60 m, y no se proponen puentes vehiculares.
-
-\section{Solución y algoritmos}
-El programa está escrito en Python, con listas de adyacencia y solo biblioteca estándar. Usa los siguientes algoritmos:
-
+\section{Modelo}
+\subsection{Del mapa al grafo}
+Las calles se descargan de OpenStreetMap con Overpass. Cada esquina es un nodo y cada cuadra es una arista con su longitud en metros como peso. Se construyen dos grafos sobre el mismo conjunto de esquinas $V$:
 \begin{itemize}
-\item \textbf{Dijkstra} (Dijkstra, 1959), con cola de prioridad. Se corre desde cada esquina de la muestra y se detiene cuando ya cerró todas las esquinas que se necesitan. Esto no cambia ninguna distancia, porque Dijkstra cierra los nodos en orden de distancia.
-\item \textbf{Grafo invertido}: en el grafo dirigido, la distancia de $y$ hacia $b$ se obtiene con Dijkstra desde $b$ en el grafo invertido.
-\item \textbf{Fórmula de arco nuevo}: al agregar un arco $x\to y$ de peso $w$, la nueva distancia es $d'(a,b)=\min\bigl(d(a,b),\,d(a,x)+w+d(y,b)\bigr)$. Así se evalúa cada candidato sin repetir Dijkstra para cada par, y entre rondas las tablas se actualizan con la misma fórmula.
-\item \textbf{Selección voraz}: en cada ronda se agrega el candidato que más reduce el desvío medio, con un mínimo de mejora de 2 \%. Es una heurística: no garantiza el óptimo, pero sí el mejor candidato en cada ronda.
-\item \textbf{Rutas alternas}: para cada cruce que la lluvia cierra, se calcula con Dijkstra el camino mínimo con lluvia hasta el otro lado.
+\item Peatones: $G_P=(V,E_P,w)$, no dirigido, porque a pie se puede ir en los dos sentidos de una calle.
+\item Vehículos: $G_V=(V,A,w)$, dirigido; cada arco $u\to v$ es un sentido permitido.
 \end{itemize}
+Tener dos grafos importa también para las medidas: un paso peatonal solo sirve a peatones y un cambio de sentido solo a vehículos.
 
-Los candidatos son de tres tipos. Para peatones: los cruces que la lluvia cierra, en los que el puente devuelve el mismo paso, y pasos nuevos de hasta 60 m en línea recta entre lados opuestos, donde hoy no hay calle que cruce. Para vehículos: calles de un solo sentido cerca del cauce, a las que se agrega el arco en sentido contrario.
+\subsection{La obra}
+La obra es una línea (su eje). Sea $C$ el conjunto de cuadras que cruzan el eje o van sobre él, dentro de una franja de 10 m a cada lado del eje (20 m de borde a borde), incluidos los puentes existentes. Con la obra, los grafos son $G_P\setminus C$ y $G_V\setminus C$. Se quita la arista en lugar de subirle el peso: una penalización sería un número inventado, mientras que quitarla representa exactamente que no se puede pasar.
 
-Las pruebas de \texttt{tests/} comparan con resultados conocidos: un camino, una estrella, un grafo de seis nodos resuelto a mano, una red miniatura con un desvío calculado de antemano, y la comprobación de que la fórmula rápida y la actualización de tablas dan lo mismo que recalcular. \completar{agregar y explicar el caso de prueba hecho a mano por el grupo}
+Cada esquina queda a un lado de la obra según el signo del producto cruz entre el segmento más cercano del eje y el vector que va del segmento a la esquina.
 
-\section{Resultados e interpretación}
+\subsection{Desvío}
+Para dos esquinas $a$ y $b$ en lados opuestos, el desvío es
+\begin{equation}
+\Delta(a,b)=d_{\text{obra}}(a,b)-d(a,b),
+\end{equation}
+donde $d$ es la distancia mínima sin la obra y $d_{\text{obra}}$ la distancia mínima en el grafo sin $C$. Se resume con el desvío medio, el porcentaje de pares con más de 200 m de desvío y el máximo. Se usan las esquinas a menos de 400 m del eje; por tiempo de cómputo se toma una muestra de esquinas por lado (120 para toda la obra a la vez y 60 por etapa, dentro de una ventana de 250 m a lo largo del eje). En vehículos se cuentan los dos sentidos de cada par.
+
+\subsection{Etapas y medidas}
+El número de etapas es $n=\lceil L/L_{\max}\rceil$, con $L$ la longitud de la obra y $L_{\max}=1.000$ m. En cada etapa solo se cierran las cuadras de $C$ que están en ese tramo; el resto sigue abierto. Las medidas son:
+\begin{itemize}
+\item \textbf{Paso peatonal provisional:} una arista nueva de $G_P$, sea un cruce que la obra cerró o un paso nuevo de hasta 60 m entre esquinas de lados opuestos. Hay uno por cada 500 m de obra, mínimo uno por etapa, separados al menos 250 m.
+\item \textbf{Cambio de sentido:} en una calle de un solo sentido cerca de la obra, se agrega el arco contrario a $G_V$ (hasta 2 por etapa).
+\item \textbf{Ruta alterna:} para cada cruce cerrado, el camino mínimo que queda entre sus dos extremos; es lo que se señaliza.
+\item \textbf{Control en esquinas:} las 5 esquinas por etapa por las que pasan más recorridos desviados, indicando si OpenStreetMap registra un semáforo a menos de 40 m.
+\end{itemize}
+No se proponen puentes vehiculares: costarían y tardarían casi lo mismo que la obra.
+
+\section{Algoritmos}
+Todo está implementado en Python con la biblioteca estándar (archivos \path{src/grafo.py}, \path{src/analisis.py} y \path{src/etapas.py}).
+
+\textbf{Dijkstra} (Dijkstra, 1959), con cola de prioridad, desde cada esquina de la muestra. Se detiene cuando ya cerró todas las esquinas que se necesitan; como Dijkstra cierra los nodos en orden de distancia, esto no cambia ninguna distancia (hay una prueba que lo comprueba). En el grafo dirigido, $d(y,b)$ se obtiene con Dijkstra desde $b$ en el grafo invertido.
+
+\textbf{Fórmula de arco nuevo.} Al agregar un arco $x\to y$ de peso $w$, un camino mínimo lo usa a lo sumo una vez, así que
+\begin{equation}
+d'(a,b)=\min\bigl(d(a,b),\; d(a,x)+w+d(y,b)\bigr).
+\end{equation}
+Con las tablas de distancias ya calculadas, cada candidato se evalúa sin repetir Dijkstra. En El Salao esto bajó el análisis de unos 36 s a entre 6 y 8 s, con los mismos resultados.
+
+\textbf{Selección voraz.} En cada ronda se agrega el candidato que más reduce el objetivo (primero el número de pares sin camino y después el desvío medio), si lo mejora al menos un 2~\%. Es una heurística: da el mejor candidato de cada ronda, pero no garantiza el óptimo del conjunto.
+
+\textbf{Programación dinámica para las etapas.} Los posibles cortes están en una malla cada 25 m a lo largo del eje. Sea $c(i,j)$ el número de cruces cerrados entre los puntos $i$ y $j$ de la malla. El costo de una división es un par $(m,q)$: $m$ es el mayor número de cruces en una sola etapa y $q$ la suma de los cuadrados de los cruces de cada etapa; los pares se comparan en orden, primero $m$ y después $q$. Si $M_s(j)=(m_s(j),q_s(j))$ es el mejor costo de dividir el eje desde el inicio hasta el punto $j$ en $s$ etapas, con $M_0(0)=(0,0)$, entonces
+\begin{equation}
+M_s(j)=\min_{i}\ \Bigl(\max\bigl(m_{s-1}(i),\,c(i,j)\bigr),\; q_{s-1}(i)+c(i,j)^2\Bigr),
+\end{equation}
+donde solo se permiten tramos $i\to j$ de largo entre $\min(0{,}4\,L_{\max},L/n)$ y $L_{\max}$. La respuesta es $M_n$ en el final del eje, y los cortes se recuperan guardando el $i$ que da el mínimo. Así ninguna etapa concentra demasiados cruces y el reparto queda parejo.
+
+\textbf{Rutas alternas y carga de esquinas.} Para cada cruce cerrado se reconstruye con Dijkstra el camino mínimo que queda. La carga de una esquina es cuántos recorridos desviados de la muestra pasan por ella.
+
+\section{Caso resuelto a mano}
+La Figura~\ref{fig:mano} muestra una red de seis esquinas: $A$, $B$ y $C$ al norte de la obra, sobre una calle con cuadras de 100 m, y $D$, $E$ y $F$ al sur. Hay tres cruces: $A$--$D$ (80 m), $B$--$E$ (50 m) y $C$--$F$ (50 m). Una etapa cierra $A$--$D$ y $B$--$E$. El grafo es no dirigido (peatones).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[xscale=1.6,yscale=2.2,esq/.style={circle,draw,fill=white,minimum size=7mm}]
+\fill[gray!35] (-0.6,0.44) rectangle (4.6,0.56);
+\draw (0,1) -- (4,1); \draw (0,0) -- (4,0);
+\draw[red,dashed,very thick] (0,0) -- (0,1);
+\draw[red,dashed,very thick] (2,0) -- (2,1);
+\draw[thick] (4,0) -- (4,1);
+\node[esq] at (0,1) {$A$}; \node[esq] at (2,1) {$B$}; \node[esq] at (4,1) {$C$};
+\node[esq] at (0,0) {$D$}; \node[esq] at (2,0) {$E$}; \node[esq] at (4,0) {$F$};
+\node[above] at (1,1.1) {100}; \node[above] at (3,1.1) {100};
+\node[below] at (1,-0.1) {100}; \node[below] at (3,-0.1) {100};
+\node[left,text=red] at (-0.05,0.75) {80}; \node[left,text=red] at (1.95,0.75) {50};
+\node[right] at (4.05,0.75) {50};
+\end{tikzpicture}
+\caption{Red de prueba. En rojo punteado, los cruces que cierra la etapa; en gris, el eje de la obra.}
+\label{fig:mano}
+\end{figure}
+
 \begin{table}[H]
 \centering
-\caption{Peatones: recorridos entre los dos lados del arroyo (muestra de 120 esquinas por lado)}
-\begin{tabular}{@{}lrrrr@{}}
+\caption{Distancias en metros para los 9 pares norte--sur}
+\label{tab:mano}
+\begin{tabular}{@{}lrrrrr@{}}
 \toprule
-Escenario & Media (m) & Desvío (m) & Más de 200 m (\%) & Máximo (m)\\
+Par & Sin obra & Con la obra & Desvío & Con paso $B$--$E$ & Desvío final\\
 \midrule
-Seco & 1.168 & 0 & 0,0 & 0\\
-Lluvia & 1.238 & 70 & 10,9 & 763\\
-Lluvia con 3 puentes peatonales & 1.195 & 26 & 2,0 & 440\\
+$A$--$D$ & 80 & 450 & 370 & 250 & 170\\
+$A$--$E$ & 150 & 350 & 200 & 150 & 0\\
+$A$--$F$ & 250 & 250 & 0 & 250 & 0\\
+$B$--$D$ & 150 & 350 & 200 & 150 & 0\\
+$B$--$E$ & 50 & 250 & 200 & 50 & 0\\
+$B$--$F$ & 150 & 150 & 0 & 150 & 0\\
+$C$--$D$ & 250 & 250 & 0 & 250 & 0\\
+$C$--$E$ & 150 & 150 & 0 & 150 & 0\\
+$C$--$F$ & 50 & 50 & 0 & 50 & 0\\
+\midrule
+Media & & & 107,8 & & 18,9\\
 \bottomrule
 \end{tabular}
 \end{table}
 
+Con la obra, el único cruce es $C$--$F$; por ejemplo, $d_{\text{obra}}(A,D)=100+100+50+100+100=450$ m. La suma de desvíos es $370+200+200+200=970$ m y la media, $970/9\approx 107{,}8$ m.
+
+El voraz prueba dos candidatos para el paso provisional, con la fórmula de arco nuevo. Con $B$--$E$ ($w=50$): $d'(A,D)=\min(450,\ d(A,B)+50+d(E,D))=\min(450,\,100+50+100)=250$, y los demás pares vuelven a su distancia sin obra; la suma de desvíos queda en $170$ m y la media en $18{,}9$ m. Con $A$--$D$ ($w=80$): $d'(B,E)=\min(250,\,100+80+100)=250$ sigue con 200 m de desvío, y $A$--$E$ y $B$--$D$ quedan en 180 m (30 m de desvío cada uno); la suma es $260$ m y la media $28{,}9$ m. El voraz elige $B$--$E$, aunque sea el cruce más corto, porque está en el centro y sirve a más pares. Este caso está en \texttt{tests/test\_app.py} y el programa da las mismas cifras.
+
+\section{Resultados en El Salao}
+\subsection{El plan por etapas}
+Las cifras salen de \texttt{resultados/plan\_etapas.txt}. La obra mide 2.386 m y queda en 3 etapas. El plan propone 5 pasos peatonales provisionales, 3 cambios de sentido, 18 rutas alternas y 15 esquinas a controlar, de las cuales 14 no tienen semáforo registrado en OpenStreetMap.
+
 \begin{table}[H]
 \centering
-\caption{Vehículos: recorridos en los dos sentidos (muestra de 120 esquinas por lado)}
-\begin{tabular}{@{}lrrrrr@{}}
+\caption{Plan por etapas de El Salao: desvío medio en metros (muestra de 60 esquinas por lado en cada etapa)}
+\label{tab:etapas}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Escenario & Media (m) & Desvío (m) & Más de 200 m (\%) & Máximo (m) & Sin camino\\
+Etapa & Tramo (m) & Cruces cerrados & Pasos & A pie: obra $\to$ pasos & Máx. a pie & En carro\\
 \midrule
-Seco & 1.288 & 0 & 0,0 & 0 & 0\\
-Lluvia & 1.427 & 138 & 23,4 & 1.580 & 240\\
-Lluvia con doble sentido en 2 calles & 1.421 & 132 & 23,4 & 1.580 & 120\\
+1 & 0--975 & 24 (3 puentes) & 2 & 387 $\to$ 48 & 1.480 $\to$ 583 & 332\\
+2 & 975--1.825 & 24 (1 puente) & 2 & 129 $\to$ 28 & 797 $\to$ 372 & 287\\
+3 & 1.825--2.386 & 26 (5 puentes) & 1 & 219 $\to$ 56 & 987 $\to$ 478 & 293\\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{mapa.png}
-\caption{Arroyo El Salao, tramos bloqueados con lluvia, puentes existentes y puentes peatonales propuestos (numerados por orden de elección)}
+\IfFileExists{../resultados/figuras/plan_mapa.png}{\includegraphics[width=\textwidth]{plan_mapa.png}}{\includegraphics[width=\textwidth]{mapa.png}}
+\caption{Plan por etapas de El Salao: eje de la obra por etapa, pasos peatonales provisionales (naranja), cambios de sentido (morado) y esquinas a controlar sin semáforo registrado (rojo). Datos © colaboradores de OpenStreetMap.}
 \end{figure}
 
-\textbf{Puentes peatonales.} La primera medida elegida es un paso nuevo entre la calle 75D con carrera 21A y la calle 76 con carrera 21, de 48 m. Con ella el desvío baja de 70 a 49 m. Las dos siguientes son cruces que hoy se inundan: la carrera 22A (173 m) y la calle 67 (132 m). Con las tres, el desvío medio baja a 26 m, una reducción de 63 \%, y el porcentaje de recorridos que se alargan más de 200 m pasa de 10,9 \% a 2,0 \%.
+\IfFileExists{../resultados/figuras/desvio_a_pie.png}{%
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{desvio_a_pie.png}
+\caption{Desvío medio a pie por etapa, con la obra y con los pasos peatonales provisionales.}
+\end{figure}}{}
 
-\textbf{Doble sentido.} El análisis revisa 151 calles de un solo sentido cerca del cauce y elige dos. La primera es una calle sin nombre de 6 m junto a la avenida Murillo: su efecto principal es devolver el camino a la mitad de los pares que quedaban sin salida (de 240 a 120), con un desvío medio de 138 m. La segunda, de la avenida Murillo a la carrera 16 sur (112 m), baja el desvío medio a 132 m, pero no cambia el número de pares sin camino. Ninguna de las dos reduce mucho el desvío medio. La primera debe verificarse en Street View antes de presentarla, porque un tramo de 6 m puede ser un error de OpenStreetMap. \completar{confirmar la calle sin nombre de 6 m}
+\textbf{Pasos peatonales.} En la etapa 1 se eligen dos pasos nuevos: entre la calle 76A con carrera 22B y la calle 76A con carrera 22A (54 m) y en la carrera 21C (29 m). En la etapa 2, los cruces de la calle 72 (11 m) y de la calle 67 (132 m). En la etapa 3, un cruce cerca de la calle 62 (38 m). Parte de la mejora viene de pasos nuevos que son atajos: algunos pares quedan incluso más cortos que sin la obra, así que el desvío medio mezcla recorridos recuperados con atajos nuevos.
 
-\textbf{Rutas alternas.} Los cruces que más se alargan cuando llueve, por el camino más corto que queda, son los que hay que señalizar. En carro, el cruce de la calle 61 pasa de 120 a 1.895 m; a pie, el de la calle 59A pasa de 46 a 576 m. El arroyo El Salao mismo, en su tramo cerrado, pasa de 102 a 1.107 m en carro.
+\textbf{Rutas alternas.} Los cruces que más se alargan son los que hay que señalizar primero. En la etapa 3, el cruce de la calle 61 pasa de 120 a 1.895 m en carro y de 120 a 1.107 m a pie. En la etapa 2, la vía local junto al eje (en OpenStreetMap figura como «Arroyo El Salao») pasa de 102 a 1.776 m en carro, y la carrera 22A de 173 a 1.761 m.
 
-En conjunto, para peatones el puente peatonal es la medida que más reduce el desvío. Para vehículos, el cambio de sentido ayuda poco al desvío medio, pero sí reduce los pares sin salida a la mitad, de modo que la señalización de rutas alternas sigue siendo necesaria.
+\textbf{Esquinas a controlar.} Las de más carga son la calle 60 con carrera 18 (72,9~\% de los recorridos desviados de la etapa 3), la calle 75 con carrera 21 (72,5~\% en la etapa 2), la calle 63 con carrera 18 (63,0~\%, la única con semáforo registrado) y la calle 73 con carrera 19A (61,1~\% en la etapa 1). Son candidatas a semáforo o agente de tránsito, no una recomendación firme.
 
-\section{Conclusiones y limitaciones}
-\completar{conclusiones propias del grupo}
+\subsection{Toda la obra a la vez}
+Como escenario de comparación se cierran los 120 tramos que toca la obra completa, sin etapas (\texttt{resultados/resumen.txt}). Aquí los puentes que OpenStreetMap marca como tales siguen abiertos.
 
-Limitaciones: los datos dependen de OpenStreetMap y de la confirmación de los cruces en Street View; la muestra de 120 esquinas por lado aproxima las cifras; la lluvia es binaria y no incluye caudal ni duración; los extremos de los puentes propuestos requieren estudio técnico, y el modelo solo mide conectividad, no suelos, costos ni diseño hidráulico.
+\begin{table}[H]
+\centering
+\caption{Toda la obra a la vez (muestra de 120 esquinas por lado)}
+\label{tab:total}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Grafo & Escenario & Media (m) & Desvío (m) & Más de 200 m (\%) & Máximo (m)\\
+\midrule
+Peatones & Sin obra & 1.168 & 0 & 0,0 & 0\\
+ & Con la obra & 1.238 & 70 & 10,9 & 763\\
+ & Con 3 pasos peatonales & 1.195 & 26 & 2,0 & 440\\
+\midrule
+Vehículos & Sin obra & 1.288 & 0 & 0,0 & 0\\
+ & Con la obra & 1.427 & 138 & 23,4 & 1.580\\
+ & Con doble sentido en 2 calles & 1.421 & 132 & 23,4 & 1.580\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A pie, tres pasos bajan el desvío medio de 70 a 26 m (63~\% menos) y los pares con más de 200 m de desvío pasan de 10,9~\% a 2,0~\%.
+
+\subsection{El hallazgo honesto: el problema vehicular}
+En carro, las medidas temporales ayudan poco. Por etapa, el desvío medio con la obra es de 332, 287 y 293 m, y el cambio de sentido lo deja en 332, 279 y 293 m sobre los mismos pares. Con toda la obra a la vez, la medida elegida en primer lugar (doble sentido en una calle sin nombre de 6 m junto a la avenida Murillo) devuelve el camino a 120 pares que no tenían ninguno, pero no baja el desvío medio, porque esos pares entran al promedio con recorridos largos. En la etapa 1, el cambio de sentido en la calle 77 lleva los pares sin camino de 60 a 0: es una mejora real aunque el promedio no la muestre. Además, con otra posición de la muestra cambia la calle recomendada, así que no se presenta como firme. Lo que sí se sostiene en carro es señalizar las rutas alternas y controlar las esquinas de más carga.
+
+La conclusión es clara: con medidas temporales, el problema peatonal mejora mucho y el vehicular casi no.
+
+\subsection{Comprobaciones}
+\begin{itemize}
+\item \textbf{Voraz contra fuerza bruta} (\texttt{resultados/experimentos/}). Con dos medidas, el voraz elige la misma pareja que el óptimo entre las 1.225 parejas de pasos peatonales y entre las 11.325 de cambios de sentido. Es una comprobación para este caso, no una demostración; hay una prueba con un caso construido en que el voraz falla.
+\item \textbf{Sensibilidad.} Con luz máxima de 60 m o más, el primer paso peatonal es siempre el mismo y el desvío final queda entre 24 y 26 m; con otros tamaños de muestra queda entre 22 y 28 m.
+\item \textbf{Control del lado.} El lado de cada esquina por producto cruz coincide en el 100~\% de 1.229 esquinas con las componentes conexas del grafo cuando la obra se trata como una barrera.
+\item \textbf{Pruebas automáticas.} \texttt{python -m unittest} corre las pruebas del repositorio: caminos y grafos resueltos a mano, una red miniatura con desvío conocido, la fórmula rápida contra Dijkstra, el plan por etapas, la API y el caso de la sección anterior.
+\end{itemize}
+
+\section{Límites}
+\begin{itemize}
+\item No hay datos de tránsito: no se mide congestión, solo desvíos en metros. La carga de una esquina es cuántos recorridos desviados de la muestra pasan por ella.
+\item Los pesos son metros, no tiempo.
+\item No se diseñan carriles ni tiempos de semáforo, ni se evalúan costo, suelos o diseño hidráulico. Que una medida mejore la conectividad no quiere decir que sea construible.
+\item Se usa una muestra de esquinas sin ponderar por población ni por destinos.
+\item La heurística voraz no garantiza el óptimo.
+\item Se supone que cada etapa cierra también los puentes existentes de su tramo. Si se mantuvieran abiertos, el desvío a pie con la obra sería de 68, 56 y 36 m (\path{resultados/informe_cambios.md}). Es el supuesto que más pesa en las cifras.
+\item La calidad de OpenStreetMap depende de quién lo edita. \completar{cómo se confirmó cada cruce cerrado en Street View (calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje)} \completar{confirmar en Street View la calle de 6 m junto a la avenida Murillo; si es un error de OpenStreetMap, dejarlo como limitación}
+\end{itemize}
+
+\section{Conclusiones}
+\begin{enumerate}
+\item Una obra que cierra calles se puede describir como quitar aristas de un grafo, y su efecto como el desvío medido con Dijkstra. Con eso se puede comparar planes antes de cerrar una sola calle.
+\item Dividir la obra en etapas limita el cierre a un tramo a la vez. La programación dinámica reparte los cruces para que ninguna etapa concentre demasiados.
+\item A pie, los pasos provisionales funcionan: en El Salao el desvío medio baja en las tres etapas, de 387 a 48 m en la primera.
+\item En carro, cambiar sentidos ayuda poco al desvío medio. Lo que se sostiene es señalizar rutas alternas y controlar las esquinas de más carga.
+\item El método no depende de El Salao: sirve para cualquier obra que se dibuje sobre el mapa.
+\end{enumerate}
+Trabajo futuro: datos de tránsito, pesos en tiempo, una muestra ponderada por población o destinos y validación en terreno.
+
+\section*{Repositorio}
+El código, los datos guardados, los resultados y las instrucciones para reproducirlos están en \repo. Desde la carpeta \texttt{proyecto\_arroyos/}: \texttt{pip install -r requirements.txt}, \texttt{python -m unittest} y \texttt{python app.py}.
 
 \section*{Referencias}
 \begin{referencias}
@@ -128,7 +263,7 @@ El Tiempo. (2026, 5 de noviembre). \textit{Atlántico | `La gente pasa porque le
 
 Infobae. (2026, 4 de noviembre). \textit{Dos menores y un adulto fueron arrastrados por un arroyo en medio de fuerte aguacero en Soledad, Atlántico}. \url{https://www.infobae.com/colombia/2026/11/04/dos-menores-y-un-adulto-fueron-arrastrados-por-un-arroyo-en-medio-de-fuerte-aguacero-en-soledad-atlantico/}
 
-Colaboradores de OpenStreetMap. (2026). \textit{OpenStreetMap} [Conjunto de datos, licencia ODbL]. Recuperado el 9 de noviembre de 2026 de \url{https://www.openstreetmap.org}
+Colaboradores de OpenStreetMap. (2026). \textit{OpenStreetMap} [Conjunto de datos, licencia ODbL]. Recuperado en noviembre de 2026 de \url{https://www.openstreetmap.org}
 \end{referencias}
 
 \end{document}
