@@ -10,7 +10,7 @@ Equipo: Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santi
 - Probar antes el ejecutable y la proyección: si algo falla por falta de preparación, **no hay tiempo adicional** y baja la nota.
 - El profesor debe poder **ejecutar y reproducir el proyecto desde este README** sin problemas: el repositorio debe tener todo el código y la documentación clara.
 
-Este es el único README del repositorio. Todo el código está en `proyecto_arroyos/`.
+Este es el único README del repositorio. Todo el código está en `proyecto_obras/`.
 
 ## 1. Qué es
 
@@ -26,7 +26,7 @@ Este es el único README del repositorio. Todo el código está en `proyecto_arr
 
 ```bash
 git clone https://github.com/odvelez/StreetView.git
-cd StreetView/proyecto_arroyos
+cd StreetView/proyecto_obras
 python -m pip install -r requirements.txt
 python -m unittest                 # verificar: todas las pruebas deben dar OK
 python app.py                      # abrir http://localhost:5000/?ejemplo
@@ -34,7 +34,7 @@ python app.py                      # abrir http://localhost:5000/?ejemplo
 
 No se necesita internet para El Salao: las calles ya están guardadas en `datos/cache/`.
 
-Requisitos: Python 3.10 o superior (Flask para la web; matplotlib para `mapa.png` y las figuras). Los algoritmos usan solo la biblioteca estándar. Todo desde `proyecto_arroyos/`.
+Requisitos: Python 3.10 o superior (Flask para la web; matplotlib para `mapa.png` y las figuras). Los algoritmos usan solo la biblioteca estándar. Todo desde `proyecto_obras/`.
 
 ```bash
 python app.py                      # pantalla en http://localhost:5000 (use /?ejemplo para cargar El Salao)
@@ -83,7 +83,7 @@ Otros experimentos (betweenness, sensibilidad, control de lados, histograma, vor
 ## 5. Organización
 
 ```
-proyecto_arroyos/
+proyecto_obras/
   app.py               servidor Flask: GET /, GET /api/ejemplo, GET /api/ejemplo_obra, POST /api/analizar, POST /api/plan
   main.py              análisis de toda la obra a la vez, por terminal
   web/                 pantalla (Leaflet): menú, recorrido paso a paso, resultados
@@ -123,7 +123,7 @@ proyecto_arroyos/
 
 ## 7. Lo que falta
 
-**Entrega (Brightspace):** subir `proyecto_arroyos/documento/main.pdf` y `proyecto_arroyos/documento/diapositivas.pdf`. Los dos tienen el enlace al repositorio y se compilan con `pdflatex main.tex` y `pdflatex diapositivas.tex` (dos veces cada uno) desde `documento/`.
+**Entrega (Brightspace):** subir `proyecto_obras/documento/main.pdf` y `proyecto_obras/documento/diapositivas.pdf`. Los dos tienen el enlace al repositorio y se compilan con `pdflatex main.tex` y `pdflatex diapositivas.tex` (dos veces cada uno) desde `documento/`.
 
 **Pendiente de verificar** (en `main.tex` ya están escritos como «pendiente de verificar», sin recuadros rojos):
 1. Cruces cerrados de El Salao (calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje, que en OSM se llama «Arroyo El Salao»): confirmar en Street View que cruzan el arroyo.
@@ -152,7 +152,7 @@ No hay datos de tránsito (no se mide congestión); los pesos son metros, no tie
 
 ## 8. Preguntas que pueden hacer en la sustentación
 
-Están, con respuestas y por tema, en `proyecto_arroyos/documento/preguntas.md`. Las más probables:
+Están, con respuestas y por tema, en `proyecto_obras/documento/preguntas.md`. Las más probables:
 
 - **¿Por qué quitar aristas y no aumentar el peso?** Un peso de penalización sería un número inventado; quitar la arista representa que no se puede pasar.
 - **¿Por qué dos grafos?** Un peatón puede caminar en contravía y un carro no; además cada medida solo sirve a quien la usa.
@@ -165,5 +165,5 @@ Están, con respuestas y por tema, en `proyecto_arroyos/documento/preguntas.md`.
 1. No inventar datos: población, noticias, costos, fechas y fuentes verificables y con enlace; si no, «pendiente de verificar».
 2. Todas las pruebas deben pasar antes de cada commit (`python -m unittest`).
 3. Si cambia una cifra, se actualiza el `.tex` en el mismo momento.
-4. Después de correr `main.py` o `plan_etapas.py` sin querer regenerar, `git checkout -- proyecto_arroyos/resultados`.
+4. Después de correr `main.py` o `plan_etapas.py` sin querer regenerar, `git checkout -- proyecto_obras/resultados`.
 5. Commits pequeños, con mensaje en español.

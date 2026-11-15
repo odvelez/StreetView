@@ -1,6 +1,6 @@
 """Figuras del plan por etapas, para el documento y las diapositivas.
 
-Uso (desde proyecto_arroyos/):
+Uso (desde proyecto_obras/):
     python herramientas/figuras_plan.py
 
 Lee resultados/plan_etapas.json (no recalcula el plan) y guarda en resultados/figuras/:

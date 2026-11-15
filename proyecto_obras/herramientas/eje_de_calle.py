@@ -1,6 +1,6 @@
 """Genera un archivo de obra ilustrativa a lo largo de una calle.
 
-Uso (desde proyecto_arroyos/):
+Uso (desde proyecto_obras/):
     python herramientas/eje_de_calle.py --calle "Calle 72" --largo-m 600 \\
         --salida datos/ejemplos/obra_ilustrativa.json [--png resultados/obra_ilustrativa.png]
 

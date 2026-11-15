@@ -1,6 +1,6 @@
 """Plan de obra por etapas: cómo hacer una obra que cierra calles sin parar la movilidad.
 
-Uso (desde proyecto_arroyos/):
+Uso (desde proyecto_obras/):
     python herramientas/plan_etapas.py                              # canalización de El Salao (caso de estudio)
     python herramientas/plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json
     python herramientas/plan_etapas.py --etapa-max 700 --un-puente-cada 400 --ancho 20

@@ -1,6 +1,6 @@
 # Informe de cambios: prioridad 2 (modelo y código)
 
-Caso de estudio: arroyo El Salao, Soledad. Todo se puede reproducir desde `proyecto_arroyos/`:
+Caso de estudio: arroyo El Salao, Soledad. Todo se puede reproducir desde `proyecto_obras/`:
 
 ```
 python main.py                              # resultados oficiales (resumen.txt, analisis.json, mapa.png)

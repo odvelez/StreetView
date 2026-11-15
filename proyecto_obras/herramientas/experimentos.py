@@ -1,6 +1,6 @@
 """Experimentos de la prioridad 2 para el caso de estudio (El Salao).
 
-Uso (desde proyecto_arroyos/):
+Uso (desde proyecto_obras/):
     python herramientas/experimentos.py                 # todos
     python herramientas/experimentos.py voraz control   # solo algunos
 

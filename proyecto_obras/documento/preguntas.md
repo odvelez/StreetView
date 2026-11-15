@@ -186,7 +186,7 @@ Por geometría: la calle cruza el eje o va sobre él dentro de la franja. Despu�
 Es una calle de 102 m que en OpenStreetMap se llama así. La pantalla la muestra como «vía local junto al eje». Falta confirmar en Street View que sirva como ruta alterna.
 
 **¿Cómo se corre?**
-Desde `proyecto_arroyos/`: `python -m pip install -r requirements.txt`, `python -m unittest` y `python app.py`; después se abre `http://localhost:5000/?ejemplo`. El primer plan tarda entre 10 y 40 s y los siguientes salen del caché.
+Desde `proyecto_obras/`: `python -m pip install -r requirements.txt`, `python -m unittest` y `python app.py`; después se abre `http://localhost:5000/?ejemplo`. El primer plan tarda entre 10 y 40 s y los siguientes salen del caché.
 
 **¿Qué hace la pantalla?**
 Elegir el municipio, dibujar la obra o cargar el ejemplo, y planificar. Después se recorre el plan paso a paso. Al hacer clic en un cruce cerrado se ve la ruta en carro y a pie, con enlace a Street View.

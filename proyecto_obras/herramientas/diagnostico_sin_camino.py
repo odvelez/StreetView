@@ -1,6 +1,6 @@
 """Diagnóstico: ¿por qué hay pares de vehículos sin camino con lluvia en El Salao?
 
-Uso (desde proyecto_arroyos/):   python herramientas/diagnostico_sin_camino.py
+Uso (desde proyecto_obras/):   python herramientas/diagnostico_sin_camino.py
 
 Lista las esquinas a las que no se puede llegar en el grafo dirigido de lluvia y los
 tramos que las rodean, para comprobar en OpenStreetMap y en Street View.
