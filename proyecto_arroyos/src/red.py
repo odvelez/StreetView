@@ -5,17 +5,21 @@ Cada tramo une dos intersecciones y guarda:
   - si lo pueden usar carros/motos y si lo pueden usar peatones,
   - su sentido: 0 doble sentido, 1 solo de u a v, -1 solo de v a u,
   - si OpenStreetMap lo marca como puente,
-  - su forma (lista de puntos) para dibujarlo en el mapa.
+  - su forma (lista de puntos) para dibujarlo en el mapa,
+  - sus carriles (etiqueta lanes de OSM o, si falta, un supuesto por tipo de vía: ver src/supuestos.py)
+    y su velocidad máxima si OSM la trae. Solo los usan las propuestas calculadas (capacidad).
 
 Con los tramos se arman dos grafos:
   - peatones: no dirigido (a pie se camina en ambos sentidos).
   - vehículos: dirigido (se respetan las calles de un solo sentido).
 """
+import math
 from collections import Counter
 from dataclasses import dataclass, field
 
 from src.geometria import Plano
 from src.grafo import INF, Grafo
+from src.supuestos import valor as supuesto
 
 VEHICULARES = {"motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link",
                "secondary", "secondary_link", "tertiary", "tertiary_link", "unclassified",
@@ -47,6 +51,20 @@ class Tramo:
     sentido: int = 0
     puente: bool = False
     extra: dict = field(default_factory=dict)
+    carriles_total: int = 2         # carriles de la vía, sumando los dos sentidos si es de doble sentido
+    carriles_de_osm: bool = False   # True si salen de la etiqueta lanes; False si son el supuesto por clase
+    vmax: float = None              # km/h, solo si OSM trae maxspeed (informativo)
+
+    def carriles_en(self, sentido=None):
+        """Carriles por sentido si la calle tuviera `sentido` (por defecto, el suyo).
+
+        De un solo sentido: todos los carriles van en ese sentido. De doble sentido: la mitad, redondeada
+        hacia arriba, con mínimo 1 (una calle de 1 carril de doble sentido se cuenta como 1 y 1).
+        """
+        s = self.sentido if sentido is None else sentido
+        if s != 0:
+            return max(1, self.carriles_total)
+        return max(1, math.ceil(self.carriles_total / 2))
 
 
 def sentido_de(tags):
@@ -60,6 +78,27 @@ def sentido_de(tags):
     if tags.get("junction") in ("roundabout", "circular") or tags.get("highway") in ("motorway", "motorway_link"):
         return 1
     return 0
+
+
+def carriles_de(tags):
+    """(carriles totales, True si vienen de OSM). Sin etiqueta lanes, el supuesto por tipo de vía."""
+    texto = str(tags.get("lanes", "")).split(";")[0].strip()
+    try:
+        n = int(float(texto))
+        if n >= 1:
+            return n, True
+    except ValueError:
+        pass
+    return supuesto("carriles_por_clase").get(tags.get("highway", ""), 2), False
+
+
+def velocidad_de(tags):
+    """maxspeed de OSM en km/h, o None si no está o no se entiende."""
+    texto = str(tags.get("maxspeed", "")).split(";")[0].strip().split(" ")[0]
+    try:
+        return float(texto)
+    except ValueError:
+        return None
 
 
 def permisos(tags):
@@ -103,6 +142,7 @@ class Red:
             usos[refs[-1]] += 1
 
         for w, (refs, tags, veh, pea) in sorted(utiles.items()):
+            c_total, c_osm = carriles_de(tags)
             inicio = 0
             for i in range(1, len(refs)):
                 if usos[refs[i]] <= 1 and i != len(refs) - 1:
@@ -119,7 +159,9 @@ class Red:
                     id=len(self.tramos), u=parte[0], v=parte[-1], metros=round(metros, 1),
                     via=_nombre_de_via(tags.get("name", "")), clase=tags.get("highway", ""), forma=forma,
                     vehicular=veh, peatonal=pea, sentido=sentido_de(tags) if veh else 0,
-                    puente=tags.get("bridge", "no") not in ("no", "") or tags.get("man_made") == "bridge"))
+                    puente=tags.get("bridge", "no") not in ("no", "") or tags.get("man_made") == "bridge",
+                carriles_total=c_total, carriles_de_osm=c_osm,
+                vmax=velocidad_de(tags)))
 
     def _nombrar(self):
         nombres = {}

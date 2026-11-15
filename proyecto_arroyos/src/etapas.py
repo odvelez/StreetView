@@ -25,6 +25,12 @@ cierran todos los tramos que tocan la franja de obra dentro del tramo en obra, i
 puentes existentes (calles que la obra podría mantener abiertas), porque la obra los intervendría.
 Con `cerrar_puentes=False` los puentes existentes se mantienen abiertos.
 
+Propuestas calculadas (opcionales, `propuestas_calculadas=True`; ver src/circulacion.py): con una
+demanda supuesta (modelo de gravedad, src/demanda.py) se calculan la capacidad para cruzar la obra
+(flujo máximo y corte mínimo), los pares de calles paralelas que conviene invertir o pasar a doble
+sentido, cuántos pasos peatonales poner y dónde, y qué esquinas priorizar para control temporal. Sin
+ese parámetro el plan es exactamente el de siempre. Todos los supuestos están en src/supuestos.py.
+
 Nombres heredados del JSON (no se quitan para no romper la pantalla): la clave `arroyo` del plan
 (ahora también está como `obra`), `cauce` en cada etapa (ahora también `eje`) y `lluvia_m` en
 las rutas (el recorrido con la obra).
@@ -33,12 +39,14 @@ import bisect
 import math
 from dataclasses import asdict
 
-from src import osm
+from src import circulacion, osm
 from src.analisis import (MEJORA_MIN, MAX_POR_LADO, LUZ_MAX_M, TOLERANCIA_M, candidatos_doble_sentido,
                           candidatos_puente_peatonal, clasificar, cruces_cerrados, extremos,
                           medir, rutas_alternas, tablas, voraz, zona)
 from src.geometria import Obra, orientar
 from src.grafo import INF, dijkstra
+from src.demanda import pesos_gravedad
+from src.supuestos import como_lista, valor as supuesto
 
 ETAPA_MAX_M = 1000         # largo máximo de una etapa de obra
 UN_PUENTE_CADA_M = 500     # un paso peatonal provisional por cada tanto de obra (mínimo uno)
@@ -144,11 +152,13 @@ def _formato_propuestas(elegidos):
             for i, (info, m) in enumerate(elegidos)]
 
 
-def carga_de_desvios(g_obra, tablas_seco, tablas_obra, pares):
+def carga_de_desvios(g_obra, tablas_seco, tablas_obra, pares, pesos=None, ponderada=None):
     """Cuántos recorridos desviados pasan por cada esquina (sin contar origen ni destino).
 
     Un par está desviado si con la obra su camino mide más de 1 m que en seco. Se recorre el camino
     mínimo con la obra de cada par desviado y se suma 1 a cada esquina intermedia.
+    Con `pesos` {(a, b): peso} y un dict `ponderada`, en la misma pasada se llena
+    ponderada = {"carga": {esquina: suma de pesos}, "total": suma de pesos} (propuestas calculadas).
     """
     desviados = {}
     for a, b in pares:
@@ -156,21 +166,31 @@ def carga_de_desvios(g_obra, tablas_seco, tablas_obra, pares):
         if d < INF and d - tablas_seco[a][b] > 1.0:
             desviados.setdefault(a, set()).add(b)
     carga, total = {}, 0
+    carga_w, total_w = {}, 0.0
     for a, destinos in desviados.items():
         dist, pred = dijkstra(g_obra, a, objetivos=destinos)
         for b in destinos:
             if b not in pred:
                 continue
             total += 1
+            w = pesos[(a, b)] if pesos is not None else 0.0
+            total_w += w
             n = pred[b]
             while n is not None and n != a:
                 carga[n] = carga.get(n, 0) + 1
+                if pesos is not None:
+                    carga_w[n] = carga_w.get(n, 0.0) + w
                 n = pred[n]
+    if ponderada is not None:
+        ponderada.update(carga=carga_w, total=total_w)
     return carga, total
 
 
-def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, radio):
-    """Todo el análisis de una etapa: desvío, pasos peatonales, doble sentido, rutas y carga."""
+def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, radio, calculadas=None):
+    """Todo el análisis de una etapa: desvío, pasos peatonales, doble sentido, rutas y carga.
+
+    Con `calculadas` (dict con d0_m) agrega al final las propuestas calculadas de src/circulacion.py.
+    """
     red, obra = ctx["red"], ctx["obra"]
     xy = red.plano.xy
     contacto_e = {i: ("bloqueado", ctx["contacto"][i][1]) for i in cerrados_ids}
@@ -190,6 +210,8 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
     muestra = {s: muestrear(lados_w[s], MAX_POR_LADO_ETAPA) for s in (1, -1)}
     if len(muestra[1]) < 3 or len(muestra[-1]) < 3:
         resultado["avisos"].append("Hay muy pocas esquinas cerca de esta etapa para medir el desvío.")
+        if calculadas:
+            resultado.update(circulacion.propuestas_vacias("Hay muy pocas esquinas cerca de esta etapa para medir."))
         return resultado
     origenes = sorted(set(muestra[1]) | set(muestra[-1]))
 
@@ -246,7 +268,9 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
 
     # ---- rutas alternas y carga de desvíos
     resultado["rutas"] = rutas_alternas(red, cruces_v, cruces_p, veh_obra, pea_obra)[:MAX_RUTAS_ETAPA]
-    carga, total = carga_de_desvios(veh_obra, Vs, Vl, pares_v)
+    pesos_v = pesos_gravedad(pares_v, Vs, calculadas["d0_m"]) if calculadas else None
+    ponderada = {}
+    carga, total = carga_de_desvios(veh_obra, Vs, Vl, pares_v, pesos_v, ponderada)
     senales = ctx["semaforos"]
     top, nombres = [], set()
     for n, c in sorted(carga.items(), key=lambda x: -x[1]):      # una esquina por nombre de calle
@@ -263,13 +287,25 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
             esquina=n, nombre=red.nombre(n), posicion=list(red.pos[n]), recorridos=c,
             porcentaje=round(100 * c / max(total, 1), 1), semaforo=con))
     resultado["recorridos_desviados"] = total
+    if calculadas:
+        arcos_p = {id(info): arcos for info, arcos in cand_p}
+        arcos_v = {id(info): arcos for info, arcos in cand_v}
+        resultado.update(circulacion.propuestas_de_etapa(dict(
+            red=red, obra=obra, p0=p0, p1=p1, cerrados=cerrados_ids, contacto=ctx["contacto"], lados_w=lados_w,
+            muestra=muestra, origenes=origenes, radio=radio, semaforos=senales, radio_semaforo_m=RADIO_SEMAFORO_M,
+            pea_obra=pea_obra, Fs=Fs, Fl=Fl, pares_p=pares_p, cand_p=cand_p,
+            elegidos_regla=[(info, arcos_p[id(info)]) for info, _ in elegidos_p],
+            Vs=Vs, Vl=Vl, Rl=Rl, veh_obra=veh_obra, pares_v=pares_v, pesos_v=pesos_v,
+            carga_w=ponderada["carga"], total_w=ponderada["total"], objetivos_v=objetivos_v,
+            medidas_regla=[(info, arcos_v[id(info)]) for info, _ in elegidos_v]), calculadas["d0_m"]))
     return resultado
 
 
 # ---------------------------------------------------------------- el plan
 def plan_por_etapas(red, lineas, radio=400, luz_max=LUZ_MAX_M, etapa_max_m=ETAPA_MAX_M,
                     un_puente_cada_m=UN_PUENTE_CADA_M, abiertos=(), cerrados=(), recuadro=None,
-                    cerrar_puentes=True, ancho_m=TOLERANCIA_M, medicion="lados"):
+                    cerrar_puentes=True, ancho_m=TOLERANCIA_M, medicion="lados", propuestas_calculadas=False,
+                    d0_m=None):
     """Plan de obra por etapas para la obra `lineas` (su eje). Devuelve un dict listo para JSON.
 
     `abiertos` y `cerrados` son ids de tramos que el usuario corrigió (como en `analizar`).
@@ -280,6 +316,9 @@ def plan_por_etapas(red, lineas, radio=400, luz_max=LUZ_MAX_M, etapa_max_m=ETAPA
     valor por defecto (10 m) el resultado es el de siempre.
     `medicion`: cómo se miden los recorridos. Por ahora solo "lados" (pares de esquinas de un lado
     al otro de la obra); cualquier otro valor es un error.
+    `propuestas_calculadas`: si es True, cada etapa trae además `circulacion`, `pares_viales`,
+    `pasos_por_demanda` y `control_temporal`, y el plan trae `supuestos`. `d0_m`: distancia de la demanda
+    supuesta (por defecto la de src/supuestos.py). Con False (por defecto) el plan es el de siempre.
     """
     if medicion not in MEDICIONES:
         raise ValueError(f"medicion={medicion!r} no existe. Use una de: {', '.join(MEDICIONES)}.")
@@ -303,12 +342,13 @@ def plan_por_etapas(red, lineas, radio=400, luz_max=LUZ_MAX_M, etapa_max_m=ETAPA
     ctx = dict(red=red, obra=obra, lineas=lineas, contacto=contacto, inundadas=inundadas,
                lados_todos=lados_todos, pos_nodo=pos_nodo, pea_seco=pea_seco, veh_seco=veh_seco,
                semaforos=osm.semaforos(recuadro) if recuadro else None)
+    calculadas = dict(d0_m=d0_m if d0_m is not None else supuesto("d0_m")) if propuestas_calculadas else None
     etapas = []
     for k in range(len(limites) - 1):
         p0, p1 = limites[k], limites[k + 1]
         ultimo = k == len(limites) - 2
         ids = [i for i, p in cerrables.items() if p0 <= p < p1 or (ultimo and p >= p1)]
-        etapas.append(evaluar_etapa(ctx, k + 1, p0, p1, ids, luz_max, un_puente_cada_m, radio))
+        etapas.append(evaluar_etapa(ctx, k + 1, p0, p1, ids, luz_max, un_puente_cada_m, radio, calculadas))
 
     datos_obra = dict(longitud_m=round(longitud), lineas=[[list(p) for p in l] for l in lineas])
     plan = dict(
@@ -316,6 +356,10 @@ def plan_por_etapas(red, lineas, radio=400, luz_max=LUZ_MAX_M, etapa_max_m=ETAPA
         parametros=dict(radio_m=radio, luz_max_m=luz_max, etapa_max_m=etapa_max_m, un_puente_cada_m=un_puente_cada_m,
                         cerrar_puentes=cerrar_puentes, ancho_m=ancho_m, medicion=medicion),
         etapas=etapas, semaforos_conocidos=None if ctx["semaforos"] is None else len(ctx["semaforos"]))
+    if calculadas:
+        plan["parametros"]["calculadas"] = dict(d0_m=calculadas["d0_m"], veh_h_carril=supuesto("veh_h_carril"),
+                                                 peso_esquina=supuesto("peso_esquina"))
+        plan["supuestos"] = como_lista(calculadas)
     plan["resumen"] = resumen_del_plan(plan)
     plan["pasos"] = pasos_del_plan(plan)
     return plan
@@ -329,9 +373,18 @@ def resumen_del_plan(plan):
     esquinas = sum(len(x["carga"]) for x in e)
     sin_semaforo = sum(1 for x in e for c in x["carga"] if c["semaforo"] is False)
     peor = max(e, key=lambda x: (x["peatones"] or {}).get("obra", {}).get("desvio_medio_m", 0), default=None)
-    return dict(etapas=len(e), longitud_m=plan["obra"]["longitud_m"], puentes_peatonales=puentes,
-                cambios_de_sentido=sentidos, rutas_alternas=rutas, esquinas_de_control=esquinas,
-                esquinas_sin_semaforo=sin_semaforo, etapa_mas_dificil=peor["numero"] if peor else None)
+    resumen = dict(etapas=len(e), longitud_m=plan["obra"]["longitud_m"], puentes_peatonales=puentes,
+                   cambios_de_sentido=sentidos, rutas_alternas=rutas, esquinas_de_control=esquinas,
+                   esquinas_sin_semaforo=sin_semaforo, etapa_mas_dificil=peor["numero"] if peor else None)
+    if "supuestos" in plan:
+        brechas = [x["pasos_por_demanda"]["brecha_max_m"] for x in e if x.get("pasos_por_demanda")]
+        resumen["calculadas"] = dict(
+            pares_viales_evaluados=sum(x["pares_viales"]["evaluados"] for x in e),
+            pares_viales_propuestos=sum(x["pares_viales"]["propuestos"] for x in e),
+            pasos_por_demanda=sum((x["pasos_por_demanda"] or {}).get("numero", 0) for x in e),
+            controles_temporales=sum(len(x["control_temporal"]["esquinas"]) for x in e),
+            brecha_max_m=max(brechas, default=None))
+    return resumen
 
 
 # ------------------------------------------------------------ paso a paso
@@ -423,9 +476,77 @@ def pasos_del_plan(plan):
             cifra=str(len((p or {}).get("puentes", []))), unidad=_plural(len((p or {}).get("puentes", [])),
                                                                           "paso peatonal", "pasos peatonales"),
             detalle=detalle, capas=["etapas", "puentes", "sentidos", "rutas", "carga"], foco=_limites(puntos)))
+    limites = ["No hay datos de volumen de tránsito: no se mide congestión, solo desvíos en metros.",
+               "No se diseñan carriles ni tiempos de semáforo.",
+               "Los pasos peatonales y cambios de sentido deben verificarse en terreno antes de proponerlos."]
+    if "supuestos" in plan:
+        pasos += pasos_calculados(plan, foco_total)
+        d0 = plan["parametros"]["calculadas"]["d0_m"]
+        limites += [f"La demanda es supuesta (modelo de gravedad con d0 = {d0} m y esquinas de igual peso): no hay "
+                    "conteos de vehículos ni de peatones.",
+                    "La capacidad se cuenta en carriles (de OpenStreetMap o supuestos por tipo de vía); no mide "
+                    "congestión ni demoras en las esquinas. Los cambios de sentido pueden tener efectos que este "
+                    "modelo no ve (paradoja de Braess)."]
     pasos.append(dict(
         id="limites", titulo="Qué no mide este plan", cifra="!", unidad="límites", etapa=None, capas=[], foco=foco_total,
-        detalle=["No hay datos de volumen de tránsito: no se mide congestión, solo desvíos en metros.",
-                 "No se diseñan carriles ni tiempos de semáforo.",
-                 "Los pasos peatonales y cambios de sentido deben verificarse en terreno antes de proponerlos."]))
+        detalle=limites))
     return pasos
+
+
+def pasos_calculados(plan, foco_total):
+    """Los tres pasos de las propuestas calculadas, para mostrar antes de «Qué no mide este plan»."""
+    r, e = plan["resumen"]["calculadas"], plan["etapas"]
+    d0 = plan["parametros"]["calculadas"]["d0_m"]
+
+    det_pares = []
+    for x in e:
+        pv, c = x["pares_viales"], x["circulacion"]
+        cap = ""
+        if c:
+            k = c["capacidad"]
+            cap = (f" Carriles para cruzar la obra (corte mínimo): {k['seco']['a_b']} y {k['seco']['b_a']} sin obra; "
+                   f"{k['obra']['a_b']} y {k['obra']['b_a']} con la obra; {k['con_medidas']['a_b']} y "
+                   f"{k['con_medidas']['b_a']} con las medidas.")
+        if pv["pares"]:
+            elegidas = [f"{' y '.join(p['calles'])}: {p['elegida']}" for p in pv["pares"]]
+            det_pares.append(f"Etapa {x['numero']}: " + "; ".join(elegidas) + "." + cap)
+        else:
+            det_pares.append(f"Etapa {x['numero']}: {pv['motivo']}" + cap)
+    det_pares.append("Para cada par se prueban todas las configuraciones (sin cambio, invertir una, invertir la otra, "
+                     "las dos a doble sentido) con Dijkstra y con el flujo máximo entre los dos lados.")
+
+    det_pasos = []
+    for x in e:
+        pd = x["pasos_por_demanda"]
+        if not pd:
+            continue
+        reg, cpe = pd["comparacion_regla_500m"], x["circulacion"]["peatones"]
+        det_pasos.append(
+            f"Etapa {x['numero']}: {pd['numero']} {plural(pd['numero'], 'paso', 'pasos')} (con la regla de 500 m: "
+            f"{reg['numero']}). Desvío a pie ponderado: {cpe['obra']['desvio_ponderado_m']:.0f} m con la obra, "
+            f"{cpe['con_pasos_por_demanda']['desvio_ponderado_m']:.0f} m con estos pasos y "
+            f"{reg['desvio_ponderado_m']:.0f} m con la regla. Mayor tramo sin cruce: {pd['brecha_max_m']} m.")
+    det_pasos.append(f"La demanda es supuesta (gravedad con d0 = {d0} m). Se agrega un paso más solo si baja el desvío "
+                     f"ponderado al menos un {round(100 * supuesto('mejora_min'))} %, con {supuesto('sep_min_pasos_m')} m "
+                     "de separación como mínimo. Se eligen con un voraz, que puede no ser el óptimo.")
+
+    det_control = []
+    for x in e:
+        ct = x["control_temporal"]
+        if ct["esquinas"]:
+            det_control.append(f"Etapa {x['numero']}: " + "; ".join(
+                f"{q['nombre']} ({q['puntaje_pct']:.0f} % de la demanda desviada)" for q in ct["esquinas"]) + ".")
+    det_control.append("Es una priorización sin conteos (esquinas con al menos 3 accesos, en el 10 % más cargado, sin "
+                       "semáforo registrado y separadas 150 m): no es un criterio para instalar un semáforo.")
+
+    return [
+        dict(id="reorganizacion", titulo="Reorganización de calles", cifra=str(r["pares_viales_propuestos"]),
+             unidad=plural(r["pares_viales_propuestos"], "par vial propuesto", "pares viales propuestos"),
+             etapa=None, capas=["pares_viales"], foco=foco_total, detalle=det_pares),
+        dict(id="pasos-demanda", titulo="Pasos peatonales según la demanda", cifra=str(r["pasos_por_demanda"]),
+             unidad=plural(r["pasos_por_demanda"], "paso peatonal", "pasos peatonales"),
+             etapa=None, capas=["pasos_demanda"], foco=foco_total, detalle=det_pasos),
+        dict(id="control-temporal", titulo="Control temporal en esquinas", cifra=str(r["controles_temporales"]),
+             unidad=plural(r["controles_temporales"], "esquina candidata", "esquinas candidatas"),
+             etapa=None, capas=["control_temporal"], foco=foco_total, detalle=det_control),
+    ]

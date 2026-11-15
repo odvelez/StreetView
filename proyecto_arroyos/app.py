@@ -10,7 +10,8 @@ Rutas:
   GET  /api/ejemplo    eje de la canalización de El Salao en Soledad, caso de estudio del documento
   GET  /api/ejemplo_obra  obra ilustrativa en la calle 72 (datos/ejemplos/obra_ilustrativa.json)
   POST /api/analizar   recibe el eje de una obra y devuelve el análisis de toda la obra a la vez (src/analisis.py)
-  POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py)
+  POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py); con
+                       "propuestas_calculadas": true agrega las propuestas de src/circulacion.py
 """
 import hashlib
 import json
@@ -26,6 +27,7 @@ from werkzeug.exceptions import HTTPException
 from src import fuente, osm
 from src.analisis import TOLERANCIA_M, analizar
 from src.etapas import ETAPA_MAX_M, MEDICIONES, UN_PUENTE_CADA_M, plan_por_etapas
+from src.supuestos import SUPUESTOS
 
 RAIZ = Path(__file__).resolve().parent
 WEB = RAIZ / "web"
@@ -198,12 +200,18 @@ def api_plan():
         cerrados = [int(i) for i in pedido.get("cerrados", [])]
         cerrar_puentes = pedido.get("cerrar_puentes", True)
         medicion = pedido.get("medicion", "lados")
+        # Propuestas calculadas (opcionales): por defecto no se calculan y el plan es el de siempre.
+        calculadas = pedido.get("propuestas_calculadas", False)
+        d0_min, d0_max = SUPUESTOS["d0_m"].rango
+        d0 = _numero(pedido, "d0_m", SUPUESTOS["d0_m"].valor, d0_min, d0_max)
     except PedidoInvalido as ex:
         return jsonify(error=str(ex)), 400
     except (TypeError, ValueError, IndexError, KeyError):
         return jsonify(error="Datos del pedido inválidos."), 400
     if not isinstance(cerrar_puentes, bool):
         return jsonify(error="cerrar_puentes debe ser true o false."), 400
+    if not isinstance(calculadas, bool):
+        return jsonify(error="propuestas_calculadas debe ser true o false."), 400
     if medicion not in MEDICIONES:
         return jsonify(error=f"medicion debe ser una de: {', '.join(MEDICIONES)}."), 400
     if not lineas:
@@ -216,7 +224,7 @@ def api_plan():
 
     # Todos los parámetros que cambian el plan van en la clave del caché.
     clave = json.dumps([lineas, radio, luz, etapa_max, un_puente_cada, ancho, abiertos, cerrados,
-                        cerrar_puentes, medicion])
+                        cerrar_puentes, medicion, calculadas, d0 if calculadas else None])
     t0 = time.time()
     with _cache_lock:
         guardado = _cache_planes.get(clave)
@@ -234,7 +242,8 @@ def api_plan():
     t1 = time.time()
     plan = plan_por_etapas(red, lineas, radio=radio, luz_max=luz, etapa_max_m=etapa_max,
                            un_puente_cada_m=un_puente_cada, abiertos=abiertos, cerrados=cerrados,
-                           recuadro=recuadro, cerrar_puentes=cerrar_puentes, ancho_m=ancho, medicion=medicion)
+                           recuadro=recuadro, cerrar_puentes=cerrar_puentes, ancho_m=ancho, medicion=medicion,
+                           propuestas_calculadas=calculadas, d0_m=d0)
     plan["recuadro"] = recuadro
     plan["fuente"] = origen
     with _cache_lock:

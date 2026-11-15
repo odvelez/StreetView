@@ -41,7 +41,7 @@ python app.py                      # pantalla en http://localhost:5000 (use /?ej
 python main.py                     # análisis de toda la obra a la vez: resultados/resumen.txt, analisis.json, mapa.png
 python herramientas/plan_etapas.py # plan por etapas: resultados/plan_etapas.txt y .json
 python herramientas/plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json   # otra obra
-python -m unittest                 # 101 pruebas (tardan unos 45 s)
+python -m unittest                 # 143 pruebas (tardan unos 45 s)
 ```
 
 En la pantalla: elegir municipio, dibujar la obra (o cargar el ejemplo), pulsar **Planificar** y seguir el recorrido paso a paso. El primer plan de El Salao tarda entre 10 y 40 s según el computador; la segunda vez sale del caché (unos 5 ms). Para la presentación, abra `/?ejemplo` una vez antes de empezar. Si cambia algo en `src/`, reinicie `python app.py` por el caché. Desde Python en Windows use `http://127.0.0.1:5000`, no `localhost` (2 s más por pedido).
@@ -67,6 +67,25 @@ Formato de un archivo de obra (`datos/ejemplos/obra_ilustrativa.json` es un ejem
 6. **Etapas.** El número de etapas sale del largo (hasta 1.000 m cada una) y los cortes se eligen con programación dinámica. Hay un paso peatonal provisional por cada 500 m de obra.
 7. **Medidas (voraz).** Se elige en cada ronda el candidato que más baja el desvío medio. Fórmula rápida: al agregar x→y con peso w, `d'(a,b) = min(d(a,b), d(a,x) + w + d(y,b))`, sin repetir Dijkstra por candidato; con parada temprana y grafo invertido para el caso dirigido. Pasó de unos 36 s a 6–8 s con los mismos resultados (hay pruebas que lo comparan).
 8. **Rutas alternas y esquinas.** Para cada cruce cerrado se calcula el camino mínimo que queda. Se marcan las esquinas con más recorridos desviados y si tienen semáforo registrado.
+
+### 3b. Propuestas calculadas (rama `propuestas-calculadas`, en prueba; apagadas por defecto)
+
+Sin el parámetro, el plan, la pantalla, el documento y las cifras son exactamente los de siempre. Con él se agregan cuatro propuestas calculadas, sin datos de tránsito y con todos sus supuestos explícitos en `src/supuestos.py` (valor, rango, justificación, fuente y estado: confirmado, reportado, no verificado o supuesto del equipo):
+
+1. **Demanda supuesta (modelo de gravedad).** Cada par de esquinas pesa `exp(-distancia sin obra / d0)` (d0 = 400 m, rango 200–1000; supuesto del equipo). Con d0 muy grande da el desvío medio de siempre (hay prueba).
+2. **Capacidad para cruzar la obra.** Flujo máximo (Edmonds–Karp) de un lado al otro en el grafo vehicular, con los carriles de OSM (`lanes`) o un supuesto por tipo de vía. El corte mínimo dice cuántos carriles quedan y por qué calles (teorema de Ford y Fulkerson).
+3. **Pares viales.** Calles locales paralelas de un solo sentido: se prueban todas las configuraciones (sin cambio, invertir una, invertir la otra, las dos a doble sentido) con Dijkstra y con el corte mínimo. Se excluyen las dos calzadas de una avenida. En El Salao no hay ningún par (OSM tiene pocas calles con `oneway`) y la salida lo dice.
+4. **Pasos peatonales por demanda.** Un voraz ponderado decide cuántos y dónde (agrega un paso solo si baja el alargamiento ponderado al menos 2 %, con 80 m de separación), y se informa el tramo más largo sin cruce (la guía GDCI recomienda no pasar de 200 m). En el caso de prueba con 2 pasos el voraz no es óptimo (42,8 m frente a 24,0 m), con 3 sí: está en `tests/test_demanda.py`.
+5. **Control temporal.** Esquinas con más demanda desviada, al menos 3 accesos, sin semáforo registrado y separadas 150 m. Es una priorización, **no** un criterio para instalar semáforos (esos exigen conteos) y no se calculan tiempos de semáforo.
+
+```bash
+python herramientas/plan_etapas.py --calculadas             # informe con las propuestas (no escribe en resultados/)
+python herramientas/experimentos.py calculadas              # sensibilidad a d0 y a los carriles (solo imprime)
+```
+
+En la API: `POST /api/plan` con `"propuestas_calculadas": true` (y opcional `"d0_m"`, 200–1000). Cada etapa agrega `circulacion`, `pares_viales`, `pasos_por_demanda` y `control_temporal`; el plan agrega `supuestos[]`, `parametros.calculadas`, `resumen.calculadas` y tres pasos antes de «Qué no mide este plan». La pantalla todavía no los dibuja (muestra los pasos, pero no tiene capas para ellos). En El Salao tarda 9 s en vez de 8.
+
+Lo robusto y lo que depende de los supuestos (El Salao, `experimentos.py calculadas`): el número y la ubicación de los pasos por demanda no cambian con d0 ni con los carriles, y siempre bajan el alargamiento frente a la regla de 500 m. Las esquinas de control temporal sí cambian con d0, y la capacidad, con un carril más por calle.
 
 ## 4. Resultados de El Salao
 
@@ -96,10 +115,14 @@ proyecto_arroyos/
   src/osm.py           lectura y descarga de OpenStreetMap
   src/comparacion.py   voraz contra fuerza bruta (k = 2)
   src/control.py       control del lado por componentes conexas
+  src/supuestos.py     todos los supuestos de las propuestas calculadas (valor, rango, fuente y estado)
+  src/demanda.py       demanda supuesta (modelo de gravedad), desvío ponderado, voraz ponderado y su fuerza bruta
+  src/circulacion.py   propuestas calculadas: capacidad (corte mínimo), pares viales, pasos por demanda, control temporal
   herramientas/        plan_etapas.py, figuras_plan.py, eje_de_calle.py, experimentos.py, diagnostico_sin_camino.py, descargar_mapa.py
   datos/               ejemplos/, cache/ (calles guardadas), arroyo_el_salao.csv (eje del ejemplo), archivo_arroyos/ (histórico, no se usa)
   resultados/          salidas generadas; figuras/ (mapa y barras del plan); linea_base/ son las cifras de referencia de El Salao
-  tests/               101 pruebas (API sin red, caso resuelto a mano, regresión contra linea_base, robustez, etapas, obras)
+  tests/               143 pruebas (API sin red, caso resuelto a mano, regresión contra linea_base, robustez, etapas, obras,
+                       flujo máximo, demanda, circulación y propuestas calculadas)
   documento/main.tex, main.pdf                  documento en LaTeX (entrega)
   documento/diapositivas.tex, diapositivas.pdf  diapositivas en Beamer (entrega)
   documento/Obras viales por etapas El Salao.pptx   diapositivas originales de Gustavo (PowerPoint), base de las de Beamer
@@ -107,7 +130,7 @@ proyecto_arroyos/
   documento/preguntas.md  preguntas y respuestas de la sustentación
 ```
 
-**Contrato `POST /api/plan`** (no romperlo: el JSON solo se agranda). Pedido: `{lineas, radio, luz_max, etapa_max_m (300–2000, 1000), un_puente_cada_m (200–1000, 500), cerrar_puentes (true), ancho_m (10–60, 10), medicion ("lados"), abiertos, cerrados}`. Respuesta: `obra`, `parametros`, `semaforos_conocidos`, `resumen`, `etapas[]` (con `eje`, `tramos_cerrados`, `peatones`, `vehiculos`, `rutas[]`, `carga[]`), `pasos[]`, `tiempos`, `recuadro`, `fuente`, `aviso_zona` y `en_cache`. Errores en JSON: 400 (pedido inválido o zona demasiado grande) y 503 (no se pudo descargar el mapa). Ejemplo real: `resultados/plan_etapas.json`.
+**Contrato `POST /api/plan`** (no romperlo: el JSON solo se agranda). Pedido: `{lineas, radio, luz_max, etapa_max_m (300–2000, 1000), un_puente_cada_m (200–1000, 500), cerrar_puentes (true), ancho_m (10–60, 10), medicion ("lados"), abiertos, cerrados}`. Respuesta: `obra`, `parametros`, `semaforos_conocidos`, `resumen`, `etapas[]` (con `eje`, `tramos_cerrados`, `peatones`, `vehiculos`, `rutas[]`, `carga[]`), `pasos[]`, `tiempos`, `recuadro`, `fuente`, `aviso_zona` y `en_cache`. Errores en JSON: 400 (pedido inválido o zona demasiado grande) y 503 (no se pudo descargar el mapa). Ejemplo real: `resultados/plan_etapas.json`. Opcional (sección 3b): `propuestas_calculadas` (false) y `d0_m` (200–1000, 400); sin ellos la respuesta no cambia.
 
 **Datos:** calles © colaboradores de OpenStreetMap (ODbL), descargadas en noviembre de 2026 para el recuadro 10,84–11,12 N y 74,96–74,73 O (Barranquilla, Soledad, Malambo, Puerto Colombia y Galapa). Si la obra queda fuera de lo guardado, se descargan las calles de Overpass a `datos/cache/` (puede tardar minutos).
 
