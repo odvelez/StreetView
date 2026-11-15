@@ -1,0 +1,305 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[spanish,es-noquoting]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,booktabs,tikz}
+\usepackage{xurl}
+\graphicspath{{../resultados/figuras/}{../resultados/}{./}}
+
+% Colores Okabe-Ito (los mismos de las figuras)
+\definecolor{azul}{HTML}{0072B2}
+\definecolor{naranja}{HTML}{E69F00}
+\definecolor{verde}{HTML}{009E73}
+\definecolor{morado}{HTML}{CC79A7}
+\definecolor{rojo}{HTML}{D55E00}
+\definecolor{tinta}{HTML}{1F2933}
+
+\usetheme{default}
+\setbeamercolor{frametitle}{fg=azul}
+\setbeamercolor{title}{fg=azul}
+\setbeamercolor{structure}{fg=azul}
+\setbeamercolor{normal text}{fg=tinta}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{footline}{%
+  \hfill{\scriptsize\color{gray}\insertshorttitle\quad\insertframenumber/\inserttotalframenumber}\hspace{1em}\vspace{0.6em}}
+
+\newcommand{\repo}{\url{https://github.com/odvelez/StreetView}}
+\newcommand{\quien}[1]{\begin{tikzpicture}[remember picture,overlay]\node[anchor=north east,font=\footnotesize,text=gray] at ([xshift=-1.2em,yshift=-0.9em]current page.north east) {#1};\end{tikzpicture}}
+\newcommand{\cifra}[3][0.28\textwidth]{\begin{minipage}[t]{#1}\centering{\Huge\bfseries\color{azul}#2}\\[2pt]{\small #3}\end{minipage}}
+\newcommand{\figura}[3]{\IfFileExists{../resultados/figuras/#1}{\includegraphics[#2]{#1}}{\fbox{\parbox{0.9\linewidth}{\centering\small #3}}}}
+
+\title[Obras viales por etapas]{Obras viales por etapas}
+\subtitle{Cómo planificar una obra que cierra calles\\Caso de estudio: canalización del arroyo El Salao, Soledad (Atlántico)}
+\author{\small Oscar Vélez \and Gustavo de la Ossa \and Sebastián Blanco \and Karel Silva \and Santiago Lobo}
+\institute{MAT 4021 Matemáticas Discretas, Universidad del Norte. Grupo 7}
+\date{16 de noviembre de 2026}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Oscar (0:00-2:00)
+\begin{frame}
+\titlepage
+\vspace{-1em}
+\begin{center}\small Repositorio: \repo\end{center}
+\end{frame}
+
+\begin{frame}{El problema}
+\quien{Oscar}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\textbf{Por qué importa}
+\begin{itemize}
+\item El 4 de noviembre de 2026, una creciente de El Salao, en Soledad, dejó víctimas.
+\item Los vecinos de ambos lados necesitan cruzarlo a diario.
+\item Canalizarlo es una obra larga que cierra calles y puentes.
+\end{itemize}
+\column{0.42\textwidth}
+\begin{block}{La pregunta}
+Al planificar una obra que cierra calles, ¿cómo se divide en etapas y qué medidas temporales reducen más el desvío de quienes la rodean?
+\end{block}
+\end{columns}
+\vfill
+\small El Salao en el mapa: 2.386 m de obra, 5.859 esquinas y 8.827 tramos de calle.
+\end{frame}
+
+\begin{frame}{La idea: la obra se hace por etapas}
+\quien{Oscar}
+En cada etapa solo se cierran los cruces de ese tramo; el resto de la ciudad sigue abierta.
+\medskip
+\begin{columns}[T]
+\column{0.24\textwidth}\textbf{\color{naranja}Paso peatonal provisional}\\\small Uno por cada 500 m de obra, mínimo uno por etapa.
+\column{0.24\textwidth}\textbf{\color{morado}Cambio de sentido}\\\small Una calle de un solo sentido pasa a doble sentido.
+\column{0.24\textwidth}\textbf{\color{azul}Ruta alterna}\\\small Para cada cruce cerrado, el camino más corto que queda. Se señaliza.
+\column{0.24\textwidth}\textbf{\color{rojo}Control en esquinas}\\\small Las esquinas con más recorridos desviados.
+\end{columns}
+\vfill
+\small Número de etapas = largo de la obra $\div$ 1.000 m, redondeado hacia arriba. No se proponen puentes vehiculares: costarían y tardarían casi lo que la obra.
+\end{frame}
+
+% ---------------------------------------------------------------- Karel (2:00-4:00)
+\begin{frame}{Del mapa al grafo}
+\quien{Karel}
+\begin{columns}[T]
+\column{0.55\textwidth}
+\begin{itemize}
+\item Esquina = nodo; cuadra = arista con su largo en metros (OpenStreetMap).
+\item \textbf{Peatones:} grafo no dirigido. \textbf{Vehículos:} grafo dirigido (sentidos viales).
+\item La obra \textbf{quita aristas}: las cuadras a menos de 10 m del eje, puentes existentes incluidos. Subir el peso sería inventar un número.
+\item El lado de cada esquina: signo del producto cruz con el eje.
+\end{itemize}
+\column{0.42\textwidth}
+\centering
+\begin{tikzpicture}[xscale=1.1,yscale=1.4,esq/.style={circle,draw,fill=white,inner sep=2pt}]
+\fill[gray!30] (-0.4,0.45) rectangle (4.4,0.55);
+\draw (0,1) -- (4,1); \draw (0,0) -- (4,0);
+\draw[rojo,dashed,very thick] (1,0) -- (1,1);
+\draw[rojo,dashed,very thick] (3,0) -- (3,1);
+\draw[naranja,line width=2pt] (2,0) -- (2,1);
+\foreach \x in {0,1,2,3,4} {\node[esq] at (\x,1) {}; \node[esq] at (\x,0) {};}
+\node[below,font=\scriptsize] at (2,-0.2) {\color{rojo}cerrada \quad \color{naranja}paso provisional};
+\end{tikzpicture}
+\end{columns}
+\vfill
+\[\Delta(a,b)=d_{\text{obra}}(a,b)-d_{\text{sin obra}}(a,b)\]
+\end{frame}
+
+\begin{frame}{Cómo se calcula}
+\quien{Karel}
+\begin{itemize}
+\item \textbf{Dijkstra} (hecho a mano en \texttt{src/grafo.py}): camino mínimo sin obra y con obra.
+\item \textbf{Fórmula de arco nuevo}: al agregar $x\to y$ de peso $w$,
+\[d'(a,b)=\min\bigl(d(a,b),\ d(a,x)+w+d(y,b)\bigr)\]
+Evalúa cada candidato sin repetir Dijkstra: de unos 36 s a 6--8 s, mismos resultados.
+\item \textbf{Voraz}: en cada ronda, la medida que más baja el desvío medio. No garantiza el óptimo.
+\item \textbf{Programación dinámica}: cortes cada 25 m; minimiza el mayor número de cruces en una etapa y luego la suma de cuadrados.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Un caso resuelto a mano}
+\quien{Karel}
+\begin{columns}[c]
+\column{0.45\textwidth}
+\centering
+\begin{tikzpicture}[xscale=1.1,yscale=1.6,esq/.style={circle,draw,fill=white,minimum size=6mm,inner sep=0pt}]
+\fill[gray!30] (-0.4,0.45) rectangle (4.4,0.55);
+\draw (0,1) -- (4,1); \draw (0,0) -- (4,0);
+\draw[rojo,dashed,very thick] (0,0) -- (0,1);
+\draw[rojo,dashed,very thick] (2,0) -- (2,1);
+\draw[thick] (4,0) -- (4,1);
+\node[esq] at (0,1) {$A$}; \node[esq] at (2,1) {$B$}; \node[esq] at (4,1) {$C$};
+\node[esq] at (0,0) {$D$}; \node[esq] at (2,0) {$E$}; \node[esq] at (4,0) {$F$};
+\node[above,font=\small] at (1,1.05) {100}; \node[above,font=\small] at (3,1.05) {100};
+\node[below,font=\small] at (1,-0.05) {100}; \node[below,font=\small] at (3,-0.05) {100};
+\node[left,rojo,font=\small] at (0,0.75) {80}; \node[left,rojo,font=\small] at (2,0.75) {50};
+\node[right,font=\small] at (4,0.75) {50};
+\end{tikzpicture}
+\column{0.52\textwidth}
+\small
+La etapa cierra $A$--$D$ y $B$--$E$. Solo queda $C$--$F$.
+\begin{itemize}
+\item Desvío medio de los 9 pares: $970/9\approx\mathbf{107{,}8}$ m.
+\item Paso en $B$--$E$: $d'(A,D)=\min(450,\,100+50+100)=250$; media \textbf{18,9 m}.
+\item Paso en $A$--$D$: media \textbf{28,9 m}.
+\end{itemize}
+El voraz elige $B$--$E$. La prueba automática da lo mismo.
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------- Gustavo (4:00-6:00)
+\begin{frame}{El plan para El Salao: 2.386 m en tres etapas}
+\quien{Gustavo}
+\begin{columns}[c]
+\column{0.58\textwidth}
+\centering
+\figura{plan_mapa.png}{width=\linewidth,height=0.68\textheight,keepaspectratio}{Mapa del plan (resultados/figuras/plan\_mapa.png)}
+\column{0.40\textwidth}
+\cifra[0.46\linewidth]{3}{etapas}\hfill\cifra[0.46\linewidth]{5}{pasos peatonales}\\[1em]
+\cifra[0.46\linewidth]{3}{cambios de sentido}\hfill\cifra[0.46\linewidth]{18}{rutas alternas}\\[1em]
+\small Etapas de 975, 850 y 561 m. 15 esquinas a controlar; 14 sin semáforo registrado.
+\end{columns}
+\end{frame}
+
+\begin{frame}{A pie, el desvío baja en las tres etapas}
+\quien{Gustavo}
+\begin{columns}[c]
+\column{0.55\textwidth}
+\centering
+\figura{desvio_a_pie.png}{width=\linewidth,height=0.7\textheight,keepaspectratio}{Barras de desvío a pie (resultados/figuras/desvio\_a\_pie.png)}
+\column{0.43\textwidth}
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Etapa & Con la obra & Con pasos\\
+\midrule
+1 (975 m) & 387 m & 48 m\\
+2 (850 m) & 129 m & 28 m\\
+3 (561 m) & 219 m & 56 m\\
+\bottomrule
+\end{tabular}
+\medskip
+
+Supuesto que más pesa: cada etapa cierra los puentes existentes. Si siguen abiertos, el desvío con la obra es 68, 56 y 36 m.
+\end{columns}
+\end{frame}
+
+\begin{frame}{Rutas alternas y esquinas a controlar}
+\quien{Gustavo}
+\small
+\begin{columns}[T]
+\column{0.52\textwidth}
+\textbf{Rutas alternas} (metros: sin obra $\to$ con la obra)\\[3pt]
+\begin{tabular}{@{}llr@{}}
+\toprule
+Cruce cerrado & Etapa & Carro\\
+\midrule
+Calle 61 & 3 & 120 $\to$ 1.895\\
+Vía local junto al eje & 2 & 102 $\to$ 1.776\\
+Carrera 22A & 2 & 173 $\to$ 1.761\\
+Calle 72 & 2 & 11 $\to$ 897\\
+\bottomrule
+\end{tabular}
+\column{0.46\textwidth}
+\textbf{Esquinas} (\% de recorridos desviados)\\[3pt]
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Esquina & \% & Semáforo\\
+\midrule
+Cl.~60 x Cra.~18 & 72,9 & no\\
+Cl.~75 x Cra.~21 & 72,5 & no\\
+Cl.~63 x Cra.~18 & 63,0 & sí\\
+Cl.~73 x Cra.~19A & 61,1 & no\\
+\bottomrule
+\end{tabular}
+\end{columns}
+\vfill
+Son candidatas: OpenStreetMap puede no tener todos los semáforos.
+\end{frame}
+
+% ---------------------------------------------------------------- Sebastián (6:00-8:00)
+\begin{frame}{En carro, el cambio de sentido ayuda poco}
+\quien{Sebastián}
+\centering
+\cifra{332 m}{etapa 1}\hspace{1em}\cifra{287 m}{etapa 2}\hspace{1em}\cifra{293 m}{etapa 3}\\[0.4em]
+{\small desvío medio en carro con la obra}
+\medskip
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{Qué pasa}
+Con el cambio de sentido queda en 332, 279 y 293 m. Su efecto real es dar salida: en la etapa 1, los pares sin camino pasan de 60 a 0.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Qué concluimos}
+Con medidas temporales, el problema peatonal mejora mucho y el vehicular casi no. En carro se sostiene señalizar rutas y controlar esquinas.
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{¿Podemos confiar en los resultados?}
+\quien{Sebastián}
+\begin{itemize}
+\item \textbf{Voraz contra fuerza bruta} ($k=2$): elige la misma pareja que el óptimo entre 1.225 parejas de pasos y 11.325 de sentidos. Un caso construido sí lo hace fallar.
+\item \textbf{Sensibilidad}: con luz de 60 m o más, el primer paso es siempre el mismo y el desvío final queda entre 24 y 26 m.
+\item \textbf{Control del lado}: el producto cruz coincide al 100~\% con las componentes conexas (1.229 esquinas).
+\item \textbf{Pruebas automáticas}: \texttt{python -m unittest}, todas en verde.
+\end{itemize}
+\vfill
+\small Las tres primeras, con toda la obra a la vez (\texttt{resultados/experimentos/}).
+\end{frame}
+
+\begin{frame}{Lo que este plan no mide}
+\quien{Sebastián}
+\begin{enumerate}
+\item No hay datos de tránsito: no se mide congestión, solo desvíos en metros.
+\item No se diseñan carriles ni tiempos de semáforo.
+\item Se supone que cada etapa cierra los puentes existentes de su tramo.
+\item Muestra de esquinas sobre OpenStreetMap, que puede estar incompleto.
+\item El voraz no garantiza el óptimo.
+\item Todo debe verificarse en terreno antes de proponerlo.
+\end{enumerate}
+\end{frame}
+
+% ---------------------------------------------------------------- Santiago (8:00-10:00)
+\begin{frame}{Demostración en vivo}
+\quien{Santiago}
+\begin{columns}[c]
+\column{0.55\textwidth}
+\begin{enumerate}
+\item Cargar el ejemplo de El Salao.
+\item Planificar y recorrer el plan paso a paso.
+\item Abrir una ruta alterna: carro y a pie.
+\item Otra obra: la calle 72 (ejemplo ilustrativo, no es una obra real).
+\end{enumerate}
+\column{0.42\textwidth}
+\small
+\begin{block}{Cómo correrlo}
+\texttt{cd proyecto\_arroyos}\\
+\texttt{pip install -r requirements.txt}\\
+\texttt{python app.py}\\
+\texttt{http://localhost:5000/?ejemplo}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Conclusiones}
+\quien{Santiago}
+\begin{enumerate}
+\item Una obra que cierra calles se modela como quitar aristas; su efecto, como el desvío medido con Dijkstra.
+\item A pie, los pasos provisionales funcionan: de 387 a 48 m en la etapa más difícil.
+\item En carro, cambiar sentidos ayuda poco; se sostiene señalizar rutas alternas y controlar esquinas.
+\item Dividir la obra en etapas limita el cierre a un tramo a la vez y sirve para cualquier obra.
+\end{enumerate}
+\vfill
+\small Trabajo futuro: datos de tránsito, pesos en tiempo y muestra ponderada por población.
+\end{frame}
+
+\begin{frame}
+\centering
+{\Large\bfseries\color{azul} Gracias. ¿Preguntas?}\\[1.5em]
+Código, datos, resultados y pruebas:\\[0.5em]
+{\large \repo}\\[1.5em]
+\small Datos del mapa: © colaboradores de OpenStreetMap (ODbL)
+\end{frame}
+
+\end{document}
