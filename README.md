@@ -22,9 +22,19 @@ Este es el único README del repositorio. Todo el código está en `proyecto_arr
 
 ## 2. Cómo se usa
 
-**Para quien califica:** clone el repositorio, entre a `proyecto_arroyos/`, instale los requisitos y corra `python app.py` (o `python -m unittest` para verificar). No se necesita internet para El Salao: las calles ya están guardadas en `datos/cache/`.
+**Para quien califica** (probado en un clon limpio con un entorno virtual nuevo, Python 3.11, Windows):
 
-Requisitos: Python 3.10 o superior y `pip install -r requirements.txt` (Flask para la web; matplotlib solo para `mapa.png`). Los algoritmos usan solo la biblioteca estándar. Todo desde `proyecto_arroyos/`.
+```bash
+git clone https://github.com/odvelez/StreetView.git
+cd StreetView/proyecto_arroyos
+python -m pip install -r requirements.txt
+python -m unittest                 # verificar: todas las pruebas deben dar OK
+python app.py                      # abrir http://localhost:5000/?ejemplo
+```
+
+No se necesita internet para El Salao: las calles ya están guardadas en `datos/cache/`.
+
+Requisitos: Python 3.10 o superior (Flask para la web; matplotlib para `mapa.png` y las figuras). Los algoritmos usan solo la biblioteca estándar. Todo desde `proyecto_arroyos/`.
 
 ```bash
 python app.py                      # pantalla en http://localhost:5000 (use /?ejemplo para cargar El Salao)
@@ -34,7 +44,9 @@ python herramientas/plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json  
 python -m unittest                 # 81 pruebas (tardan unos 35 s)
 ```
 
-En la pantalla: elegir municipio, dibujar la obra (o cargar el ejemplo), pulsar **Planificar** y seguir el recorrido paso a paso. El primer plan de El Salao tarda entre 15 y 40 s; la segunda vez sale del caché (unos 5 ms). Para la presentación, abra `/?ejemplo` una vez antes de empezar. Si cambia algo en `src/`, reinicie `python app.py` por el caché. Desde Python en Windows use `http://127.0.0.1:5000`, no `localhost` (2 s más por pedido).
+En la pantalla: elegir municipio, dibujar la obra (o cargar el ejemplo), pulsar **Planificar** y seguir el recorrido paso a paso. El primer plan de El Salao tarda entre 10 y 40 s según el computador; la segunda vez sale del caché (unos 5 ms). Para la presentación, abra `/?ejemplo` una vez antes de empezar. Si cambia algo en `src/`, reinicie `python app.py` por el caché. Desde Python en Windows use `http://127.0.0.1:5000`, no `localhost` (2 s más por pedido).
+
+**Si algo se ve raro, revise que no haya otro `python app.py` abierto.** En Windows, dos servidores pueden ocupar el puerto 5000 a la vez sin dar error, y el navegador puede estar hablando con el viejo (con otro código o con planes en caché). Cierre todas las ventanas donde corra `app.py` y vuelva a abrir uno solo.
 
 `main.py` y `plan_etapas.py` **sobrescriben `resultados/`**; úselos solo para regenerar los resultados a propósito.
 
