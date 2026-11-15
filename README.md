@@ -41,7 +41,7 @@ python app.py                      # pantalla en http://localhost:5000 (use /?ej
 python main.py                     # análisis de toda la obra a la vez: resultados/resumen.txt, analisis.json, mapa.png
 python herramientas/plan_etapas.py # plan por etapas: resultados/plan_etapas.txt y .json
 python herramientas/plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json   # otra obra
-python -m unittest                 # 81 pruebas (tardan unos 35 s)
+python -m unittest                 # 101 pruebas (tardan unos 45 s)
 ```
 
 En la pantalla: elegir municipio, dibujar la obra (o cargar el ejemplo), pulsar **Planificar** y seguir el recorrido paso a paso. El primer plan de El Salao tarda entre 10 y 40 s según el computador; la segunda vez sale del caché (unos 5 ms). Para la presentación, abra `/?ejemplo` una vez antes de empezar. Si cambia algo en `src/`, reinicie `python app.py` por el caché. Desde Python en Windows use `http://127.0.0.1:5000`, no `localhost` (2 s más por pedido).
@@ -84,7 +84,7 @@ Otros experimentos (betweenness, sensibilidad, control de lados, histograma, vor
 
 ```
 proyecto_arroyos/
-  app.py               servidor Flask: GET /, GET /api/ejemplo, POST /api/analizar, POST /api/plan
+  app.py               servidor Flask: GET /, GET /api/ejemplo, GET /api/ejemplo_obra, POST /api/analizar, POST /api/plan
   main.py              análisis de toda la obra a la vez, por terminal
   web/                 pantalla (Leaflet): menú, recorrido paso a paso, resultados
   src/grafo.py         grafo dirigido y no dirigido, BFS, componentes, Dijkstra, centralidades
@@ -96,73 +96,77 @@ proyecto_arroyos/
   src/osm.py           lectura y descarga de OpenStreetMap
   src/comparacion.py   voraz contra fuerza bruta (k = 2)
   src/control.py       control del lado por componentes conexas
-  herramientas/        plan_etapas.py, eje_de_calle.py, experimentos.py, diagnostico_sin_camino.py, descargar_mapa.py
-  datos/               ejemplos/, cache/, arroyo_el_salao.csv, arroyos_area_metropolitana.json
-  resultados/          salidas generadas; linea_base/ son las cifras de referencia de El Salao
-  tests/               81 pruebas (regresión contra linea_base, API, robustez, etapas, obras)
-  documento/main.tex   documento en LaTeX
-  documento/Obras viales por etapas El Salao.pptx   diapositivas de Gustavo (PowerPoint; falta pasarlas a Beamer)
-  documento/guion.txt  guion de la presentación
+  herramientas/        plan_etapas.py, figuras_plan.py, eje_de_calle.py, experimentos.py, diagnostico_sin_camino.py, descargar_mapa.py
+  datos/               ejemplos/, cache/ (calles guardadas), arroyo_el_salao.csv (eje del ejemplo), archivo_arroyos/ (histórico, no se usa)
+  resultados/          salidas generadas; figuras/ (mapa y barras del plan); linea_base/ son las cifras de referencia de El Salao
+  tests/               101 pruebas (API sin red, caso resuelto a mano, regresión contra linea_base, robustez, etapas, obras)
+  documento/main.tex, main.pdf                  documento en LaTeX (entrega)
+  documento/diapositivas.tex, diapositivas.pdf  diapositivas en Beamer (entrega)
+  documento/Obras viales por etapas El Salao.pptx   diapositivas originales de Gustavo (PowerPoint), base de las de Beamer
+  documento/guion.txt  guion de la presentación (10 min, 5 expositores)
+  documento/preguntas.md  preguntas y respuestas de la sustentación
 ```
 
 **Contrato `POST /api/plan`** (no romperlo: el JSON solo se agranda). Pedido: `{lineas, radio, luz_max, etapa_max_m (300–2000, 1000), un_puente_cada_m (200–1000, 500), cerrar_puentes (true), ancho_m (10–60, 10), medicion ("lados"), abiertos, cerrados}`. Respuesta: `obra`, `parametros`, `semaforos_conocidos`, `resumen`, `etapas[]` (con `eje`, `tramos_cerrados`, `peatones`, `vehiculos`, `rutas[]`, `carga[]`), `pasos[]`, `tiempos`, `recuadro`, `fuente`, `aviso_zona` y `en_cache`. Errores en JSON: 400 (pedido inválido o zona demasiado grande) y 503 (no se pudo descargar el mapa). Ejemplo real: `resultados/plan_etapas.json`.
 
-**Datos:** calles y arroyos © colaboradores de OpenStreetMap (ODbL), descargados el 10 de noviembre de 2026 para el recuadro 10,84–11,12 N y 74,96–74,73 O (Barranquilla, Soledad, Malambo, Puerto Colombia y Galapa). Si la obra queda fuera de lo guardado, se descargan las calles de Overpass a `datos/cache/` (puede tardar minutos).
+**Datos:** calles © colaboradores de OpenStreetMap (ODbL), descargadas en noviembre de 2026 para el recuadro 10,84–11,12 N y 74,96–74,73 O (Barranquilla, Soledad, Malambo, Puerto Colombia y Galapa). Si la obra queda fuera de lo guardado, se descargan las calles de Overpass a `datos/cache/` (puede tardar minutos).
 
 ## 6. Estado del equipo
 
 | Persona | Parte | Estado |
 |---|---|---|
-| Oscar | Ejemplo de obra (calle 72), integración, esta documentación | Hecho; falta la limpieza final (sección 7) |
+| Oscar | Ejemplo de obra (calle 72), integración, documento, Beamer, guion, limpieza final, esta documentación | Hecho |
 | Karel | Refactor de arroyo a obra y `/api/plan` | Hecho (R1 a R6). Opcionales sin hacer: `medicion="afectados"` y pasos peatonales casi perpendiculares |
 | Lobo | Pantalla: menú, recorrido, resultados, pantalla pequeña | Hecho |
 | Blanco | Pruebas, robustez de `app.py`, revisión de textos | Hecho |
-| Gustavo | Diapositivas, `herramientas/figuras_plan.py`, `tests/test_app.py` | **Diapositivas entregadas** (por WhatsApp, no están en el repositorio). Sin entregar: figuras y pruebas de la API; ver sección 7 |
+| Gustavo | Diapositivas (PowerPoint), base de las de Beamer | Hecho. Las figuras (`herramientas/figuras_plan.py`) y `tests/test_app.py` quedaron integradas |
 
-## 7. Lo que falta (en orden)
+## 7. Lo que falta
 
-**Bloquea la entrega**
-1. **Documento.** Debe incluir el enlace al repositorio. `documento/main.tex` sigue hablando de arroyos y lluvia y tiene **8 `\completar{}`**. El centro del documento pasa a ser el plan por etapas; las cifras de la simulación con lluvia siguen siendo válidas como «toda la obra a la vez». Completar: cifra de habitantes del sector con fuente (DANE o Alcaldía de Soledad), noticias del 4 de noviembre y canalización anunciada (fecha y costo) y emergencias anteriores, cómo se confirmó cada cruce, el caso de prueba hecho a mano y las conclusiones propias. Sin fuente, dejar «pendiente de verificar»; no inventar datos.
-2. **Diapositivas en Beamer (PDF):** Gustavo las pasó por WhatsApp; deben estar en Beamer, con el enlace al repositorio, y subirse como PDF a Brightspace. Falta revisar que usen las cifras de la sección 4 y el tema de obras (no de arroyos), y repartir quién expone qué (problema 1:30; mapa a grafo 2:00; Dijkstra, voraz y pruebas 2:00; resultados con el hallazgo honesto 2:00; demo en vivo 2:00; límites y cierre 0:30).
-3. **Figuras** (opcional si las diapositivas ya traen las suyas; `herramientas/figuras_plan.py`): leer `resultados/plan_etapas.json` y guardar PNG en `resultados/figuras/`: mapa con el eje por etapa (colores Okabe-Ito), pasos peatonales en naranja, cambios de sentido en morado y esquinas sin semáforo en rojo; y barras del desvío a pie con la obra frente a con los pasos, por etapa. Con leyenda y «© colaboradores de OpenStreetMap».
-4. **Pruebas de la API** (opcional, ya hay 18 en `test_app_robustez.py`; `tests/test_app.py`, con `app.test_client()` y sin descargas reales): `GET /` da 200; `/api/ejemplo` trae `lineas`; `/api/analizar` sin líneas da 400; `/api/plan` con El Salao da 200 con `etapas`, `resumen` y `pasos`, con parámetros fuera de rango da 400 y con Overpass caído da 503. Ya existen `tests/test_app_robustez.py` con 18 pruebas parecidas; pueden completarse o reutilizarse.
-5. **Capturas** de la app (1600 × 900; celular 390 × 844) para las diapositivas. Los `id` de la pantalla son `#menu`, `#paso-municipio`, `#paso-obra`, `#paso-planificar`, `#ajustes`, `#btn-planificar`, `#recorrido`, `#resultados`, `#cifras`, `#selector-etapa`, `#detalle-etapa`.
-6. **Ensayo cronometrado** de los 10 minutos (con la demo y el ejecutable probados en el computador y el proyector del salón, o en uno igual), llegar 10 minutos antes y preparar las preguntas de la sustentación (sección 8).
+**Entrega (Brightspace):** subir `proyecto_arroyos/documento/main.pdf` y `proyecto_arroyos/documento/diapositivas.pdf`. Los dos tienen el enlace al repositorio y se compilan con `pdflatex main.tex` y `pdflatex diapositivas.tex` (dos veces cada uno) desde `documento/`.
 
-**Limpieza del código (solo Oscar, al final)**
-- Quitar `fuente.arroyos_osm`, `lineas_por_nombre`, la ruta `/api/arroyos`, la clave `cauce` (queda `eje`), el alias `Arroyo`, el alias `recorte_del_cauce`, `--arroyo` y `--listar`; mover `datos/arroyos_area_metropolitana.json` a `datos/archivo_arroyos/`. Quedan palabras viejas en claves del JSON (`arroyo`, `cauce`, `lluvia`, `lluvia_m`) y en el `User-Agent` de `osm.py`; quitarlas rompe el contrato, así que hay que cambiar a la vez pantalla, pruebas y `resultados/linea_base/`.
-- Regenerar `resultados/` solo si cambia algo y actualizar el `.tex` en el mismo momento.
+**Pendiente de fuente** (en `main.tex` aparecen en rojo como `\completar{}`; sin fuente verificable no se escribe ninguna cifra):
+1. Habitantes de los barrios del sector, con cifra y fuente (DANE o Alcaldía de Soledad).
+2. Canalización de El Salao anunciada: entidad, fecha y costo, con enlace.
+3. Emergencias anteriores en El Salao, con fuente.
+4. Cómo se confirmó en Street View cada cruce cerrado (calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje, que en OSM se llama «Arroyo El Salao»).
+5. Confirmar en Street View la calle sin nombre de 6 m junto a la avenida Murillo; si es un error de OSM, dejarlo como limitación.
 
-**Pequeños arreglos pendientes**
-- Pantalla (`web/`): mostrar `aviso_zona` (llega pero no se ve) y agregar favicon (`<link rel="icon" href="data:,">`; hoy da 404 en la consola). Tampoco se pueden corregir a mano tramos abiertos o cerrados, y `radio`, `luz_max` y `ancho_m` no están en la pantalla.
-- `src/etapas.py`: plurales («1 cambio(s) de sentido», «1 de ellos puentes existentes») y «1 etapas», «1 pasos peatonales» en `plan_etapas.py`; con salida redirigida en Windows los acentos salen mal (`sys.stdout.reconfigure(encoding="utf-8")`).
-- Textos con jerga (por ejemplo «algoritmo de Dijkstra» en el panel) que conviene aclarar.
-- `ancho_m` se mide **desde el eje hacia cada lado**: con 10, la franja real mide 20 m de borde a borde. Decidir cuál es la definición y escribirla igual en pantalla y documento.
-- En el ejemplo de la calle 72 aparecen «Calle 47» y «Carrera 18 Sur» entre las rutas alternas; puede ser cómo están nombradas en OSM, conviene mirarlo antes de mostrarlo.
-- El commit «aaaskks» de Lobo cambió `resultados/` por ruido de redondeo; esa carpeta ya se regeneró, así que no hay nada más que hacer.
+Al completar uno, se borra el `\completar{}`, se recompila `main.pdf` y se hace commit.
+
+**Antes de la sustentación (lunes 16, 3:47 p. m.)**
+- Ensayo cronometrado de los 10 minutos con `documento/guion.txt` y la demo en el mismo computador que se va a usar.
+- Cerrar cualquier `python app.py` viejo, abrir uno solo y cargar `/?ejemplo` antes de entrar (sección 2).
+- Estudiar `documento/preguntas.md`: cada integrante debe poder responder todo.
+- Capturas de la app como respaldo por si falla la demo (opcional).
+
+**Opcionales sin hacer** (no bloquean la entrega)
+- Pantalla: no se pueden corregir a mano tramos abiertos o cerrados, y `radio`, `luz_max` y `ancho_m` no están en la pantalla.
+- En el ejemplo de la calle 72 aparecen «Calle 47» y «Carrera 18 Sur» entre las rutas alternas; puede ser cómo están nombradas en OSM.
+- Claves heredadas del JSON (`arroyo`, `cauce`, `lluvia_m`) y el `User-Agent` de `osm.py`: se dejaron para no romper el contrato de `/api/plan`.
 - Probar en un teléfono real y con alguien que planifique una obra sin explicación.
-- Revisar en Street View los cruces cerrados de El Salao (por ejemplo Calle 61, Carrera 22D, Calle 59A, Calle 60, Calle 67A, Calle 75 y la vía local junto al eje) y confirmar la calle de 6 m de la Av. Murillo; si es un error de OSM, va como limitación.
 
-**Límites que deben quedar escritos**
-No hay datos de tránsito (no se mide congestión); los pesos son metros, no tiempo; no se diseñan carriles ni semáforos; no se evalúan costo, suelos ni diseño hidráulico; se usa una muestra de 120 esquinas por lado sin ponderar por población; la heurística voraz no garantiza el óptimo; se supone que la obra cierra los puentes existentes; la calidad de OSM depende de quien lo edita y hay que verificar en terreno.
+**Hecho en la última revisión:** documento reescrito al tema de obras por etapas con el caso resuelto a mano; diapositivas en Beamer; guion de 10 minutos con la fuente de cada cifra; figuras; pruebas de la API (incluido un error 500 corregido en `app.py`); plurales, acentos en Windows, favicon, `aviso_zona` visible y textos sin jerga en la pantalla; limpieza del código de arroyos (`/api/arroyos`, `--arroyo`, `--listar` y alias) sin cambiar ninguna cifra; README probado en un clon limpio.
+
+**Definición de `ancho_m`:** se mide desde el eje hacia cada lado. Con 10, la franja mide 20 m de borde a borde; así está escrito en el documento.
+
+**Límites que deben quedar escritos** (están en el documento, sección 6)
+No hay datos de tránsito (no se mide congestión); los pesos son metros, no tiempo; no se diseñan carriles ni semáforos; no se evalúan costo, suelos ni diseño hidráulico; se usa una muestra de esquinas sin ponderar por población; la heurística voraz no garantiza el óptimo; se supone que la obra cierra los puentes existentes; la calidad de OSM depende de quien lo edita y hay que verificar en terreno.
 
 ## 8. Preguntas que pueden hacer en la sustentación
 
+Están, con respuestas y por tema, en `proyecto_arroyos/documento/preguntas.md`. Las más probables:
+
 - **¿Por qué quitar aristas y no aumentar el peso?** Un peso de penalización sería un número inventado; quitar la arista representa que no se puede pasar.
 - **¿Por qué dos grafos?** Un peatón puede caminar en contravía y un carro no; además cada medida solo sirve a quien la usa.
-- **¿Por qué no un puente vehicular?** Costaría y tardaría casi lo que la obra. Solo se proponen medidas temporales.
-- **¿El voraz da el óptimo?** No está garantizado; sí da el mejor candidato de cada ronda. Hay una comparación contra fuerza bruta con k = 2 en `resultados/experimentos/`.
-- **¿Cómo saben qué calles cierra la obra?** Por geometría: la calle cruza el eje o va sobre él. Después se verifica en Street View.
-- **¿Y si OpenStreetMap está mal?** Es una limitación; por eso se verifica en Street View.
-- **¿Por qué una muestra de esquinas?** Con todas tardaría minutos; con 120 por lado son 14.400 pares y tarda segundos.
+- **¿El voraz da el óptimo?** No está garantizado; sí da el mejor candidato de cada ronda. Contra fuerza bruta con k = 2 eligió la misma pareja (`resultados/experimentos/`).
+- **¿Dónde está la programación dinámica?** En los cortes entre etapas (`cortes` en `src/etapas.py`).
 - **¿Por qué la mejor medida vehicular no baja el desvío medio?** Devuelve el camino a pares que antes no tenían ninguno y esos entran al promedio con recorridos largos.
-- **¿Por qué no una red neuronal?** No hay datos etiquetados y el problema es de caminos en una red.
-- **¿La medida es construible?** El modelo solo mide conectividad.
 
 ## 9. Reglas del equipo
 
 1. No inventar datos: población, noticias, costos, fechas y fuentes verificables y con enlace; si no, «pendiente de verificar».
-2. Las 81 pruebas deben pasar antes de cada commit (`python -m unittest`).
+2. Todas las pruebas deben pasar antes de cada commit (`python -m unittest`).
 3. Si cambia una cifra, se actualiza el `.tex` en el mismo momento.
 4. Después de correr `main.py` o `plan_etapas.py` sin querer regenerar, `git checkout -- proyecto_arroyos/resultados`.
 5. Commits pequeños, con mensaje en español.
