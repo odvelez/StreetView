@@ -11,7 +11,7 @@ Rutas:
   GET  /api/ejemplo_obra  obra ilustrativa en la calle 72 (datos/ejemplos/obra_ilustrativa.json)
   POST /api/analizar   recibe el eje de una obra y devuelve el análisis de toda la obra a la vez (src/analisis.py)
   POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py); con
-                       "propuestas_calculadas": true agrega las propuestas de src/circulacion.py
+                       "propuestas_calculadas": false apaga las propuestas de src/circulacion.py (por defecto true)
 """
 import hashlib
 import json
@@ -200,8 +200,8 @@ def api_plan():
         cerrados = [int(i) for i in pedido.get("cerrados", [])]
         cerrar_puentes = pedido.get("cerrar_puentes", True)
         medicion = pedido.get("medicion", "lados")
-        # Propuestas calculadas (opcionales): por defecto no se calculan y el plan es el de siempre.
-        calculadas = pedido.get("propuestas_calculadas", False)
+        # Propuestas calculadas: activas por defecto; con false el plan es el de antes.
+        calculadas = pedido.get("propuestas_calculadas", True)
         d0_min, d0_max = SUPUESTOS["d0_m"].rango
         d0 = _numero(pedido, "d0_m", SUPUESTOS["d0_m"].valor, d0_min, d0_max)
     except PedidoInvalido as ex:

@@ -25,7 +25,7 @@ cierran todos los tramos que tocan la franja de obra dentro del tramo en obra, i
 puentes existentes (calles que la obra podría mantener abiertas), porque la obra los intervendría.
 Con `cerrar_puentes=False` los puentes existentes se mantienen abiertos.
 
-Propuestas calculadas (opcionales, `propuestas_calculadas=True`; ver src/circulacion.py): con una
+Propuestas calculadas (activas por defecto; se apagan con `propuestas_calculadas=False`; ver src/circulacion.py): con una
 demanda supuesta (modelo de gravedad, src/demanda.py) se calculan la capacidad para cruzar la obra
 (flujo máximo y corte mínimo), los pares de calles paralelas que conviene invertir o pasar a doble
 sentido, cuántos pasos peatonales poner y dónde, y qué esquinas priorizar para control temporal. Sin
@@ -234,7 +234,7 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
     cand_p = [c for c in cand_p if en_etapa(c[0])]
     Fl = tablas(pea_obra, origenes, objetivos=set(origenes) | extremos(cand_p))
     sep = un_puente_cada_m / 2
-    elegidos_p, _ = voraz(pea_obra, origenes, Fs, pares_p, cand_p, resultado["puentes_necesarios"], F=Fl, R=Fl,
+    elegidos_p, pea_final = voraz(pea_obra, origenes, Fs, pares_p, cand_p, resultado["puentes_necesarios"], F=Fl, R=Fl,
                           mejora_min=0.0, incompatibles=lambda a, b: abs(a["pos_m"] - b["pos_m"]) < sep)
     obra_p = medir(Fl, Fl, Fs, pares_p)
     final_p = elegidos_p[-1][1] if elegidos_p else obra_p
@@ -267,7 +267,8 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
         recuperados=obra_v.sin_camino - final_v.sin_camino, medidas=_formato_propuestas(elegidos_v))
 
     # ---- rutas alternas y carga de desvíos
-    resultado["rutas"] = rutas_alternas(red, cruces_v, cruces_p, veh_obra, pea_obra)[:MAX_RUTAS_ETAPA]
+    # A pie, la ruta alterna ya cuenta los pasos peatonales provisionales elegidos (pea_final): pasa por el más cercano.
+    resultado["rutas"] = rutas_alternas(red, cruces_v, cruces_p, veh_obra, pea_final)[:MAX_RUTAS_ETAPA]
     pesos_v = pesos_gravedad(pares_v, Vs, calculadas["d0_m"]) if calculadas else None
     ponderada = {}
     carga, total = carga_de_desvios(veh_obra, Vs, Vl, pares_v, pesos_v, ponderada)
@@ -304,7 +305,7 @@ def evaluar_etapa(ctx, numero, p0, p1, cerrados_ids, luz_max, un_puente_cada_m, 
 # ---------------------------------------------------------------- el plan
 def plan_por_etapas(red, lineas, radio=400, luz_max=LUZ_MAX_M, etapa_max_m=ETAPA_MAX_M,
                     un_puente_cada_m=UN_PUENTE_CADA_M, abiertos=(), cerrados=(), recuadro=None,
-                    cerrar_puentes=True, ancho_m=TOLERANCIA_M, medicion="lados", propuestas_calculadas=False,
+                    cerrar_puentes=True, ancho_m=TOLERANCIA_M, medicion="lados", propuestas_calculadas=True,
                     d0_m=None):
     """Plan de obra por etapas para la obra `lineas` (su eje). Devuelve un dict listo para JSON.
 

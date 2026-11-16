@@ -27,13 +27,18 @@ def a_json(x):
 
 
 class EnElBarrio(unittest.TestCase):
-    def test_sin_el_parametro_el_plan_es_el_de_siempre(self):
+    def test_apagadas_el_plan_es_el_de_siempre(self):
         red, eje = barrio_de_prueba()
-        self.assertEqual(plan_por_etapas(red, eje), plan_por_etapas(red, eje, propuestas_calculadas=False, d0_m=250))
+        self.assertEqual(plan_por_etapas(red, eje, propuestas_calculadas=False),
+                         plan_por_etapas(red, eje, propuestas_calculadas=False, d0_m=250))
+
+    def test_por_defecto_estan_activas(self):
+        red, eje = barrio_de_prueba()
+        self.assertIn("calculadas", plan_por_etapas(red, eje)["parametros"])
 
     def test_con_el_parametro_el_json_solo_se_agranda(self):
         red, eje = barrio_de_prueba()
-        antes = a_json(plan_por_etapas(red, eje))
+        antes = a_json(plan_por_etapas(red, eje, propuestas_calculadas=False))
         ahora = a_json(plan_por_etapas(red, eje, propuestas_calculadas=True))
         self.assertEqual(diferencias(sin_pasos(antes), sin_pasos(ahora), sobras=True), [])
         ids = [p["id"] for p in ahora["pasos"]]
@@ -92,8 +97,10 @@ class ApiConMock(unittest.TestCase):
     def post(self, cuerpo):
         return self.cliente.post("/api/plan", data=json.dumps(cuerpo), content_type="application/json")
 
-    def test_por_defecto_no_se_calculan(self):
+    def test_por_defecto_se_calculan(self):
         self.assertEqual(self.post({"lineas": EN_ZONA}).status_code, 200)
+        self.assertIs(self.calc.call_args.kwargs["propuestas_calculadas"], True)
+        self.post({"lineas": EN_ZONA, "propuestas_calculadas": False})
         self.assertIs(self.calc.call_args.kwargs["propuestas_calculadas"], False)
 
     def test_propuestas_calculadas_debe_ser_booleano(self):
@@ -111,11 +118,11 @@ class ApiConMock(unittest.TestCase):
         self.assertEqual(self.post({"lineas": EN_ZONA, "d0_m": "lejos"}).status_code, 400)
 
     def test_cache(self):
-        self.post({"lineas": EN_ZONA})
-        self.post({"lineas": EN_ZONA, "d0_m": 300})                      # sin calcular, d0 no cambia nada
+        self.post({"lineas": EN_ZONA, "propuestas_calculadas": False})
+        self.post({"lineas": EN_ZONA, "propuestas_calculadas": False, "d0_m": 300})  # apagadas, d0 no cambia nada
         self.assertEqual(self.calc.call_count, 1)
-        self.post({"lineas": EN_ZONA, "propuestas_calculadas": True})
-        self.post({"lineas": EN_ZONA, "propuestas_calculadas": True, "d0_m": 300})
+        self.post({"lineas": EN_ZONA})
+        self.post({"lineas": EN_ZONA, "d0_m": 300})
         self.assertEqual(self.calc.call_count, 3)
         self.post({"lineas": EN_ZONA, "propuestas_calculadas": True, "d0_m": 300})
         self.assertEqual(self.calc.call_count, 3)

@@ -66,7 +66,7 @@ class RegresionElSalao(unittest.TestCase):
 
     def test_plan_por_etapas_igual_a_la_linea_base(self):
         base = json.loads((LINEA_BASE / "plan_etapas.json").read_text(encoding="utf-8"))
-        plan = json.loads(json.dumps(plan_por_etapas(self.red, self.lineas, recuadro=self.recuadro)))
+        plan = json.loads(json.dumps(plan_por_etapas(self.red, self.lineas, recuadro=self.recuadro, propuestas_calculadas=False)))
         self.assertEqual(diferencias(base, plan), [])
         self.assertEqual(plan["resumen"]["etapas"], 3)
         self.assertEqual(len(plan["pasos"]), 9)

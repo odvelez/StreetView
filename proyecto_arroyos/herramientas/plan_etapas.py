@@ -4,10 +4,10 @@ Uso (desde proyecto_arroyos/):
     python herramientas/plan_etapas.py                              # canalización de El Salao (caso de estudio)
     python herramientas/plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json
     python herramientas/plan_etapas.py --etapa-max 700 --un-puente-cada 400 --ancho 20
-    python herramientas/plan_etapas.py --calculadas [--d0 400]      # agrega las propuestas calculadas
+    python herramientas/plan_etapas.py --sin-calculadas [--d0 400] # apaga las propuestas calculadas
 
-Guarda resultados/plan_etapas.json (para la web) y resultados/plan_etapas.txt (informe). Con --calculadas
-solo imprime (no toca resultados/), salvo que también se pase --guardar.
+Guarda resultados/plan_etapas.json (para la web) y resultados/plan_etapas.txt (informe). Con las propuestas
+calculadas (por defecto) solo imprime (no toca resultados/), salvo que se pase --guardar.
 """
 import argparse
 import json
@@ -176,12 +176,12 @@ def main():
     ap.add_argument("--medicion", default="lados", choices=MEDICIONES, help="cómo se miden los recorridos")
     ap.add_argument("--mantener-puentes", action="store_true",
                     help="la obra no cierra los puentes que ya existen en el tramo")
-    ap.add_argument("--calculadas", action="store_true",
-                    help="agrega las propuestas calculadas (pares viales, pasos por demanda, control temporal, capacidad)")
+    ap.add_argument("--sin-calculadas", action="store_true",
+                    help="apaga las propuestas calculadas (pares viales, pasos por demanda, control temporal, capacidad)")
     d0 = SUPUESTOS["d0_m"]
     ap.add_argument("--d0", type=float, default=d0.valor,
                     help=f"distancia de la demanda supuesta, en m ({d0.rango[0]} a {d0.rango[1]}; por defecto {d0.valor})")
-    ap.add_argument("--guardar", action="store_true", help="con --calculadas, también escribe en resultados/")
+    ap.add_argument("--guardar", action="store_true", help="con las propuestas calculadas, también escribe en resultados/")
     args = ap.parse_args()
     if not (d0.rango[0] <= args.d0 <= d0.rango[1]):
         ap.error(f"--d0 entre {d0.rango[0]} y {d0.rango[1]}")
@@ -204,12 +204,12 @@ def main():
     plan = plan_por_etapas(red, lineas, radio=args.radio, luz_max=args.luz, etapa_max_m=args.etapa_max,
                            un_puente_cada_m=args.un_puente_cada, recuadro=recuadro,
                            cerrar_puentes=not args.mantener_puentes, ancho_m=args.ancho, medicion=args.medicion,
-                           propuestas_calculadas=args.calculadas, d0_m=args.d0)
+                           propuestas_calculadas=not args.sin_calculadas, d0_m=args.d0)
     texto = informe(nombre, plan)
     print(texto)
     print(f"\nTiempo: {time.time() - t:.1f} s")
-    if args.calculadas and not args.guardar:
-        print("(Con --calculadas no se escribe en resultados/; use --guardar para escribirlo.)")
+    if not args.sin_calculadas and not args.guardar:
+        print("(Con las propuestas calculadas no se escribe en resultados/; use --guardar para escribirlo.)")
         return
     SALIDA.mkdir(exist_ok=True)
     (SALIDA / "plan_etapas.txt").write_text(texto + "\n", encoding="utf-8")

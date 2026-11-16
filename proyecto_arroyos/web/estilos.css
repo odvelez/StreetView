@@ -119,6 +119,7 @@ footer { color: var(--suave); font-size: 12px; border-top: 1px solid var(--borde
 }
 .pin.etapa { background: var(--c, var(--acento)); }
 .pin.puente { background: var(--naranja); font-size: 14px; }
+.pin.demanda { background: #0a9396; font-size: 14px; }
 .leaflet-overlay-pane path, .leaflet-marker-pane > * { transition: opacity .25s; }
 .apagado { pointer-events: none !important; }
 
@@ -197,6 +198,7 @@ button.ancho { width: 100%; min-height: 44px; font-weight: 600; }
 .leyenda i.ruta-pie { background: repeating-linear-gradient(90deg, var(--pie) 0 4px, transparent 4px 7px); }
 .leyenda i.circ { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid white; box-shadow: 0 0 0 1px #bbb; }
 .leyenda i.pin-mini { width: 12px; height: 12px; border-radius: 50%; background: var(--naranja); border: 2px solid white; box-shadow: 0 0 0 1px #bbb; }
+.leyenda i.pin-mini.demanda { background: #0a9396; }
 .leyenda .sep { border-top: 1px solid var(--borde); margin-top: 3px; padding-top: 3px; }
 
 .detalle {
@@ -293,3 +295,11 @@ body.recorriendo .leaflet-container { background: #161d22; }
   .detalle .ver-todo { min-height: 48px; }
   .leaflet-popup-content a { display: inline-block; min-height: 32px; line-height: 32px; }
 }
+
+/* menos texto a la vista: detalles plegables */
+.ejemplos summary, #rec-mas summary, details.nota summary { cursor: pointer; color: var(--acento); font-weight: 600; font-size: 13px; margin: 6px 0; }
+.ejemplos { margin-top: 8px; }
+#rec-detalle li { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+#rec-mas { margin-top: 6px; }
+#rec-mas-texto { max-height: 30vh; overflow: auto; font-size: 13.5px; line-height: 1.45; color: var(--texto); }
+#rec-mas-texto p { margin: 4px 0; }
