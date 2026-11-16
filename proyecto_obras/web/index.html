@@ -12,8 +12,7 @@
   <aside id="panel">
     <header>
       <h1>Obras por etapas</h1>
-      <p class="sub">Barranquilla y su área metropolitana. Defina una obra que cierra calles y el programa la
-        divide en etapas y propone medidas temporales para que la movilidad no se pare.</p>
+      <p class="sub">Divide una obra que cierra calles en etapas y propone medidas temporales.</p>
     </header>
 
     <div id="menu">
@@ -33,16 +32,18 @@
 
       <section id="paso-obra" class="paso-menu">
         <h2><span class="num">2</span> Defina la obra</h2>
-        <p class="ayuda">Marque sobre el mapa el eje de la obra: la línea de calles que se van a cerrar.</p>
+        <p class="ayuda">Marque en el mapa las calles que se cierran.</p>
         <div class="botones">
           <button id="btn-dibujar" class="sec" type="button">Dibujar la obra</button>
           <button id="btn-deshacer" class="sec" type="button">Deshacer</button>
           <button id="btn-borrar" class="sec" type="button">Borrar</button>
         </div>
         <p id="estado-dibujo" class="ayuda" aria-live="polite"></p>
-        <p class="ayuda o">o use un ejemplo:</p>
-        <button id="btn-ejemplo" class="enlace" type="button">Cargar ejemplo: obra de canalización de El Salao</button>
-        <button id="btn-ejemplo-calle" class="enlace" type="button">Cargar ejemplo ilustrativo: 600 m de la calle 72</button>
+        <details class="ejemplos" open>
+          <summary>Ejemplos</summary>
+          <button id="btn-ejemplo" class="enlace" type="button">El Salao (canalización)</button>
+          <button id="btn-ejemplo-calle" class="enlace" type="button">Calle 72 (ilustrativo)</button>
+        </details>
         <div id="aviso-ilustrativo" class="aviso" hidden>Ejemplo ilustrativo, no es una obra real.</div>
       </section>
 
@@ -50,19 +51,19 @@
         <h2><span class="num">3</span> Planifique</h2>
         <details id="ajustes">
           <summary>Ajustes</summary>
-          <label class="fila" for="etapa-max">Largo máximo de cada etapa
+          <label class="fila" for="etapa-max">Largo máximo por etapa
             <span class="control"><select id="etapa-max">
               <option>500</option><option>700</option><option selected>1000</option><option>1500</option>
             </select> m</span>
           </label>
-          <label class="fila" for="puente-cada">Un paso peatonal provisional cada
+          <label class="fila" for="puente-cada">Un paso peatonal cada
             <span class="control"><select id="puente-cada">
               <option>250</option><option selected>500</option><option>750</option>
             </select> m</span>
           </label>
           <label class="fila check" for="cerrar-puentes">
             <input type="checkbox" id="cerrar-puentes" checked>
-            La obra cierra también los puentes existentes
+            También cierra los puentes existentes
           </label>
         </details>
         <button id="btn-planificar" class="pri" type="button" disabled>Planificar obra</button>
@@ -93,6 +94,7 @@
       </div>
       <h2 id="rec-titulo"></h2>
       <ul id="rec-detalle"></ul>
+      <details id="rec-mas" hidden><summary>Ver más</summary><div id="rec-mas-texto"></div></details>
       <div id="rec-avisos"></div>
       <div class="rec-botones">
         <button id="rec-anterior" type="button">← Anterior</button>

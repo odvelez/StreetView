@@ -212,3 +212,76 @@ def intermediacion(g):
     # Cada par se cuenta dos veces en un grafo no dirigido.
     escala = 1.0 / ((n - 1) * (n - 2)) if n > 2 else 0.0
     return {u: v * escala for u, v in cb.items()}
+
+
+# ------------------------------------------------------------ flujo máximo y corte mínimo
+_FUENTE, _SUMIDERO = ("fuente virtual",), ("sumidero virtual",)
+
+
+def flujo_maximo(capacidades, fuentes, sumideros):
+    """Flujo máximo de un conjunto de fuentes a un conjunto de sumideros (Edmonds–Karp).
+
+    `capacidades`: {(u, v): c} con c entero >= 0, dirigido (para una calle de doble sentido van los dos
+    arcos). Se agrega una fuente virtual unida a cada fuente y un sumidero virtual unido desde cada
+    sumidero, con capacidad «infinita» (más que la suma de todas). Cada ronda busca con BFS el camino de
+    aumento con menos arcos en la red residual y empuja por él su cuello de botella (Edmonds y Karp, 1972).
+
+    Devuelve dict(valor, corte, alcanzables):
+      - valor: el flujo máximo;
+      - corte: [(u, v, c)] arcos que van de lo alcanzable desde la fuente en la red residual final hacia lo
+        demás. Por el teorema de flujo máximo y corte mínimo (Ford y Fulkerson, 1956), la suma de sus
+        capacidades es igual a `valor` y es el corte de capacidad mínima;
+      - alcanzables: nodos de ese lado del corte (sin la fuente virtual).
+    """
+    fuentes, sumideros = set(fuentes), set(sumideros)
+    if fuentes & sumideros:
+        raise ValueError("Un nodo no puede ser fuente y sumidero a la vez: el flujo sería infinito")
+    infinito = sum(max(0, c) for c in capacidades.values()) + 1
+    residual = {}
+
+    def arco(u, v, c):
+        residual.setdefault(u, {})
+        residual.setdefault(v, {})
+        residual[u][v] = residual[u].get(v, 0) + c
+        residual[v].setdefault(u, 0)
+
+    for (u, v), c in capacidades.items():
+        if c > 0 and u != v:
+            arco(u, v, c)
+    for f in fuentes:
+        arco(_FUENTE, f, infinito)
+    for t in sumideros:
+        arco(t, _SUMIDERO, infinito)
+
+    def bfs_residual():
+        padre = {_FUENTE: None}
+        cola = deque([_FUENTE])
+        while cola:
+            u = cola.popleft()
+            for v, c in residual.get(u, {}).items():
+                if c > 0 and v not in padre:
+                    padre[v] = u
+                    if v == _SUMIDERO:
+                        return padre
+                    cola.append(v)
+        return padre
+
+    valor = 0
+    while True:
+        padre = bfs_residual()
+        if _SUMIDERO not in padre:
+            break
+        camino, v = [], _SUMIDERO
+        while padre[v] is not None:
+            camino.append((padre[v], v))
+            v = padre[v]
+        empuje = min(residual[u][v] for u, v in camino)
+        for u, v in camino:
+            residual[u][v] -= empuje
+            residual[v][u] += empuje
+        valor += empuje
+
+    alcanzables = set(padre) - {_FUENTE}
+    corte = sorted(((u, v, c) for (u, v), c in capacidades.items()
+                    if c > 0 and u in alcanzables and v not in alcanzables), key=lambda x: (str(x[0]), str(x[1])))
+    return dict(valor=valor, corte=corte, alcanzables=alcanzables)

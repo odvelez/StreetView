@@ -4,7 +4,7 @@
 
 const COLOR = {
   obra: "#3b4750", rojo: "#c4362f", verde: "#1b8a5a", naranja: "#d9730d", morado: "#7b3fb0",
-  gris: "#8a8f93", carro: "#e8a100", pie: "#199e70", tinta: "#1f2a30",
+  gris: "#8a8f93", azul: "#0b5fa5", turquesa: "#0a9396", carro: "#e8a100", pie: "#199e70", tinta: "#1f2a30",
 };
 // Colores de las etapas, aptos para daltonismo (Okabe-Ito).
 const COLOR_ETAPA = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#56B4E9", "#D55E00"];
@@ -334,6 +334,34 @@ function dibujarPlan(d) {
     }
   });
 
+  // 4b. propuestas calculadas (solo si el plan las trae): pares viales, pasos por demanda y control temporal.
+  etapas.forEach((e, i) => {
+    const n = numeroDe(e, i);
+    for (const par of lista(e.pares_viales?.pares)) {
+      if (par.elegida === "sin cambio") continue;
+      const popup = `<b>Par vial: ${esc(lista(par.calles).join(" y "))}</b><br>Etapa ${n}. Propuesta: ${esc(par.elegida)}.<br>${esc(par.motivo)}`;
+      for (const tramo of lista(par.forma)) {
+        const forma = puntos(tramo);
+        if (forma.length >= 2) trazo("pares_viales", n, forma, COLOR.azul, { peso: 7, popup });
+      }
+    }
+    for (const p of lista(e.pasos_por_demanda?.pasos)) {
+      const forma = puntos(p?.forma);
+      if (!forma.length) continue;
+      if (forma.length >= 2) trazo("pasos_demanda", n, forma, COLOR.turquesa, { peso: 5, dash: "1 7" });
+      marca("pasos_demanda", n, medio(forma), "🚸", "demanda",
+        `<b>Paso por demanda ${esc(p.orden ?? "")}</b><br>Etapa ${n}. Cruce de la ${esc(p.via)}, metro ${fmt(p.pos_m)}.<br>
+         Une ${esc(p.desde)} con ${esc(p.hasta)}${num(p.recorrido_m) !== null ? ` (${fmt(p.recorrido_m)} m)` : ""}.<br>
+         Desvío ponderado a pie con este paso: ${fmt(p.desvio_ponderado_m)} m.<br>${enlaceStreetView(medio(forma))}`);
+    }
+    for (const q of lista(e.control_temporal?.esquinas)) {
+      const pos = punto(q?.posicion);
+      if (!pos) continue;
+      registrar("control_temporal", n, L.circleMarker(pos, { radius: 11, color: COLOR.tinta, weight: 3, fillColor: "#fff", fillOpacity: 0.9, dashArray: "4 3" }))
+        .bindPopup(`<b>Candidata a control temporal: ${esc(q.nombre || "Esquina")}</b><br>Etapa ${n}. ${esc(q.motivo)}<br>${enlaceStreetView(pos)}`);
+    }
+  });
+
   // 5. carga: esquinas que reciben recorridos desviados (rojo sin semáforo, verde con semáforo, gris sin dato).
   etapas.forEach((e, i) => {
     const n = numeroDe(e, i);
@@ -405,7 +433,12 @@ function mostrarPaso() {
   $("rec-cifra").textContent = p.cifra ?? "";
   $("rec-unidad").textContent = p.unidad ?? "";
   $("rec-titulo").textContent = p.titulo ?? "";
-  $("rec-detalle").innerHTML = lista(p.detalle).map((t) => `<li>${esc(t)}</li>`).join("");
+  // Dos viñetas de un vistazo; el detalle completo queda detrás de «Ver más».
+  const det = lista(p.detalle);
+  $("rec-detalle").innerHTML = det.slice(0, 2).map((t) => `<li>${esc(t)}</li>`).join("");
+  $("rec-mas").hidden = det.length <= 2 && det.every((t) => String(t).length < 140);
+  $("rec-mas-texto").innerHTML = det.map((t) => `<p>${esc(t)}</p>`).join("");
+  $("rec-mas").open = false;
 
   // Avisos de la etapa del paso (por ejemplo, cuando no hay datos de peatones o de vehículos).
   const e = etapa === null ? null : etapasDe(estado.plan).find((x, i) => numeroDe(x, i) === etapa);
@@ -501,7 +534,7 @@ function mostrarPlan(d) {
 // ------------------------------------------------------------------ resultados en el panel
 const pl = (n, uno, varios) => `${fmt(n)} ${num(n) === 1 ? uno : varios}`;
 const avisosHtml = (xs) => lista(xs).map((a) => `<div class="aviso">${esc(a)}</div>`).join("");
-const CAPAS = ["etapas", "puentes", "sentidos", "rutas", "carga"];
+const CAPAS = ["etapas", "puentes", "sentidos", "rutas", "carga", "pares_viales", "pasos_demanda", "control_temporal"];
 let etapaVista = null;   // null = todas
 
 function cifra(valor, texto, extra = "") {
@@ -524,13 +557,16 @@ function pintarResultados(d) {
     <div class="cifras" id="cifras">
       ${cifra(fmt(nEtapas), num(nEtapas) === 1 ? "etapa de obra" : "etapas de obra")}
       ${cifra(largo === null ? "—" : `${fmt(largo)} m`, "de obra")}
-      ${cifra(fmt(s.puentes_peatonales), num(s.puentes_peatonales) === 1 ? "paso peatonal provisional" : "pasos peatonales provisionales")}
-      ${cifra(fmt(s.cambios_de_sentido), num(s.cambios_de_sentido) === 1 ? "calle a doble sentido" : "calles a doble sentido")}
-      ${cifra(fmt(s.rutas_alternas), num(s.rutas_alternas) === 1 ? "ruta alterna" : "rutas alternas")}
-      ${cifra(fmt(s.esquinas_de_control), "esquinas para controlar", sinSem === null ? "" : `${fmt(sinSem)} sin semáforo`)}
+      ${cifra(fmt(s.puentes_peatonales), "pasos peatonales")}
+      ${cifra(fmt(s.cambios_de_sentido), "doble sentido")}
+      ${cifra(fmt(s.rutas_alternas), "rutas alternas")}
+      ${cifra(fmt(s.esquinas_de_control), "esquinas", sinSem === null ? "" : `${fmt(sinSem)} sin semáforo`)}${s.calculadas ? `
+      ${cifra(fmt(s.calculadas.pares_viales_propuestos), "pares viales")}
+      ${cifra(fmt(s.calculadas.pasos_por_demanda), "pasos por demanda")}
+      ${cifra(fmt(s.calculadas.controles_temporales), "control temporal")}` : ""}
     </div>
     <div class="botones dos">
-      <button id="btn-repetir" class="sec" type="button">↺ Repetir el recorrido</button>
+      <button id="btn-repetir" class="sec" type="button">↺ Recorrido</button>
       <button id="btn-ver-todo" class="sec" type="button">Ver toda la obra</button>
     </div>
     ${lista(d.pasos).length ? "" : `<div class="aviso">El servidor no envió pasos para el recorrido.</div>`}
@@ -540,10 +576,11 @@ function pintarResultados(d) {
       ${etapas.map((e, i) => { const n = numeroDe(e, i); return `<button type="button" role="tab" data-etapa="${n}" style="--c:${colorEtapa(n)}">${n}</button>`; }).join("")}
     </div>
     <div id="detalle-etapa"></div>
-    <p class="nota">Cómo leer esto: se toman esquinas a los dos lados de la obra y, para ir de una a otra, se busca
-      el recorrido más corto por las calles, sin la obra y con ella. El desvío es cuántos metros más hay que
-      recorrer. No hay datos de cuántos carros pasan: no se mide congestión.</p>
-    <p class="nota">${d.fuente ? `Fuente del mapa: ${esc(d.fuente)}. ` : ""}${num(d.tiempos?.plan_s) !== null ? `Cálculo: ${d.tiempos.plan_s} s.` : ""}</p>`;
+    <details class="nota"><summary>Cómo leerlo</summary>
+      <p>Se toman esquinas a los dos lados de la obra y se busca el recorrido más corto sin la obra y con ella. El
+      desvío son los metros de más. No hay datos de tránsito: no se mide congestión.</p>
+      <p>${d.fuente ? `Fuente del mapa: ${esc(d.fuente)}. ` : ""}${num(d.tiempos?.plan_s) !== null ? `Cálculo: ${d.tiempos.plan_s} s.` : ""}</p>
+    </details>`;
 
   $("btn-repetir").onclick = iniciarRecorrido;
   $("btn-ver-todo").onclick = () => verEtapa(null);
@@ -622,8 +659,7 @@ function tarjetaEtapa(e, n) {
   let h = `<div class="tarjeta" style="--c:${colorEtapa(n)}">
     <div class="tarjeta-tit"><span class="chip">Etapa ${n}</span>
       metro ${fmt(e.inicio_m)} al ${fmt(e.fin_m)} · ${fmt(e.longitud_m)} m</div>
-    <p class="nota">Se cierran <b>${pl(e.cruces_cerrados, "cruce", "cruces")}</b>${num(e.puentes_existentes_cerrados) ? `, ${pl(e.puentes_existentes_cerrados, "de ellos es un puente existente", "de ellos son puentes existentes")}` : ""}.
-      ${num(e.recorridos_desviados) !== null ? `${fmt(e.recorridos_desviados)} de los recorridos medidos se desvían.` : ""}</p>
+    <p class="nota">${pl(e.cruces_cerrados, "cruce cerrado", "cruces cerrados")}${num(e.puentes_existentes_cerrados) ? ` (${fmt(e.puentes_existentes_cerrados)} puente${e.puentes_existentes_cerrados === 1 ? "" : "s"})` : ""}${num(e.recorridos_desviados) !== null ? ` · ${fmt(e.recorridos_desviados)} recorridos desviados` : ""}</p>
     ${avisosHtml(e.avisos)}
     ${ped === null ? `<div class="aviso">Esta etapa no trae datos de peatones.</div>` : comparacion("A pie", ped?.obra, ped?.con_puentes, `Con ${pl(puentes.length, "paso", "pasos")}`, "naranja")}
     ${veh === null ? `<div class="aviso">Esta etapa no trae datos de vehículos.</div>` : comparacion("En carro o moto", veh?.obra, veh?.con_medidas, `Con ${pl(medidas.length, "cambio", "cambios")}`, "morado")}`;
@@ -639,14 +675,13 @@ function tarjetaEtapa(e, n) {
   }
   if (rutas.length) {
     const max = Math.max(1, ...rutas.flatMap((x) => [extra(x.carro), extra(x.pie)]));
-    h += `<h4><i class="ico ruta"></i>Rutas alternas para señalizar</h4>
-      <p class="nota">Cruces que la obra cierra y cuánto más hay que recorrer por el camino más corto que queda. Toque uno para verlo en el mapa.</p>
+    h += `<h4><i class="ico ruta"></i>Rutas alternas</h4>
       <div class="leyenda-mini"><span><i class="mini-barra carro"></i>En carro</span><span><i class="mini-barra pie"></i>A pie</span></div>
       <ul class="lista mini-lista">${rutas.map((x, i) => item("data-ruta", i,
       `<b>${esc(x.via || "Cruce")}</b>${miniBarra("En carro", x.carro, "carro", max)}${miniBarra("A pie", x.pie, "pie", max)}`)).join("")}</ul>`;
   }
   if (carga.length) {
-    h += `<h4><i class="ico esquina"></i>Esquinas que reciben más recorridos desviados</h4><ul class="lista mini-lista">${carga.map((c, i) => item("data-esquina", i,
+    h += `<h4><i class="ico esquina"></i>Esquinas más cargadas</h4><ul class="lista mini-lista">${carga.map((c, i) => item("data-esquina", i,
       `<i class="semaforo ${c.semaforo === true ? "si" : c.semaforo === false ? "no" : "nd"}"></i><b>${esc(c.nombre || "Esquina")}</b>
        <small>${fmt(c.recorridos)} recorridos${num(c.porcentaje) !== null ? ` (${String(c.porcentaje).replace(".", ",")} %)` : ""} ·
        ${c.semaforo === true ? "tiene semáforo" : c.semaforo === false ? "sin semáforo registrado" : "sin dato de semáforo"}</small>`)).join("")}</ul>`;
@@ -814,15 +849,19 @@ function pintarLeyenda(d) {
   caja.open = window.innerWidth > 700;
   const etapas = etapasDe(d);
   caja.innerHTML = `<summary>Leyenda</summary>
-    <div>${etapas.map((e, i) => `<i class="cuadro" style="background:${colorEtapa(numeroDe(e, i))}"></i>`).join("")}Eje de la obra por etapa</div>
-    <div><i class="pin-mini puente"></i>Paso peatonal provisional</div>
-    <div><i class="linea" style="background:${COLOR.morado}"></i>Calle a doble sentido</div>
+    <div>${etapas.map((e, i) => `<i class="cuadro" style="background:${colorEtapa(numeroDe(e, i))}"></i>`).join("")}Obra por etapa</div>
+    <div><i class="pin-mini puente"></i>Paso peatonal</div>
+    <div><i class="linea" style="background:${COLOR.morado}"></i>Doble sentido</div>
     <div><i class="linea" style="background:${COLOR.rojo}"></i>Cruce cerrado</div>
     <div><i class="linea ruta-carro"></i>Ruta alterna en carro</div>
     <div><i class="linea ruta-pie"></i>Ruta alterna a pie</div>
-    <div class="sep"><i class="circ" style="background:${COLOR.rojo}"></i>Esquina sin semáforo</div>
-    <div><i class="circ" style="background:${COLOR.verde}"></i>Esquina con semáforo</div>
-    <div><i class="circ" style="background:${COLOR.gris}"></i>Sin dato de semáforo</div>`;
+    ${etapas.some((e) => e.pares_viales) ? `
+    <div class="sep"><i class="linea" style="background:${COLOR.azul}"></i>Par vial</div>
+    <div><i class="pin-mini demanda"></i>Paso por demanda</div>
+    <div><i class="circ" style="background:#fff;border:2px dashed ${COLOR.tinta}"></i>Control temporal</div>` : ""}
+    <div class="sep"><i class="circ" style="background:${COLOR.rojo}"></i>Sin semáforo</div>
+    <div><i class="circ" style="background:${COLOR.verde}"></i>Con semáforo</div>
+    <div><i class="circ" style="background:${COLOR.gris}"></i>Sin dato</div>`;
 }
 
 // http://localhost:5000/?ejemplo abre la página con El Salao ya planificado (útil en la presentación).

@@ -1,7 +1,7 @@
 # Obras viales por etapas (MAT 4021, Matemáticas Discretas, Uninorte)
 
 Equipo: Oscar Vélez, Gustavo de la Ossa, Sebastián Blanco, Karel Silva y Santiago Lobo.
-**Entrega (Brightspace, domingo 15 de noviembre de 2026, 11:59 p. m.):** dos PDF: (1) el documento escrito (paper) en LaTeX y (2) las diapositivas **hechas en Beamer**. Tanto el documento como las diapositivas deben incluir el **enlace al repositorio** (https://github.com/odvelez/StreetView). La sustentación individual vale **40 %**: cada integrante debe poder explicar todo el proyecto.
+**Entrega (Brightspace, martes 17 de noviembre de 2026):** el documento escrito (paper) en LaTeX, en PDF, y las diapositivas (que se preparan aparte y no están en este repositorio). Ambos deben incluir el **enlace al repositorio** (https://github.com/odvelez/StreetView). La sustentación individual vale **40 %**: cada integrante debe poder explicar todo el proyecto.
 
 **Sustentación** (programación oficial del profesor): lunes 16 de noviembre (2:00 a 4:00 p. m.; grupos 1 a 7, citación desde las 2:05 y cada 17 min) o miércoles 18 (2:00 a 3:00 p. m.; grupos 8 a 10, citaciones 2:05, 2:22 y 2:39). **Somos el grupo 7: lunes 16 de noviembre, citación a las 3:47 p. m. (estar afuera del salón desde las 3:37).**
 - Estar **afuera del salón 10 minutos antes** de la hora y dejar todo listo; al entrar se empieza enseguida (solo hay 2 minutos entre grupos).
@@ -41,7 +41,7 @@ python app.py                      # pantalla en http://localhost:5000 (use /?ej
 python main.py                     # análisis de toda la obra a la vez: resultados/resumen.txt, analisis.json, mapa.png
 python herramientas/plan_etapas.py # plan por etapas: resultados/plan_etapas.txt y .json
 python herramientas/plan_etapas.py --obra datos/ejemplos/obra_ilustrativa.json   # otra obra
-python -m unittest                 # 101 pruebas (tardan unos 45 s)
+python -m unittest                 # 144 pruebas (tardan unos 45 s)
 ```
 
 En la pantalla: elegir municipio, dibujar la obra (o cargar el ejemplo), pulsar **Planificar** y seguir el recorrido paso a paso. El primer plan de El Salao tarda entre 10 y 40 s según el computador; la segunda vez sale del caché (unos 5 ms). Para la presentación, abra `/?ejemplo` una vez antes de empezar. Si cambia algo en `src/`, reinicie `python app.py` por el caché. Desde Python en Windows use `http://127.0.0.1:5000`, no `localhost` (2 s más por pedido).
@@ -66,7 +66,27 @@ Formato de un archivo de obra (`datos/ejemplos/obra_ilustrativa.json` es un ejem
 5. **Desvío.** Para cada par de esquinas en lados opuestos, Dijkstra da el camino mínimo sin obra y con obra; el desvío es la diferencia.
 6. **Etapas.** El número de etapas sale del largo (hasta 1.000 m cada una) y los cortes se eligen con programación dinámica. Hay un paso peatonal provisional por cada 500 m de obra.
 7. **Medidas (voraz).** Se elige en cada ronda el candidato que más baja el desvío medio. Fórmula rápida: al agregar x→y con peso w, `d'(a,b) = min(d(a,b), d(a,x) + w + d(y,b))`, sin repetir Dijkstra por candidato; con parada temprana y grafo invertido para el caso dirigido. Pasó de unos 36 s a 6–8 s con los mismos resultados (hay pruebas que lo comparan).
-8. **Rutas alternas y esquinas.** Para cada cruce cerrado se calcula el camino mínimo que queda. Se marcan las esquinas con más recorridos desviados y si tienen semáforo registrado.
+8. **Rutas alternas y esquinas.** Para cada cruce cerrado se calcula el camino mínimo que queda (a pie, ya con los pasos peatonales provisionales elegidos, así que pasa por el más cercano). Se marcan las esquinas con más recorridos desviados y si tienen semáforo registrado.
+
+### 3b. Propuestas calculadas (activas por defecto)
+
+Vienen activadas en la pantalla, la API y los scripts; con `"propuestas_calculadas": false` (o `--sin-calculadas`) el plan es el de antes, sin ellas. Agregan cinco propuestas calculadas, sin datos de tránsito y con todos sus supuestos explícitos en `src/supuestos.py` (valor, rango, justificación, fuente y estado: confirmado, reportado, no verificado o supuesto del equipo):
+
+1. **Demanda supuesta (modelo de gravedad).** Cada par de esquinas pesa `exp(-distancia sin obra / d0)` (d0 = 400 m, rango 200–1000; supuesto del equipo). Con d0 muy grande da el desvío medio de siempre (hay prueba).
+2. **Capacidad para cruzar la obra.** Flujo máximo (Edmonds–Karp) de un lado al otro en el grafo vehicular, con los carriles de OSM (`lanes`) o un supuesto por tipo de vía. El corte mínimo dice cuántos carriles quedan y por qué calles (teorema de Ford y Fulkerson).
+3. **Pares viales.** Calles locales paralelas de un solo sentido: se prueban todas las configuraciones (sin cambio, invertir una, invertir la otra, las dos a doble sentido) con Dijkstra y con el corte mínimo. Se excluyen las dos calzadas de una avenida. En El Salao no hay ningún par (OSM tiene pocas calles con `oneway`) y la salida lo dice.
+4. **Pasos peatonales por demanda.** Un voraz ponderado decide cuántos y dónde (agrega un paso solo si baja el alargamiento ponderado al menos 2 %, con 80 m de separación), y se informa el tramo más largo sin cruce (la guía GDCI recomienda no pasar de 200 m). En el caso de prueba con 2 pasos el voraz no es óptimo (42,8 m frente a 24,0 m), con 3 sí: está en `tests/test_demanda.py`.
+5. **Control temporal.** Esquinas con más demanda desviada, al menos 3 accesos, sin semáforo registrado y separadas 150 m. Es una priorización, **no** un criterio para instalar semáforos (esos exigen conteos) y no se calculan tiempos de semáforo.
+
+```bash
+python herramientas/plan_etapas.py                          # informe con las propuestas (no escribe en resultados/ salvo --guardar)
+python herramientas/plan_etapas.py --sin-calculadas         # el plan de antes, sin propuestas calculadas
+python herramientas/experimentos.py calculadas              # sensibilidad a d0 y a los carriles (solo imprime)
+```
+
+En la API: `POST /api/plan` (activas por defecto; `"propuestas_calculadas": false` las apaga; opcional `"d0_m"`, 200–1000). Cada etapa agrega `circulacion`, `pares_viales`, `pasos_por_demanda` y `control_temporal`; el plan agrega `supuestos[]`, `parametros.calculadas`, `resumen.calculadas` y tres pasos antes de «Qué no mide este plan». La pantalla los dibuja: pares viales (azul), pasos por demanda (turquesa) y esquinas de control temporal (círculos punteados), con sus pasos en el recorrido.
+
+Lo robusto y lo que depende de los supuestos (El Salao, `experimentos.py calculadas`): el número y la ubicación de los pasos por demanda no cambian con d0 ni con los carriles, y siempre bajan el alargamiento frente a la regla de 500 m. Las esquinas de control temporal sí cambian con d0, y la capacidad, con un carril más por calle.
 
 ## 4. Resultados de El Salao
 
@@ -96,18 +116,19 @@ proyecto_obras/
   src/osm.py           lectura y descarga de OpenStreetMap
   src/comparacion.py   voraz contra fuerza bruta (k = 2)
   src/control.py       control del lado por componentes conexas
+  src/supuestos.py     todos los supuestos de las propuestas calculadas (valor, rango, fuente y estado)
+  src/demanda.py       demanda supuesta (modelo de gravedad), desvío ponderado, voraz ponderado y su fuerza bruta
+  src/circulacion.py   propuestas calculadas: capacidad (corte mínimo), pares viales, pasos por demanda, control temporal
   herramientas/        plan_etapas.py, figuras_plan.py, eje_de_calle.py, experimentos.py, diagnostico_sin_camino.py, descargar_mapa.py
   datos/               ejemplos/, cache/ (calles guardadas), arroyo_el_salao.csv (eje del ejemplo), archivo_arroyos/ (histórico, no se usa)
   resultados/          salidas generadas; figuras/ (mapa y barras del plan); linea_base/ son las cifras de referencia de El Salao
-  tests/               101 pruebas (API sin red, caso resuelto a mano, regresión contra linea_base, robustez, etapas, obras)
+  tests/               144 pruebas (API sin red, caso resuelto a mano, regresión contra linea_base, robustez, etapas, obras,
+                       flujo máximo, demanda, circulación y propuestas calculadas)
   documento/main.tex, main.pdf                  documento en LaTeX (entrega)
-  documento/diapositivas.tex, diapositivas.pdf  diapositivas en Beamer (entrega)
-  documento/Obras viales por etapas El Salao.pptx   diapositivas originales de Gustavo (PowerPoint), base de las de Beamer
-  documento/guion.txt  guion de la presentación (10 min, 5 expositores)
   documento/preguntas.md  preguntas y respuestas de la sustentación
 ```
 
-**Contrato `POST /api/plan`** (no romperlo: el JSON solo se agranda). Pedido: `{lineas, radio, luz_max, etapa_max_m (300–2000, 1000), un_puente_cada_m (200–1000, 500), cerrar_puentes (true), ancho_m (10–60, 10), medicion ("lados"), abiertos, cerrados}`. Respuesta: `obra`, `parametros`, `semaforos_conocidos`, `resumen`, `etapas[]` (con `eje`, `tramos_cerrados`, `peatones`, `vehiculos`, `rutas[]`, `carga[]`), `pasos[]`, `tiempos`, `recuadro`, `fuente`, `aviso_zona` y `en_cache`. Errores en JSON: 400 (pedido inválido o zona demasiado grande) y 503 (no se pudo descargar el mapa). Ejemplo real: `resultados/plan_etapas.json`.
+**Contrato `POST /api/plan`** (no romperlo: el JSON solo se agranda). Pedido: `{lineas, radio, luz_max, etapa_max_m (300–2000, 1000), un_puente_cada_m (200–1000, 500), cerrar_puentes (true), ancho_m (10–60, 10), medicion ("lados"), abiertos, cerrados}`. Respuesta: `obra`, `parametros`, `semaforos_conocidos`, `resumen`, `etapas[]` (con `eje`, `tramos_cerrados`, `peatones`, `vehiculos`, `rutas[]`, `carga[]`), `pasos[]`, `tiempos`, `recuadro`, `fuente`, `aviso_zona` y `en_cache`. Errores en JSON: 400 (pedido inválido o zona demasiado grande) y 503 (no se pudo descargar el mapa). Ejemplo real: `resultados/plan_etapas.json`. Opcional (sección 3b): `propuestas_calculadas` (true; con false la respuesta es la de antes) y `d0_m` (200–1000, 400).
 
 **Datos:** calles © colaboradores de OpenStreetMap (ODbL), descargadas en noviembre de 2026 para el recuadro 10,84–11,12 N y 74,96–74,73 O (Barranquilla, Soledad, Malambo, Puerto Colombia y Galapa). Si la obra queda fuera de lo guardado, se descargan las calles de Overpass a `datos/cache/` (puede tardar minutos).
 
@@ -115,15 +136,15 @@ proyecto_obras/
 
 | Persona | Parte | Estado |
 |---|---|---|
-| Oscar | Ejemplo de obra (calle 72), integración, documento, Beamer, guion, limpieza final, esta documentación | Hecho |
+| Oscar | Ejemplo de obra (calle 72), integración, documento, limpieza final, esta documentación | Hecho |
 | Karel | Refactor de arroyo a obra y `/api/plan` | Hecho (R1 a R6). Opcionales sin hacer: `medicion="afectados"` y pasos peatonales casi perpendiculares |
 | Lobo | Pantalla: menú, recorrido, resultados, pantalla pequeña | Hecho |
 | Blanco | Pruebas, robustez de `app.py`, revisión de textos | Hecho |
-| Gustavo | Diapositivas (PowerPoint), base de las de Beamer | Hecho. Las figuras (`herramientas/figuras_plan.py`) y `tests/test_app.py` quedaron integradas |
+| Gustavo | Diapositivas (aparte, fuera del repositorio) | Hecho. Las figuras (`herramientas/figuras_plan.py`) y `tests/test_app.py` quedaron integradas |
 
 ## 7. Lo que falta
 
-**Entrega (Brightspace):** subir `proyecto_obras/documento/main.pdf` y `proyecto_obras/documento/diapositivas.pdf`. Los dos tienen el enlace al repositorio y se compilan con `pdflatex main.tex` y `pdflatex diapositivas.tex` (dos veces cada uno) desde `documento/`.
+**Entrega (Brightspace, martes 17 de noviembre):** subir `proyecto_obras/documento/main.pdf` (tiene el enlace al repositorio; se compila con `pdflatex main.tex` dos veces desde `documento/`) y las diapositivas, que se preparan aparte.
 
 **Pendiente de verificar** (en `main.tex` ya están escritos como «pendiente de verificar», sin recuadros rojos):
 1. Cruces cerrados de El Salao (calle 61, carrera 22D, calle 59A, calle 60, calle 67A, calle 75 y la vía local junto al eje, que en OSM se llama «Arroyo El Salao»): confirmar en Street View que cruzan el arroyo.
@@ -132,7 +153,7 @@ proyecto_obras/
 **Fuentes del documento sin abrir todavía.** Los datos de la canalización (CRA, 2022 y 2023; El Heraldo, 12 de noviembre de 2026), del taxi arrastrado (El Heraldo, 18 de octubre de 2026) y de la población de Soledad (DANE, censo 2018, 535.984 habitantes) salieron de dos informes de IA. Antes de la sustentación hay que abrir los enlaces de la bibliografía y confirmar que dicen eso. No hay cifra de habitantes del sector ni costo de la obra con fuente.
 
 **Antes de la sustentación (lunes 16, 3:47 p. m.)**
-- Ensayo cronometrado de los 10 minutos con `documento/guion.txt` y la demo en el mismo computador que se va a usar.
+- Ensayo cronometrado de los 10 minutos y la demo en el mismo computador que se va a usar.
 - Cerrar cualquier `python app.py` viejo, abrir uno solo y cargar `/?ejemplo` antes de entrar (sección 2).
 - Estudiar `documento/preguntas.md`: cada integrante debe poder responder todo.
 - Capturas de la app como respaldo por si falla la demo (opcional).
@@ -143,7 +164,7 @@ proyecto_obras/
 - Claves heredadas del JSON (`arroyo`, `cauce`, `lluvia_m`) y el `User-Agent` de `osm.py`: se dejaron para no romper el contrato de `/api/plan`.
 - Probar en un teléfono real y con alguien que planifique una obra sin explicación.
 
-**Hecho en la última revisión:** documento reescrito al tema de obras por etapas con el caso resuelto a mano; diapositivas en Beamer; guion de 10 minutos con la fuente de cada cifra; figuras; pruebas de la API (incluido un error 500 corregido en `app.py`); plurales, acentos en Windows, favicon, `aviso_zona` visible y textos sin jerga en la pantalla; limpieza del código de arroyos (`/api/arroyos`, `--arroyo`, `--listar` y alias) sin cambiar ninguna cifra; README probado en un clon limpio.
+**Hecho en la última revisión:** documento reescrito al tema de obras por etapas con el caso resuelto a mano; figuras; pruebas de la API (incluido un error 500 corregido en `app.py`); plurales, acentos en Windows, favicon, `aviso_zona` visible y textos sin jerga en la pantalla; limpieza del código de arroyos (`/api/arroyos`, `--arroyo`, `--listar` y alias) sin cambiar ninguna cifra; README probado en un clon limpio.
 
 **Definición de `ancho_m`:** se mide desde el eje hacia cada lado. Con 10, la franja mide 20 m de borde a borde; así está escrito en el documento.
 

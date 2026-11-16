@@ -10,9 +10,12 @@ Experimentos:
     sensibilidad  luz máxima del puente y tamaño y posición de la muestra de esquinas
     control       lado por producto cruz contra componentes conexas
     histograma    distribución del desvío por par, antes y después de las medidas
+    calculadas    sensibilidad de las propuestas calculadas (d0, carriles y capacidad por carril)
 
 Cada uno guarda un .json y un .md (tabla lista para el informe) en resultados/experimentos/.
 Los resultados oficiales de resultados/analisis.json no se tocan.
+Excepción: «calculadas» solo imprime; con --salida <carpeta> guarda su .json y .md en esa carpeta
+(nunca en resultados/):  python herramientas/experimentos.py calculadas --salida /tmp/sensibilidad
 """
 import json
 import sys
@@ -320,17 +323,108 @@ def dibujar_histograma(datos, ruta):
     print(f"  -> {ruta.relative_to(RAIZ)}")
 
 
+# --------------------------------------------------- sensibilidad de las propuestas calculadas
+def _resumen_calculadas(plan):
+    """Lo que se compara entre variantes: pasos (posiciones), controles, pares y capacidad, por etapa."""
+    res = []
+    for e in plan["etapas"]:
+        pd, c = e["pasos_por_demanda"], e["circulacion"]
+        res.append(dict(
+            pasos=sorted(q["pos_m"] for q in (pd or {}).get("pasos", [])),
+            controles=sorted(q["nombre"] for q in e["control_temporal"]["esquinas"]),
+            pares=[(tuple(p["calles"]), p["elegida"]) for p in e["pares_viales"]["pares"]],
+            capacidad=None if not c else (c["capacidad"]["obra"]["a_b"], c["capacidad"]["obra"]["b_a"]),
+            demanda_mejor_que_regla=None if not c else (
+                c["peatones"]["con_pasos_por_demanda"]["desvio_positivo_m"]
+                <= c["peatones"]["con_pasos_regla_500m"]["desvio_positivo_m"])))
+    return res
+
+
+def exp_calculadas(salida=None):
+    """Recalcula las propuestas de El Salao cambiando un supuesto a la vez y dice qué cambia.
+
+    - d0_m: 200, 400 (base) y 1000 m.
+    - carriles: ±1 en las calles SIN etiqueta lanes de OSM (las que usan el supuesto por clase).
+    - veh_h_carril: 600, 950 y 1900. No hace falta recalcular: es el mismo número en todas las calles, así
+      que solo multiplica la capacidad (el corte mínimo en carriles y el orden de las alternativas no cambian).
+    """
+    from src.etapas import plan_por_etapas
+    from src.supuestos import SUPUESTOS
+    print("Sensibilidad de las propuestas calculadas (El Salao): unos 50 s")
+    lineas = fuente.lineas_ejemplo()
+    recuadro, _ = fuente.recuadro_de(lineas, RADIO)
+    red, _ = fuente.red_para(recuadro)
+    base_d0 = SUPUESTOS["d0_m"].valor
+
+    def plan(d0):
+        return _resumen_calculadas(plan_por_etapas(red, lineas, radio=RADIO, recuadro=recuadro,
+                                                   propuestas_calculadas=True, d0_m=d0))
+
+    variantes = {f"d0 = {base_d0} m (base)": plan(base_d0)}
+    for d0 in (200, 1000):
+        variantes[f"d0 = {d0} m"] = plan(d0)
+    originales = {t.id: t.carriles_total for t in red.tramos if not t.carriles_de_osm}
+    try:
+        for delta in (-1, +1):
+            for t in red.tramos:
+                if t.id in originales:
+                    t.carriles_total = max(1, originales[t.id] + delta)
+            variantes[f"carriles {delta:+d} (sin lanes en OSM)"] = plan(base_d0)
+    finally:
+        for t in red.tramos:
+            if t.id in originales:
+                t.carriles_total = originales[t.id]
+    base = variantes[f"d0 = {base_d0} m (base)"]
+    filas, datos = [], {}
+    for nombre, v in variantes.items():
+        for k, (e, b) in enumerate(zip(v, base)):
+            cambios = [clave for clave in ("pasos", "controles", "pares", "capacidad", "demanda_mejor_que_regla")
+                       if e[clave] != b[clave]]
+            filas.append([nombre, k + 1, len(e["pasos"]), ", ".join(e["controles"]) or "-",
+                          "-" if e["capacidad"] is None else f"{e['capacidad'][0]} / {e['capacidad'][1]}",
+                          "sí" if e["demanda_mejor_que_regla"] else "no",
+                          "igual a la base" if not cambios else "cambia: " + ", ".join(cambios)])
+        datos[nombre] = v
+    md = ("Cada fila cambia un solo supuesto. «Cambia» lista qué propuestas son distintas a las de la base "
+          "(si no cambia ninguna con ese supuesto, la propuesta es robusta frente a él).\n"
+          "veh_h_carril (600, 950, 1900) no se recalcula: multiplica igual a todas las calles y no cambia el orden.\n\n"
+          + tabla(["Variante", "Etapa", "Pasos por demanda", "Control temporal", "Carriles con obra (A->B / B->A)",
+                   "Demanda mejor que la regla de 500 m", "Comparado con la base"], filas))
+    print(md)
+    for clave in ("pasos", "controles", "capacidad", "demanda_mejor_que_regla"):
+        robusta = all(v[k][clave] == base[k][clave] for v in variantes.values() for k in range(len(base)))
+        print(f"  {clave}: {'robusta' if robusta else 'depende de los supuestos'}")
+    if salida:
+        carpeta = Path(salida)
+        if (RAIZ / "resultados") in [carpeta.resolve(), *carpeta.resolve().parents]:
+            raise SystemExit("--salida no puede estar dentro de resultados/")
+        carpeta.mkdir(parents=True, exist_ok=True)
+        (carpeta / "sensibilidad_calculadas.json").write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")
+        (carpeta / "sensibilidad_calculadas.md").write_text(md, encoding="utf-8")
+        print(f"  -> {carpeta}/sensibilidad_calculadas.json y .md")
+
+
 EXPERIMENTOS = dict(voraz=exp_voraz, criticos=exp_criticos, sensibilidad=exp_sensibilidad,
                     control=exp_control, histograma=exp_histograma)
+# Solo cuando se pide por nombre (no está en «todos»): no escribe en resultados/.
+A_PEDIDO = dict(calculadas=exp_calculadas)
 
 if __name__ == "__main__":
     if hasattr(sys.stdout, "reconfigure"):  # acentos bien en Windows con salida redirigida
         sys.stdout.reconfigure(encoding="utf-8")
-    pedidos = sys.argv[1:] or list(EXPERIMENTOS)
-    desconocidos = [p for p in pedidos if p not in EXPERIMENTOS]
+    argumentos, salida = sys.argv[1:], None
+    if "--salida" in argumentos:
+        i = argumentos.index("--salida")
+        if i + 1 >= len(argumentos):
+            raise SystemExit("Falta la carpeta después de --salida")
+        salida = argumentos[i + 1]
+        argumentos = argumentos[:i] + argumentos[i + 2:]
+    pedidos = argumentos or list(EXPERIMENTOS)
+    todos = {**EXPERIMENTOS, **A_PEDIDO}
+    desconocidos = [p for p in pedidos if p not in todos]
     if desconocidos:
-        raise SystemExit(f"Experimento desconocido: {desconocidos}. Opciones: {', '.join(EXPERIMENTOS)}")
+        raise SystemExit(f"Experimento desconocido: {desconocidos}. Opciones: {', '.join(todos)}")
     for nombre in pedidos:
         t = time.time()
-        EXPERIMENTOS[nombre]()
+        todos[nombre](salida) if nombre in A_PEDIDO else todos[nombre]()
         print(f"  ({time.time() - t:.0f} s)\n")
