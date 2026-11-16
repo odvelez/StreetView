@@ -120,7 +120,7 @@ proyecto_obras/
   src/demanda.py       demanda supuesta (modelo de gravedad), desvío ponderado, voraz ponderado y su fuerza bruta
   src/circulacion.py   propuestas calculadas: capacidad (corte mínimo), pares viales, pasos por demanda, control temporal
   herramientas/        plan_etapas.py, figuras_plan.py, eje_de_calle.py, experimentos.py, diagnostico_sin_camino.py, descargar_mapa.py
-  datos/               ejemplos/, cache/ (calles guardadas), arroyo_el_salao.csv (eje del ejemplo), archivo_arroyos/ (histórico, no se usa)
+  datos/               ejemplos/, cache/ (calles guardadas), arroyo_el_salao.csv (eje del ejemplo)
   resultados/          salidas generadas; figuras/ (mapa y barras del plan); linea_base/ son las cifras de referencia de El Salao
   tests/               144 pruebas (API sin red, caso resuelto a mano, regresión contra linea_base, robustez, etapas, obras,
                        flujo máximo, demanda, circulación y propuestas calculadas)

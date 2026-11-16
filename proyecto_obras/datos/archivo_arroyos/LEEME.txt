@@ -1,6 +1,0 @@
-Archivo histórico. El proyecto empezó analizando arroyos del área metropolitana de Barranquilla;
-hoy planifica obras viales por etapas y el programa ya no lee este archivo.
-
-arroyos_area_metropolitana.json: cauces de OpenStreetMap (© colaboradores de OpenStreetMap, ODbL)
-con su nombre, descargados con herramientas/descargar_mapa.py.
-El eje del ejemplo de El Salao está en datos/arroyo_el_salao.csv.
