@@ -60,7 +60,7 @@ def red_para(recuadro):
 
 
 def lineas_ejemplo():
-    """Eje de la obra de canalización del arroyo El Salao en Soledad (caso de estudio del documento)."""
+    """Eje de la obra de canalización del arroyo El Salao en Soledad (caso de estudio)."""
     with open(osm.DATOS / "arroyo_el_salao.csv", newline="", encoding="utf-8") as f:
         segs = [[(float(r["lat1"]), float(r["lon1"])), (float(r["lat2"]), float(r["lon2"]))]
                 for r in csv.DictReader(f)]

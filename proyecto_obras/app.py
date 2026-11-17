@@ -7,7 +7,7 @@ Uso:
 
 Rutas:
   GET  /               la página (carpeta web/)
-  GET  /api/ejemplo    eje de la canalización de El Salao en Soledad, caso de estudio del documento
+  GET  /api/ejemplo    eje de la canalización de El Salao en Soledad, caso de estudio
   GET  /api/ejemplo_obra  obra ilustrativa en la calle 72 (datos/ejemplos/obra_ilustrativa.json)
   POST /api/analizar   recibe el eje de una obra y devuelve el análisis de toda la obra a la vez (src/analisis.py)
   POST /api/plan       recibe el eje de una obra y devuelve el plan por etapas (src/etapas.py); con

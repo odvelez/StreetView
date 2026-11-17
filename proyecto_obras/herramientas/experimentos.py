@@ -1,4 +1,4 @@
-"""Experimentos de la prioridad 2 para el caso de estudio (El Salao).
+"""Experimentos y comprobaciones del modelo para el caso de estudio (El Salao).
 
 Uso (desde proyecto_obras/):
     python herramientas/experimentos.py                 # todos
@@ -29,7 +29,7 @@ from src import analisis, fuente
 from src.analisis import analizar, medir, tablas
 from src.comparacion import comparar
 from src.control import control_de_lados, lados_de_zona, lados_por_distancia
-from src.grafo import INF, intermediacion
+from src.grafo import intermediacion
 
 SALIDA = RAIZ / "resultados" / "experimentos"
 RADIO = 400

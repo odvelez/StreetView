@@ -1,4 +1,4 @@
-"""Pruebas de la API (app.py) y del caso resuelto a mano del documento.
+"""Pruebas de la API (app.py) y del caso resuelto a mano.
 
 Ejecutar:  python -m unittest tests.test_app -v
 
@@ -143,7 +143,7 @@ class PlanDeElSalao(unittest.TestCase):
 
 
 class CasoResueltoAMano(unittest.TestCase):
-    """El caso de la sección 4 del documento (documento/main.tex), calculado a mano.
+    """Caso de seis esquinas calculado a mano.
 
     Seis esquinas: A, B, C al norte de la obra y D, E, F al sur. Cuadras de 100 m a lo largo de cada
     lado (A-B, B-C, D-E, E-F) y tres cruces: A-D (80 m), B-E (50 m) y C-F (50 m). Grafo no dirigido

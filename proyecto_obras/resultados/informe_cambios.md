@@ -1,12 +1,12 @@
-# Informe de cambios: prioridad 2 (modelo y código)
+# Experimentos y comprobaciones del modelo
 
-Caso de estudio: arroyo El Salao, Soledad. Todo se puede reproducir desde `proyecto_obras/`:
+Caso de estudio: El Salao, Soledad. Todo se puede reproducir desde `proyecto_obras/`:
 
 ```
 python main.py                              # resultados oficiales (resumen.txt, analisis.json, mapa.png)
 python herramientas/diagnostico_sin_camino.py   # hipótesis de los 240 pares
 python herramientas/experimentos.py         # voraz, críticos, sensibilidad, control, histograma (unos 8 min)
-python -m unittest                          # 30 pruebas (22 originales + 8 nuevas)
+python -m unittest                          # pruebas
 ```
 
 La línea base anterior a los cambios está en `resultados/linea_base/`. **Los resultados oficiales no cambiaron**: `analisis.json` nuevo y la línea base son idénticos campo por campo, salvo dos campos agregados (`desvio_fijo_m` y `recuperados`).
@@ -83,7 +83,7 @@ Objetivo = (pares sin camino, desvío medio en m). Menor es mejor.
 
 **Resultado:** en los dos casos el voraz **elige la misma pareja que el óptimo**; la diferencia es 0 pares y 0 m.
 
-**Límites, que deben ir en el documento:**
+**Límites:**
 
 - Es una cota **empírica** para este caso y k = 2. No demuestra que el voraz sea óptimo en general.
 - El voraz solo recomienda medidas que mejoran al menos 2 %; la fuerza bruta no tiene ese umbral.
@@ -202,7 +202,7 @@ Se varió la luz máxima del puente peatonal y el tamaño y la posición de la m
 - **Peatones, muestra:** el desvío con lluvia es 68,7–70,9 m según el tamaño; con 3 puentes, 23,8–27,9 m. Con todas las esquinas da **27,6 m** (la muestra oficial da 26,1). Conviene decir «entre 22 y 28 m».
 - **Vehículos, pares sin camino:** con 120 esquinas por lado depende de la posición de la muestra: 240, 120, 120, 0 y 0 pares. Con todas las esquinas es 0,37 %. **No debe presentarse «240 pares» como una cifra del problema.**
 - **Vehículos, medida recomendada: no es estable.** De cinco posiciones de la muestra de 120, tres recomiendan una rampa junto a la avenida Murillo (en distintos sentidos: 6 m, 6 m al revés y 4 m); una recomienda tres arcos en la avenida Circunvalar; y una no recomienda ninguna. Con todas las esquinas, el desvío medio **no baja** con las medidas (133,4 → 133,4 m) y solo bajan los pares sin camino (de 2.170 a 508).
-- **Conclusión para el documento:** para peatones, la recomendación es sólida. Para vehículos, el cambio de sentido **no mejora el desvío medio de forma confiable**; su único efecto es abrir acceso a unas pocas esquinas sin salida, y la calle concreta depende de la muestra.
+- **Conclusión:** para peatones, la recomendación es sólida. Para vehículos, el cambio de sentido **no mejora el desvío medio de forma confiable**; su único efecto es abrir acceso a unas pocas esquinas sin salida, y la calle concreta depende de la muestra.
 
 ## 2e. Control del lado: producto cruz contra componentes conexas
 
@@ -241,110 +241,3 @@ Desvío = distancia con el escenario − distancia en seco, en metros, por par c
 
 - **Peatones:** con las medidas, la mediana baja de 26,7 a 1,1 m y el P99 de 491 a 245 m. El 9,6 % de los pares queda **más corto que en la red seca**, porque los pasos nuevos son atajos. Por eso el desvío medio de 26 m **mezcla pérdida recuperada con atajos nuevos**; conviene decirlo.
 - **Vehículos:** las dos distribuciones son casi idénticas (mediana 33,7 m, P90 404 m). El 23,4 % de los pares sigue con más de 200 m de desvío.
-
-## 3. Pruebas
-
-Las **22 pruebas originales siguen en verde**. Se agregaron **8** en `tests/test_mejoras.py` (30 en total):
-
-| Prueba | Qué comprueba |
-|---|---|
-| desvío fijo sin referencia | es igual al desvío medio |
-| desvío fijo con referencia | nunca sube al agregar una medida y recupera pares |
-| recuperados en el informe | `recuperados` = pares sin camino con lluvia − con medida |
-| arcos complementarios | el voraz no elige nada y la fuerza bruta sí (resuelto a mano: 4 m) |
-| voraz = óptimo en el barrio | en la red miniatura coinciden |
-| fuerza bruta = Dijkstra desde cero | el objetivo de la mejor pareja es exacto |
-| control: barrera total | norte y sur quedan en 2 componentes, acuerdo 100 % |
-| control: puente abierto | una componente mezclada, acuerdo 50 % |
-
-## 4. Cifras del `.tex` que cambiaron
-
-**Ninguna.** Todas las cifras de `documento/main.tex` salen de `analisis.json` / `resumen.txt`, que no cambiaron. No se editó el `.tex`.
-
-Sí hay **frases que conviene reescribir** (decisión de Persona 3, con estos resultados confirmados):
-
-| Dónde | Frase actual | Por qué conviene cambiarla |
-|---|---|---|
-| Resumen | «240 pares de esquinas quedan sin camino» | Son 2 esquinas de la muestra; con todas las esquinas, 0,37 % de los pares |
-| Resumen | «devuelve el camino a la mitad de esos pares» | Los 120 pares tienen desvío negativo: es un camino nuevo, no el que se perdió |
-| Resultados, «Doble sentido» | la calle de 6 m «devuelve el camino a la mitad de los pares» | Idem; además es una rampa (`primary_link`) y debe verificarse |
-| Resultados, conclusión | «el cambio de sentido ayuda poco al desvío medio» | Es correcto y se puede reforzar con la sensibilidad (no es estable) |
-| Solución y algoritmos | «no garantiza el óptimo» | Se puede citar la comparación con fuerza bruta |
-| Limitaciones | – | Agregar: la muestra de 120 esquinas cambia la recomendación vehicular |
-
-## 5. Pendientes que requieren al equipo
-
-**Persona 2 (datos y verificación):**
-
-- [ ] **Street View de las esquinas A y B y de la rampa de 6 m.** Ver si B (junto a la avenida Murillo) es de verdad una rampa de un solo sentido y si invertirla es realista. Enlaces OSM en la sección 1.
-- [ ] **Street View de los cruces bloqueados** (lista en el README). Si alguno sí se puede pasar, marcarlo como abierto en la web y avisar a Persona 1 para volver a correr.
-- [ ] Población afectada, noticias del 4 de noviembre, canalización anunciada, emergencias previas: **con fuente**. No hay nada de esto en el código.
-- [ ] Confirmar si la calle 72 (la que más gana intermediación con lluvia) coincide con lo que se vio o se reportó.
-
-**Persona 3 (documento):**
-
-- [ ] Reescribir las frases de la sección 4 según lo que Persona 2 confirme.
-- [ ] Decidir cómo presentar las medidas vehiculares: como resultado sensible a la muestra, no como una recomendación firme.
-- [ ] Interpretación y conclusiones propias (`\completar`): este informe da los hechos, no las conclusiones del grupo.
-
-**Persona 1 / equipo:**
-
-- [ ] **El caso de prueba a mano** sigue pendiente: lo tienen que resolver ustedes en papel. Lo que hay en `tests/` lo escribió el código, no el grupo.
-- [ ] Decidir si la sección del documento incluye la intermediación (2b) y la sensibilidad (2d) o solo se mencionan.
-- [ ] Preparar para la sustentación: ¿por qué el voraz coincide con el óptimo aquí pero puede fallar en general? ¿por qué la media vehicular no mejora?
-- [ ] Si se vuelve a correr algo después de revisar Street View, repetir `main.py` y `experimentos.py` y actualizar el `.tex`.
-
-## 6. Archivos nuevos o cambiados
-
-| Archivo | Cambio |
-|---|---|
-| `src/analisis.py` | `desvio_fijo_m`, `recuperados`, parámetro `ref` en `medir`, parámetro `contexto` en `analizar`, `DESFASE_MUESTRA` (valor 0 = comportamiento anterior) |
-| `src/comparacion.py` | **nuevo**: fuerza bruta y comparación con el voraz |
-| `src/control.py` | **nuevo**: control del lado por componentes conexas |
-| `main.py` | imprime pares recuperados y desvío fijo |
-| `herramientas/diagnostico_sin_camino.py` | **nuevo**: hipótesis de los 240 pares |
-| `herramientas/experimentos.py` | **nuevo**: los cinco experimentos |
-| `tests/test_mejoras.py` | **nuevo**: 8 pruebas |
-| `resultados/linea_base/` | **nuevo**: resultados antes de los cambios |
-| `resultados/experimentos/` | **nuevo**: JSON y tablas de cada experimento |
-| `resultados/histograma_desvios.png` | **nuevo** |
-| `resultados/analisis.json`, `resumen.txt` | regenerados: mismos valores, más dos campos |
-
-
----
-
-## 7. Plan de canalización por etapas (nuevo, viernes 13 por la noche)
-
-El grupo decidió cambiar el enfoque: en lugar de simular solo una creciente, la app **planifica la obra por etapas**. Código en `src/etapas.py`; se corre con `python herramientas/plan_etapas.py`; resultado en `resultados/plan_etapas.txt` y `.json` (copia en `resultados/linea_base/`).
-
-**Cómo funciona**
-
-- Número de etapas = ceil(largo del cauce / largo máximo de etapa). Con 1.000 m de máximo, El Salao (2.386 m) queda en **3 etapas** (975, 850 y 561 m).
-- Los cortes se eligen con programación dinámica: ninguna etapa pasa del máximo y se reparte parejo el número de cruces.
-- En cada etapa se cierran los tramos que tocan el cauce **dentro de ese tramo** (el resto sigue abierto), también los puentes existentes (opción `cerrar_puentes`).
-- **Puentes peatonales temporales:** uno por cada 500 m de obra (mínimo 1), elegidos con el voraz y con una separación mínima de 250 m entre ellos. El Salao: 2, 2 y 1 = **5 puentes**.
-- **Cambios de sentido** por etapa (hasta 2), **rutas alternas** y **esquinas con más recorridos desviados**, con la información de si ya tienen semáforo (OpenStreetMap trae 29 semáforos en la zona; se leen de las descargas guardadas, sin descargar nada nuevo).
-- `pasos_del_plan` arma los pasos para el recorrido de la pantalla (cifra grande, detalle, capas y foco del mapa).
-
-**Resultado en El Salao (con la obra cerrando también los puentes existentes)**
-
-| Etapa | Tramo | Cruces cerrados | Desvío a pie con la obra | Con puentes | Puentes |
-|---|---|---|---|---|---|
-| 1 | metro 0 a 975 | 24 (3 son puentes existentes) | 387 m | 48 m | 2 |
-| 2 | metro 975 a 1825 | 24 (1) | 129 m | 28 m | 2 |
-| 3 | metro 1825 a 2386 | 26 (5) | 219 m | 56 m | 1 |
-
-Con `--mantener-puentes` (los puentes existentes siguen abiertos) los desvíos a pie con la obra bajan a 68, 56 y 36 m. **Es el supuesto que más pesa en las cifras y el grupo debe decidirlo y justificarlo.**
-
-**Límites que deben decirse**
-
-- No hay datos de volumen de tránsito: no se mide congestión. La «carga» de una esquina es cuántos recorridos desviados de la muestra pasan por ella.
-- No se diseñan carriles ni tiempos de semáforo. Las esquinas sin semáforo registrado son **candidatas** a control de tráfico, no una recomendación firme (OpenStreetMap puede estar incompleto).
-- La muestra es de 60 esquinas por lado en cada etapa, dentro de una ventana de 250 m a lo largo del cauce.
-- En la etapa 3 hay 644 pares de vehículos sin camino (584 con la medida): son las rampas aisladas de la avenida Murillo (sección 1); no es una cifra del problema.
-- Las esquinas a controlar de una misma etapa suelen ser cruces consecutivos de un mismo corredor.
-- Todo debe verificarse en terreno.
-
-**Corrección en el voraz (sin efecto en los resultados oficiales).** El umbral de mejora `desvío × (1 − 2 %)` se invertía con desvíos medios negativos (posibles con atajos nuevos). Ahora es `desvío − (|desvío| × 2 % + 0,5)`, idéntico al anterior cuando el desvío es positivo: `analisis.json` no cambió.
-
-**Pruebas:** 44 en total (22 originales + 8 de `test_mejoras.py` + 14 de `test_etapas.py`).

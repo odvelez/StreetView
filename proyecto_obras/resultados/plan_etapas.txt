@@ -10,11 +10,11 @@ ETAPA 1: metro 0 al 975 (975 m)
      paso peatonal 2: Carrera 21C <-> Calle 78D x Carrera 21C (paso nuevo, 29 m, metro 246 de la obra)
   En carro: desvío medio 332 m; pares sin camino 60 -> 0; desvío medio sobre los mismos pares 332 -> 332 m.
      doble sentido 1: Calle 77, Calle 77 -> Calle 77 x Carrera 22B (16 m, metro 431)
-     ruta alterna Calle 77             a pie 16 -> 1554
-     ruta alterna esquina cerca de Calle 78F a pie 8 -> 1065
-     ruta alterna Calle 75C            a pie 101 -> 741
+     ruta alterna Calle 77             a pie 16 -> 656
+     ruta alterna esquina cerca de Calle 78F a pie 8 -> 600
      ruta alterna Calle 75B            a pie 108 -> 550
      ruta alterna Calle 75             carro 118 -> 483   a pie 83 -> 515
+     ruta alterna Calle 75C            a pie 101 -> 369
      ruta alterna Calle 74             carro 152 -> 371
      esquina a controlar: Calle 73 x Carrera 19A (3545 recorridos desviados, 61.1 %, SIN semáforo registrado)
      esquina a controlar: Calle 73 x Carrera 21 (3521 recorridos desviados, 60.7 %, SIN semáforo registrado)
@@ -23,18 +23,18 @@ ETAPA 1: metro 0 al 975 (975 m)
      esquina a controlar: Calle 74 x Carrera 21 (3521 recorridos desviados, 60.7 %, SIN semáforo registrado)
 
 ETAPA 2: metro 975 al 1825 (850 m)
-  Cierra 24 cruces (1 son puentes existentes); 56 tramos en total.
+  Cierra 24 cruces (1 es un puente existente); 56 tramos en total.
   A pie: desvío medio 129 m -> 28 m con 2 de 2 pasos peatonales (máximo 797 -> 372 m).
      paso peatonal 1: Calle 72 <-> Calle 72 (cruce de la Calle 72, 11 m, metro 1181 de la obra)
      paso peatonal 2: Calle 67 x Carrera 23 <-> Carrera 22D (cruce de la Calle 67, 132 m, metro 1608 de la obra)
   En carro: desvío medio 287 m; pares sin camino 0 -> 0; desvío medio sobre los mismos pares 287 -> 279 m.
      doble sentido 1: Avenida Circunvalar, Avenida Circunvalar -> Avenida Circunvalar (187 m, metro 1829)
-     ruta alterna Vía local junto al eje (en OSM: Arroyo El Salao) carro 102 -> 1776   a pie 102 -> 1137
-     ruta alterna Carrera 22A          carro 173 -> 1761   a pie 173 -> 725
-     ruta alterna Carrera 22D          carro 169 -> 1675   a pie 169 -> 1164
-     ruta alterna Calle 72             carro 11 -> 897   a pie 11 -> 760
-     ruta alterna Calle 67A            carro 153 -> 1035   a pie 153 -> 1025
-     ruta alterna Calle 67             carro 189 -> 1004   a pie 132 -> 790
+     ruta alterna Vía local junto al eje (en OSM: Arroyo El Salao) carro 102 -> 1776   a pie 102 -> 521
+     ruta alterna Carrera 22A          carro 173 -> 1761   a pie 173 -> 543
+     ruta alterna Carrera 22D          carro 169 -> 1675   a pie 169 -> 548
+     ruta alterna Calle 72             carro 11 -> 897   a pie 11 -> 11
+     ruta alterna Calle 67A            carro 153 -> 1035   a pie 153 -> 409
+     ruta alterna Calle 67             carro 189 -> 1004   a pie 132 -> 132
      esquina a controlar: Calle 75 x Carrera 21 (4410 recorridos desviados, 72.5 %, SIN semáforo registrado)
      esquina a controlar: Calle 75 x Carrera 21A (4410 recorridos desviados, 72.5 %, SIN semáforo registrado)
      esquina a controlar: Calle 74 x Carrera 19A (3230 recorridos desviados, 53.1 %, SIN semáforo registrado)
@@ -43,20 +43,105 @@ ETAPA 2: metro 975 al 1825 (850 m)
 
 ETAPA 3: metro 1825 al 2386 (561 m)
   Cierra 26 cruces (5 son puentes existentes); 27 tramos en total.
-  A pie: desvío medio 219 m -> 56 m con 1 de 1 pasos peatonales (máximo 987 -> 478 m).
+  A pie: desvío medio 219 m -> 56 m con 1 de 1 paso peatonal (máximo 987 -> 478 m).
      paso peatonal 1: esquina cerca de Calle 62 <-> Calle 62 x Carrera22B (cruce de la esquina cerca de Calle 62, 38 m, metro 1995 de la obra)
   En carro: desvío medio 293 m; pares sin camino 644 -> 584; desvío medio sobre los mismos pares 293 -> 293 m.
      doble sentido 1: Avenida Murillo, Avenida Murillo -> Avenida Murillo x Carrera 22A (52 m, metro 1880)
-     ruta alterna Calle 61             carro 120 -> 1895   a pie 120 -> 1107
-     ruta alterna esquina cerca de Calle 62 a pie 38 -> 1115
-     ruta alterna Avenida Murillo      a pie 14 -> 992
-     ruta alterna esquina sin nombre   a pie 14 -> 986
-     ruta alterna Calle 60             carro 132 -> sin ruta   a pie 132 -> 1036
-     ruta alterna Calle 59A            carro 177 -> sin ruta   a pie 46 -> 918
+     ruta alterna Calle 61             carro 120 -> 1895   a pie 120 -> 217
+     ruta alterna Calle 59A            carro 177 -> sin ruta   a pie 46 -> 576
+     ruta alterna Avenida Murillo      a pie 14 -> 511
+     ruta alterna Calle 58A            a pie 50 -> 529
+     ruta alterna esquina sin nombre   a pie 14 -> 460
+     ruta alterna Carrera 22D          a pie 163 -> 566
      esquina a controlar: Calle 60 x Carrera 18 (3755 recorridos desviados, 72.9 %, SIN semáforo registrado)
      esquina a controlar: Calle 63 x Carrera 18 (3243 recorridos desviados, 63.0 %, con semáforo)
      esquina a controlar: Calle 59 x Carrera 18 (3193 recorridos desviados, 62.0 %, SIN semáforo registrado)
      esquina a controlar: Carrera 18 (3101 recorridos desviados, 60.2 %, SIN semáforo registrado)
      esquina a controlar: Calle 61 x Carrera 18 (3084 recorridos desviados, 59.9 %, SIN semáforo registrado)
+
+PROPUESTAS CALCULADAS (demanda supuesta; no hay conteos)
+Demanda: modelo de gravedad, peso del par = exp(-distancia sin obra / 400 m), esquinas de igual peso. Capacidad: carriles del corte mínimo (flujo máximo de un lado al otro); 1 carril ≈ 950 veh/h (supuesto).
+
+ETAPA 1
+  Carriles para cruzar (A->B / B->A): sin obra 16 / 15; con la obra 14 / 13; con las medidas 14 / 13. Calles del corte con la obra (A->B): Avenida Murillo, Calle 45, Calle 64A, Calle 72, Calle 74, Calle 77, Calle 77A, Calle 77D, Carrera 12G, Carrera 16A, Carrera 22D, Carrera 24, Vía local junto al eje (en OSM: Arroyo El Salao) (el corte mínimo es el cuello de botella de toda la red entre los dos lados; puede estar lejos del eje).
+  A pie, desvío ponderado: 491 m con la obra; 76 m con la regla de 500 m; -16 m con los pasos por demanda (solo alargamiento: 6 m).
+  En carro, desvío ponderado: 435 m (60 pares sin camino) con la obra; 446 m con los cambios de sentido; 446 m con los pares viales.
+  Pares viales: Hay calles de un solo sentido cerca de esta etapa, pero ningún par es paralelo y está a menos de 200 m.
+     no se usa Calle 77: tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)
+     no se usa Carrera 15 Sur: solo tiene 31 m de un sentido cerca de la etapa
+  Pasos peatonales por demanda: 7 (con la regla de 500 m: 2). Mayor tramo sin cruce: 213 m (con la regla: 398 m).
+     paso 1: Calle 77 <-> Calle 77 x Carrera 22A (paso nuevo, metro 431) -> alargamiento ponderado 138 m
+     paso 2: Calle 75D x Carrera 21A <-> Calle 76 x Carrera 21 (paso nuevo, metro 744) -> alargamiento ponderado 66 m
+     paso 3: esquina cerca de Calle 78F <-> esquina cerca de Calle 78D (cruce de la esquina cerca de Calle 78F, metro 132) -> alargamiento ponderado 22 m
+     paso 4: Calle 74A x Carrera 21A <-> Calle 74 x Carrera 19A (cruce de la Calle 74A, metro 961) -> alargamiento ponderado 16 m
+     paso 5: Carrera 21C <-> Calle 78D x Carrera 21C (paso nuevo, metro 246) -> alargamiento ponderado 11 m
+     paso 6: Calle 76A 1 x Carrera 22B <-> Calle 76A x Carrera 22A (paso nuevo, metro 644) -> alargamiento ponderado 8 m
+     paso 7: Calle 75 x Carrera 19A <-> Calle 75A x Carrera 21A (cruce de la Calle 75, metro 860) -> alargamiento ponderado 6 m
+     tramo sin cruce del metro 431 al 644 (213 m); candidatos dentro: 0
+  Control temporal: Calle 73 x Carrera 19A (64 % de la demanda desviada, 3 accesos)
+  Control temporal: Calle 75 x Carrera 19A (47 % de la demanda desviada, 3 accesos)
+  Control temporal: Calle 78C 1 x Carrera 18E (34 % de la demanda desviada, 3 accesos)
+
+ETAPA 2
+  Carriles para cruzar (A->B / B->A): sin obra 15 / 18; con la obra 10 / 13; con las medidas 10 / 13. Calles del corte con la obra (A->B): Avenida Murillo, Calle 45, Calle 51B, Calle 61, Calle 75, Calle 79, Carrera 22D, Carrera 23A, Carrera 24 (el corte mínimo es el cuello de botella de toda la red entre los dos lados; puede estar lejos del eje).
+  A pie, desvío ponderado: 163 m con la obra; 35 m con la regla de 500 m; 17 m con los pasos por demanda (solo alargamiento: 18 m).
+  En carro, desvío ponderado: 364 m con la obra; 364 m con los cambios de sentido; 364 m con los pares viales.
+  Pares viales: No se encontraron calles locales de un solo sentido, con nombre y de al menos 100 m, cerca de esta etapa. En OpenStreetMap pocas calles traen la etiqueta de sentido (oneway): verificar en terreno.
+     no se usa Avenida Circunvalar: es una vía de clase trunk (solo se proponen calles locales)
+     no se usa Avenida Murillo: tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)
+     no se usa Calle 45G: solo tiene 62 m de un sentido cerca de la etapa
+     no se usa Calle 72: tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)
+  Pasos peatonales por demanda: 5 (con la regla de 500 m: 2). Mayor tramo sin cruce: 427 m (con la regla: 427 m).
+     paso 1: Calle 72 <-> Calle 72 (cruce de la Calle 72, metro 1181) -> alargamiento ponderado 78 m
+     paso 2: Calle 67 x Carrera 23 <-> Carrera 22D (cruce de la Calle 67, metro 1608) -> alargamiento ponderado 35 m
+     paso 3: Calle 65A <-> Calle 65 (paso nuevo, metro 1730) -> alargamiento ponderado 27 m
+     paso 4: Calle 73 x Carrera 19A <-> Calle 73A x Carrera 21A (cruce de la Calle 73, metro 1077) -> alargamiento ponderado 22 m
+     paso 5: Calle 64 <-> Calle 63A (paso nuevo, metro 1823) -> alargamiento ponderado 18 m
+     tramo sin cruce del metro 1181 al 1608 (427 m); candidatos dentro: 3
+  Control temporal: Calle 75 x Carrera 21A (75 % de la demanda desviada, 4 accesos)
+  Control temporal: Calle 73 x Carrera 19 (45 % de la demanda desviada, 4 accesos)
+  Control temporal: Calle 72A x Carrera 22 (36 % de la demanda desviada, 3 accesos)
+
+ETAPA 3
+  Carriles para cruzar (A->B / B->A): sin obra 15 / 17; con la obra 11 / 11; con las medidas 11 / 11. Calles del corte con la obra (A->B): Calle 45, Calle 51B, Calle 68, Carrera 16 Sur, Carrera 18 Sur, Carrera 22D, Carrera 23, Carrera 23B, Carrera 24, Vía local junto al eje (en OSM: Arroyo El Salao) (el corte mínimo es el cuello de botella de toda la red entre los dos lados; puede estar lejos del eje).
+  A pie, desvío ponderado: 263 m con la obra; 66 m con la regla de 500 m; 24 m con los pasos por demanda (solo alargamiento: 24 m).
+  En carro, desvío ponderado: 355 m (644 pares sin camino) con la obra; 357 m (584 pares sin camino) con los cambios de sentido; 357 m (584 pares sin camino) con los pares viales.
+  Pares viales: No se encontraron calles locales de un solo sentido, con nombre y de al menos 100 m, cerca de esta etapa. En OpenStreetMap pocas calles traen la etiqueta de sentido (oneway): verificar en terreno.
+     no se usa Avenida Circunvalar: tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)
+     no se usa Avenida Murillo: tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)
+     no se usa Calle 45G: solo tiene 62 m de un sentido cerca de la etapa
+     no se usa Calle 58B: solo tiene 33 m de un sentido cerca de la etapa
+     no se usa Carrera 28: solo tiene 31 m de un sentido cerca de la etapa
+  Pasos peatonales por demanda: 4 (con la regla de 500 m: 1). Mayor tramo sin cruce: 195 m (con la regla: 391 m).
+     paso 1: esquina cerca de Calle 62 <-> Calle 62 x Carrera22B (cruce de la esquina cerca de Calle 62, metro 1995) -> alargamiento ponderado 66 m
+     paso 2: esquina sin nombre <-> esquina sin nombre (cruce de la esquina sin nombre, metro 1872) -> alargamiento ponderado 48 m
+     paso 3: Calle 58A <-> Calle 57D x Calle 58A (cruce de la Calle 58A, metro 2345) -> alargamiento ponderado 30 m
+     paso 4: Calle 59A <-> Calle 59B x Carrera 22E (cruce de la Calle 59A, metro 2190) -> alargamiento ponderado 24 m
+  Control temporal: Calle 60 x Carrera 18 (60 % de la demanda desviada, 4 accesos, vía principal)
+  Control temporal: Calle 66A x Carrera 22A (53 % de la demanda desviada, 4 accesos)
+  Control temporal: Carrera 18 (48 % de la demanda desviada, 3 accesos, vía principal)
+     4 esquinas muy cargadas ya tienen semáforo registrado.
+
+SUPUESTOS (valor, rango, estado):
+  d0_m                         400 m; rango 200–1000; supuesto del equipo
+  peso_esquina                 uniforme ; rango uniforme; supuesto del equipo
+  veh_h_carril                 950 veh/h por carril; rango 600–1900; reportado
+  carriles_por_clase           ver src/supuestos.py carriles (total de la vía); rango ±1 carril; supuesto del equipo
+  dist_par_max_m               200 m; rango 80–300; supuesto del equipo
+  largo_min_par_m              100 m; rango 50–300; supuesto del equipo
+  sep_calzadas_m               40 m; rango 20–60; supuesto del equipo
+  carriles_min_doble           2 carriles; rango 1–3; supuesto del equipo
+  clases_invertibles           ver src/supuestos.py clases de OSM; rango residential, tertiary, unclassified, living_street; supuesto del equipo
+  max_pares_etapa              3 pares; rango 1–6; supuesto del equipo
+  sep_min_pasos_m              80 m; rango 50–150; reportado
+  brecha_max_m                 200 m; rango 100–400; reportado
+  max_pasos_etapa              8 pasos; rango 2–12; supuesto del equipo
+  mejora_min                   0.02 fracción; rango 0.0–0.1; supuesto del equipo
+  tolerancia_desvio_relativo   0.5 fracción; rango 0.25–1.0; reportado
+  percentil_carga              90 percentil; rango 75–95; supuesto del equipo
+  accesos_min                  3 accesos; rango 3–4; supuesto del equipo
+  sep_control_m                150 m; rango 80–300; supuesto del equipo
+  max_controles_etapa          3 esquinas; rango 1–5; supuesto del equipo
+Control temporal: es una priorización sin conteos, no un criterio para instalar semáforos (los criterios del MUTCD, capítulo 4C, exigen conteos). No se calculan tiempos de semáforo.
 
 LÍMITES: no hay datos de volumen de tránsito (no se mide congestión, solo desvíos en metros y cuántos recorridos desviados pasan por cada esquina); no se diseñan carriles ni tiempos de semáforo; todo debe verificarse en terreno.

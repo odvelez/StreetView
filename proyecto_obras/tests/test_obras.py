@@ -1,4 +1,4 @@
-"""Pruebas del cambio de arroyos a obras viales (tareas R1 a R5).  Ejecutar:  python -m unittest -v
+"""Pruebas de la planificación de obras viales.  Ejecutar:  python -m unittest -v
 
 - Regresión: El Salao da los mismos números que resultados/linea_base/.
 - `ancho_m`: una franja más ancha cierra lo mismo o más, nunca menos.

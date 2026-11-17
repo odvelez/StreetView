@@ -21,3 +21,7 @@ Thumbs.db
 # Entornos virtuales
 .venv/
 venv/
+
+# Material de entrega que va por Brightspace, no en el repositorio
+*.pptx
+Proyecto_Final_Presentacion*.pdf

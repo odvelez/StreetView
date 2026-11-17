@@ -1,4 +1,4 @@
-"""Robustez de app.py (tarea B3 de Blanco).  Ejecutar:  python -m unittest tests.test_app_robustez -v
+"""Robustez de app.py.  Ejecutar:  python -m unittest tests.test_app_robustez -v
 
 Sin descargas reales: el mapa y el plan se reemplazan con unittest.mock donde hace falta.
 """

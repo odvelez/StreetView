@@ -1,4 +1,4 @@
-"""Figuras del plan por etapas, para el documento y las diapositivas.
+"""Figuras del plan por etapas (mapa y desvío a pie).
 
 Uso (desde proyecto_obras/):
     python herramientas/figuras_plan.py

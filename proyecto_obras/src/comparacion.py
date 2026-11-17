@@ -11,7 +11,6 @@ Es exacto: la fórmula rápida es exacta para UN arco nuevo sobre unas tablas ya
 y `actualizar_tablas` deja las tablas correctas para el grafo con el primer arco.
 """
 from src.analisis import Evaluador, actualizar_tablas, extremos, voraz
-from src.grafo import INF
 
 
 def objetivo_inicial(F, R, base, pares):

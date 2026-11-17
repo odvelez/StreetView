@@ -40,7 +40,7 @@ import math
 from dataclasses import asdict
 
 from src import circulacion, osm
-from src.analisis import (MEJORA_MIN, MAX_POR_LADO, LUZ_MAX_M, TOLERANCIA_M, candidatos_doble_sentido,
+from src.analisis import (LUZ_MAX_M, TOLERANCIA_M, candidatos_doble_sentido,
                           candidatos_puente_peatonal, clasificar, cruces_cerrados, extremos,
                           medir, rutas_alternas, tablas, voraz, zona)
 from src.geometria import Obra, orientar
@@ -59,7 +59,7 @@ PASO_CORTE_M = 25          # los cortes entre etapas se buscan cada tanto
 RADIO_SEMAFORO_M = 40      # un semáforo a menos de esto de la esquina cuenta como suyo
 SEPARACION_SENTIDOS_M = 150
 # Formas de medir los recorridos. "lados": pares de esquinas de un lado al otro de la obra (como
-# siempre). "afectados" (R7, opcional) aún no está hecho.
+# siempre). "afectados" no está implementado.
 MEDICIONES = ("lados",)
 
 

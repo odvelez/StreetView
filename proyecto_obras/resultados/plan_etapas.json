@@ -776,7 +776,12 @@
   "un_puente_cada_m": 500,
   "cerrar_puentes": true,
   "ancho_m": 10,
-  "medicion": "lados"
+  "medicion": "lados",
+  "calculadas": {
+   "d0_m": 400,
+   "veh_h_carril": 950,
+   "peso_esquina": "uniforme"
+  }
  },
  "etapas": [
   {
@@ -1223,7 +1228,7 @@
      "via": "Calle 77",
      "pie": {
       "seco_m": 16,
-      "lluvia_m": 1554,
+      "lluvia_m": 656,
       "desde": "Calle 77",
       "hasta": "Calle 77",
       "cerrado": [
@@ -1278,144 +1283,8 @@
         -74.8097074
        ],
        [
-        10.9178949,
-        -74.8094934
-       ],
-       [
-        10.9178889,
-        -74.80908
-       ],
-       [
-        10.9175444,
-        -74.8090422
-       ],
-       [
-        10.9176288,
-        -74.8079523
-       ],
-       [
-        10.9177146,
-        -74.8069277
-       ],
-       [
-        10.9177882,
-        -74.8059004
-       ],
-       [
-        10.9181001,
-        -74.8059375
-       ],
-       [
-        10.9181064,
-        -74.8059458
-       ],
-       [
-        10.91811,
-        -74.8059572
-       ],
-       [
-        10.9181128,
-        -74.8059935
-       ],
-       [
-        10.9181942,
-        -74.8059982
-       ],
-       [
-        10.9184377,
-        -74.8060124
-       ],
-       [
-        10.9190114,
-        -74.8060708
-       ],
-       [
-        10.9190003,
-        -74.8063781
-       ],
-       [
-        10.9189903,
-        -74.8066988
-       ],
-       [
-        10.9189851,
-        -74.8067501
-       ],
-       [
-        10.9189789,
-        -74.8070465
-       ],
-       [
-        10.9189664,
-        -74.8073482
-       ],
-       [
-        10.9189649,
-        -74.8073789
-       ],
-       [
-        10.9189516,
-        -74.807652
-       ],
-       [
-        10.9189493,
-        -74.8076991
-       ],
-       [
-        10.918937,
-        -74.8079517
-       ],
-       [
-        10.9189359,
-        -74.807965
-       ],
-       [
-        10.9189347,
-        -74.8079806
-       ],
-       [
-        10.9189314,
-        -74.8080631
-       ],
-       [
-        10.9189304,
-        -74.8080873
-       ],
-       [
-        10.9189211,
-        -74.8082894
-       ],
-       [
-        10.9189165,
-        -74.8083894
-       ],
-       [
-        10.918904,
-        -74.8086112
-       ],
-       [
-        10.9189006,
-        -74.8086605
-       ],
-       [
-        10.9188889,
-        -74.8089203
-       ],
-       [
-        10.918888,
-        -74.8089568
-       ],
-       [
-        10.9188747,
-        -74.8092451
-       ],
-       [
-        10.9190086,
-        -74.8092786
-       ],
-       [
-        10.9189907,
-        -74.8095863
+        10.9185029,
+        -74.8097351
        ],
        [
         10.9189745,
@@ -1464,7 +1333,7 @@
      "via": "esquina cerca de Calle 78F",
      "pie": {
       "seco_m": 8,
-      "lluvia_m": 1065,
+      "lluvia_m": 600,
       "desde": "esquina cerca de Calle 78F",
       "hasta": "esquina cerca de Calle 78D",
       "cerrado": [
@@ -1519,112 +1388,44 @@
         -74.8143798
        ],
        [
-        10.918157,
-        -74.8146703
+        10.9185263,
+        -74.8142803
        ],
        [
-        10.9183759,
-        -74.8148834
+        10.9191337,
+        -74.8136387
        ],
        [
-        10.9183334,
-        -74.8149318
+        10.9188661,
+        -74.813384
        ],
        [
-        10.918146,
-        -74.8151442
+        10.9185651,
+        -74.8130804
        ],
        [
-        10.9179503,
-        -74.8153539
+        10.91831,
+        -74.8130294
        ],
        [
-        10.9177405,
-        -74.8155729
+        10.9180062,
+        -74.812727
        ],
        [
-        10.9169815,
-        -74.8148587
+        10.9177897,
+        -74.8125105
        ],
        [
-        10.9169573,
-        -74.814836
+        10.9175731,
+        -74.81274
        ],
        [
-        10.9168995,
-        -74.814791
+        10.9173713,
+        -74.8129528
        ],
        [
-        10.9168653,
-        -74.8147893
-       ],
-       [
-        10.9162577,
-        -74.8149392
-       ],
-       [
-        10.9160037,
-        -74.8150157
-       ],
-       [
-        10.9157588,
-        -74.815085
-       ],
-       [
-        10.9155157,
-        -74.8141839
-       ],
-       [
-        10.9154381,
-        -74.8139293
-       ],
-       [
-        10.9153412,
-        -74.8137507
-       ],
-       [
-        10.9154639,
-        -74.81364
-       ],
-       [
-        10.9156925,
-        -74.813406
-       ],
-       [
-        10.9158983,
-        -74.8136198
-       ],
-       [
-        10.9159177,
-        -74.8136375
-       ],
-       [
-        10.9161256,
-        -74.8138278
-       ],
-       [
-        10.9163447,
-        -74.8140376
-       ],
-       [
-        10.9165835,
-        -74.8142666
-       ],
-       [
-        10.9167765,
-        -74.8140633
-       ],
-       [
-        10.9169768,
-        -74.8138528
-       ],
-       [
-        10.9170759,
-        -74.8137473
-       ],
-       [
-        10.9171873,
-        -74.8136253
+        10.917604,
+        -74.8131834
        ],
        [
         10.9173912,
@@ -1641,115 +1442,6 @@
        [
         10.9179204,
         -74.8139555
-       ]
-      ]
-     }
-    },
-    {
-     "via": "Calle 75C",
-     "pie": {
-      "seco_m": 101,
-      "lluvia_m": 741,
-      "desde": "Calle 75C x Carrera 21A",
-      "hasta": "Calle 76 x Carrera 21",
-      "cerrado": [
-       [
-        10.9183043,
-        -74.8085763
-       ],
-       [
-        10.9179889,
-        -74.8085578
-       ],
-       [
-        10.917908,
-        -74.8085544
-       ],
-       [
-        10.9178949,
-        -74.8087621
-       ],
-       [
-        10.9178889,
-        -74.80908
-       ]
-      ],
-      "forma": [
-       [
-        10.9183043,
-        -74.8085763
-       ],
-       [
-        10.9183204,
-        -74.8082735
-       ],
-       [
-        10.918344,
-        -74.807959
-       ],
-       [
-        10.9183652,
-        -74.8076536
-       ],
-       [
-        10.918388,
-        -74.80733
-       ],
-       [
-        10.9183971,
-        -74.8070274
-       ],
-       [
-        10.9183962,
-        -74.8067003
-       ],
-       [
-        10.9184095,
-        -74.8063335
-       ],
-       [
-        10.9184377,
-        -74.8060124
-       ],
-       [
-        10.9181942,
-        -74.8059982
-       ],
-       [
-        10.9181128,
-        -74.8059935
-       ],
-       [
-        10.91811,
-        -74.8059572
-       ],
-       [
-        10.9181064,
-        -74.8059458
-       ],
-       [
-        10.9181001,
-        -74.8059375
-       ],
-       [
-        10.9177882,
-        -74.8059004
-       ],
-       [
-        10.9177146,
-        -74.8069277
-       ],
-       [
-        10.9176288,
-        -74.8079523
-       ],
-       [
-        10.9175444,
-        -74.8090422
-       ],
-       [
-        10.9178889,
-        -74.80908
        ]
       ]
      }
@@ -2027,6 +1719,95 @@
      }
     },
     {
+     "via": "Calle 75C",
+     "pie": {
+      "seco_m": 101,
+      "lluvia_m": 369,
+      "desde": "Calle 75C x Carrera 21A",
+      "hasta": "Calle 76 x Carrera 21",
+      "cerrado": [
+       [
+        10.9183043,
+        -74.8085763
+       ],
+       [
+        10.9179889,
+        -74.8085578
+       ],
+       [
+        10.917908,
+        -74.8085544
+       ],
+       [
+        10.9178949,
+        -74.8087621
+       ],
+       [
+        10.9178889,
+        -74.80908
+       ]
+      ],
+      "forma": [
+       [
+        10.9183043,
+        -74.8085763
+       ],
+       [
+        10.918904,
+        -74.8086112
+       ],
+       [
+        10.9189006,
+        -74.8086605
+       ],
+       [
+        10.9188889,
+        -74.8089203
+       ],
+       [
+        10.918888,
+        -74.8089568
+       ],
+       [
+        10.9188747,
+        -74.8092451
+       ],
+       [
+        10.9190086,
+        -74.8092786
+       ],
+       [
+        10.9189907,
+        -74.8095863
+       ],
+       [
+        10.9189745,
+        -74.8098653
+       ],
+       [
+        10.9185029,
+        -74.8097351
+       ],
+       [
+        10.9182768,
+        -74.8094175
+       ],
+       [
+        10.9180325,
+        -74.8091931
+       ],
+       [
+        10.917956,
+        -74.8091322
+       ],
+       [
+        10.9178889,
+        -74.80908
+       ]
+      ]
+     }
+    },
+    {
      "via": "Calle 74",
      "carro": {
       "seco_m": 152,
@@ -2169,7 +1950,489 @@
      "semaforo": false
     }
    ],
-   "recorridos_desviados": 5800
+   "recorridos_desviados": 5800,
+   "circulacion": {
+    "demanda": {
+     "modelo": "gravedad: peso del par = exp(-distancia sin obra / d0), normalizado",
+     "d0_m": 400,
+     "peso_esquina": "uniforme",
+     "pares_peatones": 3600,
+     "pares_vehiculos": 7200
+    },
+    "peatones": {
+     "obra": {
+      "desvio_ponderado_m": 490.8,
+      "desvio_positivo_m": 490.8,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 65.2
+     },
+     "con_pasos_regla_500m": {
+      "desvio_ponderado_m": 76.3,
+      "desvio_positivo_m": 92.4,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 14.4
+     },
+     "con_pasos_por_demanda": {
+      "desvio_ponderado_m": -15.6,
+      "desvio_positivo_m": 6.4,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.0
+     }
+    },
+    "vehiculos": {
+     "obra": {
+      "desvio_ponderado_m": 435.3,
+      "desvio_positivo_m": 435.3,
+      "sin_camino": 60,
+      "demanda_sin_camino_pct": 1.8,
+      "demanda_desvio_relativo_pct": 0.0
+     },
+     "con_cambios_de_sentido": {
+      "desvio_ponderado_m": 445.5,
+      "desvio_positivo_m": 445.5,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.0
+     },
+     "con_cambios_y_pares_viales": {
+      "desvio_ponderado_m": 445.5,
+      "desvio_positivo_m": 445.5,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.0
+     }
+    },
+    "capacidad": {
+     "unidad": "carriles del corte mínimo (sentido a_b: del lado A al lado B)",
+     "veh_h_carril": 950,
+     "seco": {
+      "a_b": 16,
+      "calles_a_b": [
+       "Avenida Murillo",
+       "Calle 45",
+       "Calle 64A",
+       "Calle 72",
+       "Calle 74",
+       "Calle 75",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 22D",
+       "Carrera 24",
+       "Vía local junto al eje (en OSM: Arroyo El Salao)"
+      ],
+      "b_a": 15,
+      "calles_b_a": [
+       "Avenida Murillo",
+       "Calle 72",
+       "Calle 74",
+       "Calle 75",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 21B",
+       "Carrera 22D",
+       "Carrera 24"
+      ]
+     },
+     "obra": {
+      "a_b": 14,
+      "calles_a_b": [
+       "Avenida Murillo",
+       "Calle 45",
+       "Calle 64A",
+       "Calle 72",
+       "Calle 74",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 22D",
+       "Carrera 24",
+       "Vía local junto al eje (en OSM: Arroyo El Salao)"
+      ],
+      "b_a": 13,
+      "calles_b_a": [
+       "Avenida Murillo",
+       "Calle 72",
+       "Calle 73",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 21B",
+       "Carrera 22D",
+       "Carrera 24"
+      ]
+     },
+     "con_medidas": {
+      "a_b": 14,
+      "calles_a_b": [
+       "Avenida Murillo",
+       "Calle 45",
+       "Calle 64A",
+       "Calle 72",
+       "Calle 74",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 22D",
+       "Carrera 24",
+       "Vía local junto al eje (en OSM: Arroyo El Salao)"
+      ],
+      "b_a": 13,
+      "calles_b_a": [
+       "Avenida Murillo",
+       "Calle 72",
+       "Calle 73",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 21B",
+       "Carrera 22D",
+       "Carrera 24"
+      ]
+     },
+     "conserva_pct": {
+      "a_b": 87.5,
+      "b_a": 86.7
+     },
+     "conserva_con_medidas_pct": {
+      "a_b": 87.5,
+      "b_a": 86.7
+     },
+     "veh_h_aprox": {
+      "seco": {
+       "a_b": 15200,
+       "b_a": 14250
+      },
+      "obra": {
+       "a_b": 13300,
+       "b_a": 12350
+      },
+      "con_medidas": {
+       "a_b": 13300,
+       "b_a": 12350
+      }
+     }
+    },
+    "esquina_mas_cargada_pct": 63.8
+   },
+   "pares_viales": {
+    "pares": [],
+    "evaluados": 0,
+    "propuestos": 0,
+    "calles_un_sentido": [
+     "Carrera 24"
+    ],
+    "excluidas": [
+     {
+      "via": "Calle 77",
+      "motivo": "tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)"
+     },
+     {
+      "via": "Carrera 15 Sur",
+      "motivo": "solo tiene 31 m de un sentido cerca de la etapa"
+     }
+    ],
+    "motivo": "Hay calles de un solo sentido cerca de esta etapa, pero ningún par es paralelo y está a menos de 200 m."
+   },
+   "pasos_por_demanda": {
+    "pasos": [
+     {
+      "orden": 1,
+      "tipo": "nuevo",
+      "via": "",
+      "desde": "Calle 77",
+      "hasta": "Calle 77 x Carrera 22A",
+      "recorrido_m": 23,
+      "forma": [
+       [
+        10.9190929,
+        -74.8114948
+       ],
+       [
+        10.9188875,
+        -74.8114827
+       ]
+      ],
+      "pos_m": 431,
+      "desvio_ponderado_m": 138.5,
+      "desvio_positivo_m": 138.5,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 19.9
+     },
+     {
+      "orden": 2,
+      "tipo": "nuevo",
+      "via": "",
+      "desde": "Calle 75D x Carrera 21A",
+      "hasta": "Calle 76 x Carrera 21",
+      "recorrido_m": 48,
+      "forma": [
+       [
+        10.91829,
+        -74.8089023
+       ],
+       [
+        10.9178889,
+        -74.80908
+       ]
+      ],
+      "pos_m": 744,
+      "desvio_ponderado_m": 53.8,
+      "desvio_positivo_m": 66.2,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 7.9
+     },
+     {
+      "orden": 3,
+      "tipo": "cruce",
+      "via": "esquina cerca de Calle 78F",
+      "desde": "esquina cerca de Calle 78F",
+      "hasta": "esquina cerca de Calle 78D",
+      "recorrido_m": 8,
+      "forma": [
+       [
+        10.9179729,
+        -74.8140058
+       ],
+       [
+        10.9179204,
+        -74.8139555
+       ]
+      ],
+      "pos_m": 132,
+      "desvio_ponderado_m": 9.3,
+      "desvio_positivo_m": 21.7,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 1.5
+     },
+     {
+      "orden": 4,
+      "tipo": "cruce",
+      "via": "Calle 74A",
+      "desde": "Calle 74A x Carrera 21A",
+      "hasta": "Calle 74 x Carrera 19A",
+      "recorrido_m": 84,
+      "forma": [
+       [
+        10.9183971,
+        -74.8070274
+       ],
+       [
+        10.9181047,
+        -74.8070227
+       ],
+       [
+        10.9180164,
+        -74.8070168
+       ],
+       [
+        10.9180212,
+        -74.8069471
+       ],
+       [
+        10.9177146,
+        -74.8069277
+       ]
+      ],
+      "pos_m": 961,
+      "desvio_ponderado_m": 3.4,
+      "desvio_positivo_m": 15.8,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.6
+     },
+     {
+      "orden": 5,
+      "tipo": "nuevo",
+      "via": "",
+      "desde": "Carrera 21C",
+      "hasta": "Calle 78D x Carrera 21C",
+      "recorrido_m": 29,
+      "forma": [
+       [
+        10.9185651,
+        -74.8130804
+       ],
+       [
+        10.91831,
+        -74.8130294
+       ]
+      ],
+      "pos_m": 246,
+      "desvio_ponderado_m": -4.4,
+      "desvio_positivo_m": 11.0,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.2
+     },
+     {
+      "orden": 6,
+      "tipo": "nuevo",
+      "via": "",
+      "desde": "Calle 76A 1 x Carrera 22B",
+      "hasta": "Calle 76A x Carrera 22A",
+      "recorrido_m": 54,
+      "forma": [
+       [
+        10.9189745,
+        -74.8098653
+       ],
+       [
+        10.9185029,
+        -74.8097351
+       ]
+      ],
+      "pos_m": 644,
+      "desvio_ponderado_m": -14.3,
+      "desvio_positivo_m": 7.8,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.1
+     },
+     {
+      "orden": 7,
+      "tipo": "cruce",
+      "via": "Calle 75",
+      "desde": "Calle 75 x Carrera 19A",
+      "hasta": "Calle 75A x Carrera 21A",
+      "recorrido_m": 83,
+      "forma": [
+       [
+        10.9176288,
+        -74.8079523
+       ],
+       [
+        10.9179443,
+        -74.8079791
+       ],
+       [
+        10.9179488,
+        -74.807938
+       ],
+       [
+        10.918037,
+        -74.8079438
+       ],
+       [
+        10.918344,
+        -74.807959
+       ]
+      ],
+      "pos_m": 860,
+      "desvio_ponderado_m": -15.6,
+      "desvio_positivo_m": 6.4,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.0
+     }
+    ],
+    "numero": 7,
+    "candidatos": 23,
+    "limitado_por_maximo": false,
+    "brecha_max_m": 213,
+    "tramos_sobre_brecha": [
+     {
+      "inicio_m": 431,
+      "fin_m": 644,
+      "largo_m": 213,
+      "candidatos_dentro": 0
+     }
+    ],
+    "comparacion_regla_500m": {
+     "numero": 2,
+     "brecha_max_m": 398,
+     "tramos_sobre_brecha": [
+      {
+       "inicio_m": 0,
+       "fin_m": 246,
+       "largo_m": 246,
+       "candidatos_dentro": 1
+      },
+      {
+       "inicio_m": 246,
+       "fin_m": 644,
+       "largo_m": 398,
+       "candidatos_dentro": 10
+      },
+      {
+       "inicio_m": 644,
+       "fin_m": 975,
+       "largo_m": 331,
+       "candidatos_dentro": 9
+      }
+     ],
+     "desvio_ponderado_m": 76.3,
+     "desvio_positivo_m": 92.4,
+     "sin_camino": 0,
+     "demanda_sin_camino_pct": 0.0,
+     "demanda_desvio_relativo_pct": 14.4
+    },
+    "metodo": "voraz ponderado por la demanda supuesta; con pocos candidatos se comparó contra fuerza bruta (tests/test_demanda.py): con 2 pasos el voraz puede no ser óptimo"
+   },
+   "control_temporal": {
+    "esquinas": [
+     {
+      "esquina": "1882408985",
+      "nombre": "Calle 73 x Carrera 19A",
+      "posicion": [
+       10.9177882,
+       -74.8059004
+      ],
+      "puntaje_pct": 63.8,
+      "accesos": 3,
+      "cruza_via_mayor": false,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 64 % de la demanda desviada; 3 accesos; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     },
+     {
+      "esquina": "1882408972",
+      "nombre": "Calle 75 x Carrera 19A",
+      "posicion": [
+       10.9176288,
+       -74.8079523
+      ],
+      "puntaje_pct": 46.9,
+      "accesos": 3,
+      "cruza_via_mayor": false,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 47 % de la demanda desviada; 3 accesos; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     },
+     {
+      "esquina": "1880072906",
+      "nombre": "Calle 78C 1 x Carrera 18E",
+      "posicion": [
+       10.9169573,
+       -74.814836
+      ],
+      "puntaje_pct": 34.0,
+      "accesos": 3,
+      "cruza_via_mayor": false,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 34 % de la demanda desviada; 3 accesos; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     }
+    ],
+    "descartadas_por_semaforo": 0,
+    "semaforos_conocidos": true
+   }
   },
   {
    "numero": 2,
@@ -2927,7 +3190,7 @@
      },
      "pie": {
       "seco_m": 102,
-      "lluvia_m": 1137,
+      "lluvia_m": 521,
       "desde": "Carrera 21D",
       "hasta": "Calle 67B x Carrera 22D",
       "cerrado": [
@@ -2978,124 +3241,8 @@
         -74.8019635
        ],
        [
-        10.9187234,
-        -74.801932
-       ],
-       [
-        10.918441,
-        -74.8019105
-       ],
-       [
-        10.9184858,
-        -74.801318
-       ],
-       [
-        10.9184426,
-        -74.8013144
-       ],
-       [
-        10.9184669,
-        -74.8009899
-       ],
-       [
-        10.9184894,
-        -74.8006938
-       ],
-       [
-        10.9185054,
-        -74.8003935
-       ],
-       [
-        10.9185546,
-        -74.8003956
-       ],
-       [
-        10.9185656,
-        -74.8000752
-       ],
-       [
-        10.9185757,
-        -74.7997845
-       ],
-       [
-        10.9185865,
-        -74.7993612
-       ],
-       [
-        10.9189922,
-        -74.7993615
-       ],
-       [
-        10.9189918,
-        -74.7992731
-       ],
-       [
-        10.919501,
-        -74.7992728
-       ],
-       [
-        10.9196745,
-        -74.7992753
-       ],
-       [
-        10.9197991,
-        -74.7992767
-       ],
-       [
-        10.9201062,
-        -74.7993059
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9205502,
-        -74.7995598
-       ],
-       [
-        10.9205442,
-        -74.7998285
-       ],
-       [
-        10.9205377,
-        -74.8001157
-       ],
-       [
-        10.9205374,
-        -74.8001327
-       ],
-       [
-        10.9205311,
-        -74.8004118
-       ],
-       [
-        10.9205305,
-        -74.8004395
-       ],
-       [
-        10.9205252,
-        -74.8006741
-       ],
-       [
-        10.9205238,
-        -74.800734
-       ],
-       [
-        10.9205192,
-        -74.8009421
-       ],
-       [
-        10.9205171,
-        -74.8010348
-       ],
-       [
-        10.9205136,
-        -74.8011886
+        10.9193352,
+        -74.8014107
        ],
        [
         10.9205061,
@@ -3386,7 +3533,7 @@
      },
      "pie": {
       "seco_m": 173,
-      "lluvia_m": 725,
+      "lluvia_m": 543,
       "desde": "Calle 66 x Carrera 22A",
       "hasta": "Calle 67B x Carrera 22D",
       "cerrado": [
@@ -3421,108 +3568,36 @@
         -74.8007591
        ],
        [
-        10.9192323,
-        -74.8005392
+        10.9184894,
+        -74.8006938
        ],
        [
-        10.9191852,
-        -74.8004408
+        10.9184669,
+        -74.8009899
        ],
        [
-        10.9191043,
-        -74.8002672
+        10.9184426,
+        -74.8013144
        ],
        [
-        10.9190457,
-        -74.8001144
+        10.9184858,
+        -74.801318
        ],
        [
-        10.9190098,
-        -74.7999667
+        10.918768,
+        -74.8013307
        ],
        [
-        10.9189923,
-        -74.7998018
+        10.9190512,
+        -74.8013502
        ],
        [
-        10.91899,
-        -74.7996748
+        10.9193536,
+        -74.801378
        ],
        [
-        10.9189922,
-        -74.7993615
-       ],
-       [
-        10.9189918,
-        -74.7992731
-       ],
-       [
-        10.919501,
-        -74.7992728
-       ],
-       [
-        10.9196745,
-        -74.7992753
-       ],
-       [
-        10.9197991,
-        -74.7992767
-       ],
-       [
-        10.9201062,
-        -74.7993059
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9205502,
-        -74.7995598
-       ],
-       [
-        10.9205442,
-        -74.7998285
-       ],
-       [
-        10.9205377,
-        -74.8001157
-       ],
-       [
-        10.9205374,
-        -74.8001327
-       ],
-       [
-        10.9205311,
-        -74.8004118
-       ],
-       [
-        10.9205305,
-        -74.8004395
-       ],
-       [
-        10.9205252,
-        -74.8006741
-       ],
-       [
-        10.9205238,
-        -74.800734
-       ],
-       [
-        10.9205192,
-        -74.8009421
-       ],
-       [
-        10.9205171,
-        -74.8010348
-       ],
-       [
-        10.9205136,
-        -74.8011886
+        10.9193352,
+        -74.8014107
        ],
        [
         10.9205061,
@@ -3813,7 +3888,7 @@
      },
      "pie": {
       "seco_m": 169,
-      "lluvia_m": 1164,
+      "lluvia_m": 548,
       "desde": "Carrera 22D",
       "hasta": "Carrera 21D",
       "cerrado": [
@@ -3912,124 +3987,8 @@
         -74.8015232
        ],
        [
-        10.9205136,
-        -74.8011886
-       ],
-       [
-        10.9205171,
-        -74.8010348
-       ],
-       [
-        10.9205192,
-        -74.8009421
-       ],
-       [
-        10.9205238,
-        -74.800734
-       ],
-       [
-        10.9205252,
-        -74.8006741
-       ],
-       [
-        10.9205305,
-        -74.8004395
-       ],
-       [
-        10.9205311,
-        -74.8004118
-       ],
-       [
-        10.9205374,
-        -74.8001327
-       ],
-       [
-        10.9205377,
-        -74.8001157
-       ],
-       [
-        10.9205442,
-        -74.7998285
-       ],
-       [
-        10.9205502,
-        -74.7995598
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9201062,
-        -74.7993059
-       ],
-       [
-        10.9197991,
-        -74.7992767
-       ],
-       [
-        10.9196745,
-        -74.7992753
-       ],
-       [
-        10.919501,
-        -74.7992728
-       ],
-       [
-        10.9189918,
-        -74.7992731
-       ],
-       [
-        10.9189922,
-        -74.7993615
-       ],
-       [
-        10.9185865,
-        -74.7993612
-       ],
-       [
-        10.9185757,
-        -74.7997845
-       ],
-       [
-        10.9185656,
-        -74.8000752
-       ],
-       [
-        10.9185546,
-        -74.8003956
-       ],
-       [
-        10.9185054,
-        -74.8003935
-       ],
-       [
-        10.9184894,
-        -74.8006938
-       ],
-       [
-        10.9184669,
-        -74.8009899
-       ],
-       [
-        10.9184426,
-        -74.8013144
-       ],
-       [
-        10.9184858,
-        -74.801318
-       ],
-       [
-        10.918441,
-        -74.8019105
-       ],
-       [
-        10.9187234,
-        -74.801932
+        10.9193352,
+        -74.8014107
        ],
        [
         10.9190081,
@@ -4172,7 +4131,7 @@
      },
      "pie": {
       "seco_m": 11,
-      "lluvia_m": 760,
+      "lluvia_m": 11,
       "desde": "Calle 72",
       "hasta": "Calle 72",
       "cerrado": [
@@ -4189,86 +4148,6 @@
        [
         10.9182625,
         -74.8050655
-       ],
-       [
-        10.9178789,
-        -74.8050355
-       ],
-       [
-        10.9175569,
-        -74.8050153
-       ],
-       [
-        10.9175327,
-        -74.8053071
-       ],
-       [
-        10.9175106,
-        -74.805588
-       ],
-       [
-        10.917489,
-        -74.8058681
-       ],
-       [
-        10.9177882,
-        -74.8059004
-       ],
-       [
-        10.9177146,
-        -74.8069277
-       ],
-       [
-        10.9180212,
-        -74.8069471
-       ],
-       [
-        10.9180164,
-        -74.8070168
-       ],
-       [
-        10.9181047,
-        -74.8070227
-       ],
-       [
-        10.9183971,
-        -74.8070274
-       ],
-       [
-        10.9183962,
-        -74.8067003
-       ],
-       [
-        10.9184095,
-        -74.8063335
-       ],
-       [
-        10.9184377,
-        -74.8060124
-       ],
-       [
-        10.9184638,
-        -74.8057171
-       ],
-       [
-        10.9184802,
-        -74.8054261
-       ],
-       [
-        10.9190403,
-        -74.8054459
-       ],
-       [
-        10.9190426,
-        -74.8053494
-       ],
-       [
-        10.9190597,
-        -74.8050392
-       ],
-       [
-        10.9189589,
-        -74.8050374
        ],
        [
         10.9183639,
@@ -4471,7 +4350,7 @@
      },
      "pie": {
       "seco_m": 153,
-      "lluvia_m": 1025,
+      "lluvia_m": 409,
       "desde": "Calle 67A x Carrera 23",
       "hasta": "Carrera 21D",
       "cerrado": [
@@ -4518,124 +4397,8 @@
         -74.8015232
        ],
        [
-        10.9205136,
-        -74.8011886
-       ],
-       [
-        10.9205171,
-        -74.8010348
-       ],
-       [
-        10.9205192,
-        -74.8009421
-       ],
-       [
-        10.9205238,
-        -74.800734
-       ],
-       [
-        10.9205252,
-        -74.8006741
-       ],
-       [
-        10.9205305,
-        -74.8004395
-       ],
-       [
-        10.9205311,
-        -74.8004118
-       ],
-       [
-        10.9205374,
-        -74.8001327
-       ],
-       [
-        10.9205377,
-        -74.8001157
-       ],
-       [
-        10.9205442,
-        -74.7998285
-       ],
-       [
-        10.9205502,
-        -74.7995598
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9201062,
-        -74.7993059
-       ],
-       [
-        10.9197991,
-        -74.7992767
-       ],
-       [
-        10.9196745,
-        -74.7992753
-       ],
-       [
-        10.919501,
-        -74.7992728
-       ],
-       [
-        10.9189918,
-        -74.7992731
-       ],
-       [
-        10.9189922,
-        -74.7993615
-       ],
-       [
-        10.9185865,
-        -74.7993612
-       ],
-       [
-        10.9185757,
-        -74.7997845
-       ],
-       [
-        10.9185656,
-        -74.8000752
-       ],
-       [
-        10.9185546,
-        -74.8003956
-       ],
-       [
-        10.9185054,
-        -74.8003935
-       ],
-       [
-        10.9184894,
-        -74.8006938
-       ],
-       [
-        10.9184669,
-        -74.8009899
-       ],
-       [
-        10.9184426,
-        -74.8013144
-       ],
-       [
-        10.9184858,
-        -74.801318
-       ],
-       [
-        10.918441,
-        -74.8019105
-       ],
-       [
-        10.9187234,
-        -74.801932
+        10.9193352,
+        -74.8014107
        ],
        [
         10.9190081,
@@ -4846,7 +4609,7 @@
      },
      "pie": {
       "seco_m": 132,
-      "lluvia_m": 790,
+      "lluvia_m": 132,
       "desde": "Calle 67 x Carrera 23",
       "hasta": "Carrera 22D",
       "cerrado": [
@@ -4875,130 +4638,6 @@
        [
         10.9205061,
         -74.8015232
-       ],
-       [
-        10.9205136,
-        -74.8011886
-       ],
-       [
-        10.9205171,
-        -74.8010348
-       ],
-       [
-        10.9205192,
-        -74.8009421
-       ],
-       [
-        10.9205238,
-        -74.800734
-       ],
-       [
-        10.9205252,
-        -74.8006741
-       ],
-       [
-        10.9205305,
-        -74.8004395
-       ],
-       [
-        10.9205311,
-        -74.8004118
-       ],
-       [
-        10.9205374,
-        -74.8001327
-       ],
-       [
-        10.9205377,
-        -74.8001157
-       ],
-       [
-        10.9205442,
-        -74.7998285
-       ],
-       [
-        10.9205502,
-        -74.7995598
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9201062,
-        -74.7993059
-       ],
-       [
-        10.9197991,
-        -74.7992767
-       ],
-       [
-        10.9196745,
-        -74.7992753
-       ],
-       [
-        10.919501,
-        -74.7992728
-       ],
-       [
-        10.9189918,
-        -74.7992731
-       ],
-       [
-        10.9189922,
-        -74.7993615
-       ],
-       [
-        10.9185865,
-        -74.7993612
-       ],
-       [
-        10.9185757,
-        -74.7997845
-       ],
-       [
-        10.9185656,
-        -74.8000752
-       ],
-       [
-        10.9185546,
-        -74.8003956
-       ],
-       [
-        10.9185054,
-        -74.8003935
-       ],
-       [
-        10.9184894,
-        -74.8006938
-       ],
-       [
-        10.9184669,
-        -74.8009899
-       ],
-       [
-        10.9184426,
-        -74.8013144
-       ],
-       [
-        10.9184858,
-        -74.801318
-       ],
-       [
-        10.918768,
-        -74.8013307
-       ],
-       [
-        10.9190512,
-        -74.8013502
-       ],
-       [
-        10.9193536,
-        -74.801378
        ],
        [
         10.9193352,
@@ -5065,7 +4704,445 @@
      "semaforo": false
     }
    ],
-   "recorridos_desviados": 6079
+   "recorridos_desviados": 6079,
+   "circulacion": {
+    "demanda": {
+     "modelo": "gravedad: peso del par = exp(-distancia sin obra / d0), normalizado",
+     "d0_m": 400,
+     "peso_esquina": "uniforme",
+     "pares_peatones": 3600,
+     "pares_vehiculos": 7200
+    },
+    "peatones": {
+     "obra": {
+      "desvio_ponderado_m": 162.7,
+      "desvio_positivo_m": 162.7,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 25.1
+     },
+     "con_pasos_regla_500m": {
+      "desvio_ponderado_m": 35.4,
+      "desvio_positivo_m": 35.4,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 3.6
+     },
+     "con_pasos_por_demanda": {
+      "desvio_ponderado_m": 16.9,
+      "desvio_positivo_m": 17.8,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.6
+     }
+    },
+    "vehiculos": {
+     "obra": {
+      "desvio_ponderado_m": 363.9,
+      "desvio_positivo_m": 363.9,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.0
+     },
+     "con_cambios_de_sentido": {
+      "desvio_ponderado_m": 363.7,
+      "desvio_positivo_m": 363.9,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.0
+     },
+     "con_cambios_y_pares_viales": {
+      "desvio_ponderado_m": 363.7,
+      "desvio_positivo_m": 363.9,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.0
+     }
+    },
+    "capacidad": {
+     "unidad": "carriles del corte mínimo (sentido a_b: del lado A al lado B)",
+     "veh_h_carril": 950,
+     "seco": {
+      "a_b": 15,
+      "calles_a_b": [
+       "Avenida Murillo",
+       "Calle 45",
+       "Calle 51B",
+       "Calle 61",
+       "Calle 64A",
+       "Calle 72",
+       "Calle 74",
+       "Calle 75",
+       "Calle 79",
+       "Carrera 22D",
+       "Carrera 23A",
+       "Carrera 24",
+       "Vía local junto al eje (en OSM: Arroyo El Salao)"
+      ],
+      "b_a": 18,
+      "calles_b_a": [
+       "Avenida Murillo",
+       "Calle 61",
+       "Calle 72",
+       "Calle 74",
+       "Calle 75",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 22D",
+       "Carrera 24",
+       "calle sin nombre"
+      ]
+     },
+     "obra": {
+      "a_b": 10,
+      "calles_a_b": [
+       "Avenida Murillo",
+       "Calle 45",
+       "Calle 51B",
+       "Calle 61",
+       "Calle 75",
+       "Calle 79",
+       "Carrera 22D",
+       "Carrera 23A",
+       "Carrera 24"
+      ],
+      "b_a": 13,
+      "calles_b_a": [
+       "Avenida Murillo",
+       "Calle 61",
+       "Calle 75",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 24",
+       "calle sin nombre"
+      ]
+     },
+     "con_medidas": {
+      "a_b": 10,
+      "calles_a_b": [
+       "Avenida Murillo",
+       "Calle 45",
+       "Calle 51B",
+       "Calle 61",
+       "Calle 75",
+       "Calle 79",
+       "Carrera 22D",
+       "Carrera 23A",
+       "Carrera 24"
+      ],
+      "b_a": 13,
+      "calles_b_a": [
+       "Avenida Murillo",
+       "Calle 61",
+       "Calle 75",
+       "Calle 77",
+       "Calle 77A",
+       "Calle 77D",
+       "Carrera 12G",
+       "Carrera 16A",
+       "Carrera 24",
+       "calle sin nombre"
+      ]
+     },
+     "conserva_pct": {
+      "a_b": 66.7,
+      "b_a": 72.2
+     },
+     "conserva_con_medidas_pct": {
+      "a_b": 66.7,
+      "b_a": 72.2
+     },
+     "veh_h_aprox": {
+      "seco": {
+       "a_b": 14250,
+       "b_a": 17100
+      },
+      "obra": {
+       "a_b": 9500,
+       "b_a": 12350
+      },
+      "con_medidas": {
+       "a_b": 9500,
+       "b_a": 12350
+      }
+     }
+    },
+    "esquina_mas_cargada_pct": 75.4
+   },
+   "pares_viales": {
+    "pares": [],
+    "evaluados": 0,
+    "propuestos": 0,
+    "calles_un_sentido": [],
+    "excluidas": [
+     {
+      "via": "Avenida Circunvalar",
+      "motivo": "es una vía de clase trunk (solo se proponen calles locales)"
+     },
+     {
+      "via": "Avenida Murillo",
+      "motivo": "tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)"
+     },
+     {
+      "via": "Calle 45G",
+      "motivo": "solo tiene 62 m de un sentido cerca de la etapa"
+     },
+     {
+      "via": "Calle 72",
+      "motivo": "tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)"
+     }
+    ],
+    "motivo": "No se encontraron calles locales de un solo sentido, con nombre y de al menos 100 m, cerca de esta etapa. En OpenStreetMap pocas calles traen la etiqueta de sentido (oneway): verificar en terreno."
+   },
+   "pasos_por_demanda": {
+    "pasos": [
+     {
+      "orden": 1,
+      "tipo": "cruce",
+      "via": "Calle 72",
+      "desde": "Calle 72",
+      "hasta": "Calle 72",
+      "recorrido_m": 11,
+      "forma": [
+       [
+        10.9182625,
+        -74.8050655
+       ],
+       [
+        10.9183639,
+        -74.8050451
+       ]
+      ],
+      "pos_m": 1181,
+      "desvio_ponderado_m": 77.7,
+      "desvio_positivo_m": 77.7,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 12.0
+     },
+     {
+      "orden": 2,
+      "tipo": "cruce",
+      "via": "Calle 67",
+      "desde": "Calle 67 x Carrera 23",
+      "hasta": "Carrera 22D",
+      "recorrido_m": 132,
+      "forma": [
+       [
+        10.9205061,
+        -74.8015232
+       ],
+       [
+        10.91968,
+        -74.8015098
+       ],
+       [
+        10.9195959,
+        -74.8015196
+       ],
+       [
+        10.9195445,
+        -74.8015048
+       ],
+       [
+        10.9193352,
+        -74.8014107
+       ]
+      ],
+      "pos_m": 1608,
+      "desvio_ponderado_m": 35.4,
+      "desvio_positivo_m": 35.4,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 3.6
+     },
+     {
+      "orden": 3,
+      "tipo": "nuevo",
+      "via": "",
+      "desde": "Calle 65A",
+      "hasta": "Calle 65",
+      "recorrido_m": 31,
+      "forma": [
+       [
+        10.9200349,
+        -74.8007211
+       ],
+       [
+        10.9198224,
+        -74.8005383
+       ]
+      ],
+      "pos_m": 1730,
+      "desvio_ponderado_m": 26.8,
+      "desvio_positivo_m": 27.3,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 2.2
+     },
+     {
+      "orden": 4,
+      "tipo": "cruce",
+      "via": "Calle 73",
+      "desde": "Calle 73 x Carrera 19A",
+      "hasta": "Calle 73A x Carrera 21A",
+      "recorrido_m": 77,
+      "forma": [
+       [
+        10.9177882,
+        -74.8059004
+       ],
+       [
+        10.9181001,
+        -74.8059375
+       ],
+       [
+        10.9181064,
+        -74.8059458
+       ],
+       [
+        10.91811,
+        -74.8059572
+       ],
+       [
+        10.9181128,
+        -74.8059935
+       ],
+       [
+        10.9181942,
+        -74.8059982
+       ],
+       [
+        10.9184377,
+        -74.8060124
+       ]
+      ],
+      "pos_m": 1077,
+      "desvio_ponderado_m": 21.7,
+      "desvio_positivo_m": 22.2,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 1.3
+     },
+     {
+      "orden": 5,
+      "tipo": "nuevo",
+      "via": "",
+      "desde": "Calle 64",
+      "hasta": "Calle 63A",
+      "recorrido_m": 30,
+      "forma": [
+       [
+        10.9200607,
+        -74.7998258
+       ],
+       [
+        10.9198213,
+        -74.7996917
+       ]
+      ],
+      "pos_m": 1823,
+      "desvio_ponderado_m": 16.9,
+      "desvio_positivo_m": 17.8,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 0.6
+     }
+    ],
+    "numero": 5,
+    "candidatos": 22,
+    "limitado_por_maximo": false,
+    "brecha_max_m": 427,
+    "tramos_sobre_brecha": [
+     {
+      "inicio_m": 1181,
+      "fin_m": 1608,
+      "largo_m": 427,
+      "candidatos_dentro": 3
+     }
+    ],
+    "comparacion_regla_500m": {
+     "numero": 2,
+     "brecha_max_m": 427,
+     "tramos_sobre_brecha": [
+      {
+       "inicio_m": 975,
+       "fin_m": 1181,
+       "largo_m": 206,
+       "candidatos_dentro": 4
+      },
+      {
+       "inicio_m": 1181,
+       "fin_m": 1608,
+       "largo_m": 427,
+       "candidatos_dentro": 3
+      },
+      {
+       "inicio_m": 1608,
+       "fin_m": 1825,
+       "largo_m": 217,
+       "candidatos_dentro": 10
+      }
+     ],
+     "desvio_ponderado_m": 35.4,
+     "desvio_positivo_m": 35.4,
+     "sin_camino": 0,
+     "demanda_sin_camino_pct": 0.0,
+     "demanda_desvio_relativo_pct": 3.6
+    },
+    "metodo": "voraz ponderado por la demanda supuesta; con pocos candidatos se comparó contra fuerza bruta (tests/test_demanda.py): con 2 pasos el voraz puede no ser óptimo"
+   },
+   "control_temporal": {
+    "esquinas": [
+     {
+      "esquina": "5907299525",
+      "nombre": "Calle 75 x Carrera 21A",
+      "posicion": [
+       10.9183652,
+       -74.8076536
+      ],
+      "puntaje_pct": 75.4,
+      "accesos": 4,
+      "cruza_via_mayor": false,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 75 % de la demanda desviada; 4 accesos; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     },
+     {
+      "esquina": "1882408955",
+      "nombre": "Calle 73 x Carrera 19",
+      "posicion": [
+       10.917489,
+       -74.8058681
+      ],
+      "puntaje_pct": 44.7,
+      "accesos": 4,
+      "cruza_via_mayor": false,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 45 % de la demanda desviada; 4 accesos; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     },
+     {
+      "esquina": "1882409200",
+      "nombre": "Calle 72A x Carrera 22",
+      "posicion": [
+       10.9190426,
+       -74.8053494
+      ],
+      "puntaje_pct": 36.4,
+      "accesos": 3,
+      "cruza_via_mayor": false,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 36 % de la demanda desviada; 3 accesos; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     }
+    ],
+    "descartadas_por_semaforo": 0,
+    "semaforos_conocidos": true
+   }
   },
   {
    "numero": 3,
@@ -5848,7 +5925,7 @@
      },
      "pie": {
       "seco_m": 120,
-      "lluvia_m": 1107,
+      "lluvia_m": 217,
       "desde": "Calle 61",
       "hasta": "Calle 61 x Carrera 22",
       "cerrado": [
@@ -5891,232 +5968,13 @@
         -74.7975975
        ],
        [
-        10.9199,
-        -74.7973768
-       ],
-       [
-        10.919893,
-        -74.797102
+        10.919879,
+        -74.797899
        ],
        [
         10.9199,
-        -74.79684
+        -74.798181
        ],
-       [
-        10.919921,
-        -74.7965874
-       ],
-       [
-        10.9200111,
-        -74.7964122
-       ],
-       [
-        10.9200516,
-        -74.7963205
-       ],
-       [
-        10.9200967,
-        -74.7962634
-       ],
-       [
-        10.9201691,
-        -74.7961387
-       ],
-       [
-        10.9202216,
-        -74.7960515
-       ],
-       [
-        10.9206681,
-        -74.7960549
-       ],
-       [
-        10.9207169,
-        -74.7959492
-       ],
-       [
-        10.9207669,
-        -74.7958835
-       ],
-       [
-        10.9207918,
-        -74.7958267
-       ],
-       [
-        10.9207933,
-        -74.7957813
-       ],
-       [
-        10.9208025,
-        -74.7955177
-       ],
-       [
-        10.9208101,
-        -74.7952486
-       ],
-       [
-        10.9207417,
-        -74.795147
-       ],
-       [
-        10.9213767,
-        -74.795005
-       ],
-       [
-        10.9213478,
-        -74.7949026
-       ],
-       [
-        10.9212952,
-        -74.7947108
-       ],
-       [
-        10.9212284,
-        -74.7944877
-       ],
-       [
-        10.9211527,
-        -74.7942772
-       ],
-       [
-        10.9211199,
-        -74.7941996
-       ],
-       [
-        10.9210512,
-        -74.7940896
-       ],
-       [
-        10.9209978,
-        -74.7939549
-       ],
-       [
-        10.9208687,
-        -74.7939952
-       ],
-       [
-        10.920804,
-        -74.7940111
-       ],
-       [
-        10.9207417,
-        -74.7940386
-       ],
-       [
-        10.920686,
-        -74.7940677
-       ],
-       [
-        10.920643,
-        -74.7941026
-       ],
-       [
-        10.9206155,
-        -74.7941439
-       ],
-       [
-        10.9205933,
-        -74.7941869
-       ],
-       [
-        10.9205727,
-        -74.7942781
-       ],
-       [
-        10.9205435,
-        -74.7942779
-       ],
-       [
-        10.9204072,
-        -74.7942773
-       ],
-       [
-        10.9202133,
-        -74.7942776
-       ],
-       [
-        10.9202014,
-        -74.7949367
-       ],
-       [
-        10.9199014,
-        -74.7949497
-       ],
-       [
-        10.9197626,
-        -74.7949573
-       ],
-       [
-        10.9197612,
-        -74.7952899
-       ],
-       [
-        10.9197613,
-        -74.7955235
-       ],
-       [
-        10.919759,
-        -74.7957903
-       ],
-       [
-        10.9196428,
-        -74.7958714
-       ],
-       [
-        10.9195361,
-        -74.795925
-       ],
-       [
-        10.9195051,
-        -74.7959369
-       ],
-       [
-        10.9192454,
-        -74.7960207
-       ],
-       [
-        10.9190864,
-        -74.796098
-       ],
-       [
-        10.9190337,
-        -74.7961366
-       ],
-       [
-        10.9190018,
-        -74.7961708
-       ],
-       [
-        10.9189748,
-        -74.7962249
-       ],
-       [
-        10.9189569,
-        -74.7962345
-       ],
-       [
-        10.9189724,
-        -74.7968498
-       ],
-       [
-        10.9189778,
-        -74.7970617
-       ],
-       [
-        10.918973,
-        -74.7977085
-       ]
-      ]
-     }
-    },
-    {
-     "via": "esquina cerca de Calle 62",
-     "pie": {
-      "seco_m": 38,
-      "lluvia_m": 1115,
-      "desde": "esquina cerca de Calle 62",
-      "hasta": "Calle 62 x Carrera22B",
-      "cerrado": [
        [
         10.9198576,
         -74.7981684
@@ -6128,844 +5986,18 @@
        [
         10.9195098,
         -74.798158
-       ]
-      ],
-      "forma": [
-       [
-        10.9198576,
-        -74.7981684
-       ],
-       [
-        10.9199,
-        -74.798181
-       ],
-       [
-        10.9199001,
-        -74.7984329
-       ],
-       [
-        10.9199,
-        -74.798498
-       ],
-       [
-        10.9198983,
-        -74.7987911
-       ],
-       [
-        10.9204808,
-        -74.7990143
-       ],
-       [
-        10.9205214,
-        -74.7990417
-       ],
-       [
-        10.9205219,
-        -74.7990831
-       ],
-       [
-        10.9206523,
-        -74.7990846
-       ],
-       [
-        10.920787,
-        -74.7990843
-       ],
-       [
-        10.9208167,
-        -74.7990842
-       ],
-       [
-        10.9208165,
-        -74.7991404
-       ],
-       [
-        10.9208163,
-        -74.7991912
-       ],
-       [
-        10.9208162,
-        -74.799242
-       ],
-       [
-        10.9208161,
-        -74.7993014
-       ],
-       [
-        10.9208159,
-        -74.7993436
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9200194,
-        -74.7994749
-       ],
-       [
-        10.9200192,
-        -74.7995594
-       ],
-       [
-        10.9200167,
-        -74.8001292
-       ],
-       [
-        10.9199337,
-        -74.8001286
-       ],
-       [
-        10.9199319,
-        -74.799993
-       ],
-       [
-        10.919825,
-        -74.7999894
-       ],
-       [
-        10.9190098,
-        -74.7999667
-       ],
-       [
-        10.9189923,
-        -74.7998018
-       ],
-       [
-        10.9185757,
-        -74.7997845
-       ],
-       [
-        10.9185865,
-        -74.7993612
-       ],
-       [
-        10.9182844,
-        -74.7993609
-       ],
-       [
-        10.9180075,
-        -74.7993613
-       ],
-       [
-        10.9177114,
-        -74.7993587
-       ],
-       [
-        10.9174816,
-        -74.7993566
-       ],
-       [
-        10.9174813,
-        -74.7993445
-       ],
-       [
-        10.9176171,
-        -74.7993413
-       ],
-       [
-        10.917616,
-        -74.7989933
-       ],
-       [
-        10.9174804,
-        -74.7989924
-       ],
-       [
-        10.9174792,
-        -74.7990109
-       ],
-       [
-        10.919075,
-        -74.7990148
-       ],
-       [
-        10.9192613,
-        -74.7987515
-       ],
-       [
-        10.9194209,
-        -74.7987849
-       ],
-       [
-        10.9194591,
-        -74.7987776
-       ],
-       [
-        10.9194857,
-        -74.7987601
-       ],
-       [
-        10.9195118,
-        -74.7987272
-       ],
-       [
-        10.9195374,
-        -74.7986635
-       ],
-       [
-        10.919544,
-        -74.7982692
-       ],
-       [
-        10.9195335,
-        -74.7982129
-       ],
-       [
-        10.9195098,
-        -74.798158
-       ]
-      ]
-     }
-    },
-    {
-     "via": "Avenida Murillo",
-     "pie": {
-      "seco_m": 14,
-      "lluvia_m": 992,
-      "desde": "Avenida Murillo",
-      "hasta": "Avenida Murillo",
-      "cerrado": [
-       [
-        10.9196757,
-        -74.7990549
-       ],
-       [
-        10.9198021,
-        -74.7990569
-       ]
-      ],
-      "forma": [
-       [
-        10.9196757,
-        -74.7990549
-       ],
-       [
-        10.9191185,
-        -74.7990568
-       ],
-       [
-        10.9190365,
-        -74.7990557
-       ],
-       [
-        10.919075,
-        -74.7990148
-       ],
-       [
-        10.9174792,
-        -74.7990109
-       ],
-       [
-        10.9174804,
-        -74.7989924
-       ],
-       [
-        10.917616,
-        -74.7989933
-       ],
-       [
-        10.9176171,
-        -74.7993413
-       ],
-       [
-        10.9174813,
-        -74.7993445
-       ],
-       [
-        10.9174816,
-        -74.7993566
-       ],
-       [
-        10.9177114,
-        -74.7993587
-       ],
-       [
-        10.9180075,
-        -74.7993613
-       ],
-       [
-        10.9182844,
-        -74.7993609
-       ],
-       [
-        10.9185865,
-        -74.7993612
-       ],
-       [
-        10.9185757,
-        -74.7997845
-       ],
-       [
-        10.9189923,
-        -74.7998018
-       ],
-       [
-        10.9190098,
-        -74.7999667
-       ],
-       [
-        10.919825,
-        -74.7999894
-       ],
-       [
-        10.9199319,
-        -74.799993
-       ],
-       [
-        10.9199337,
-        -74.8001286
-       ],
-       [
-        10.9200167,
-        -74.8001292
-       ],
-       [
-        10.9200192,
-        -74.7995594
-       ],
-       [
-        10.9200194,
-        -74.7994749
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9208159,
-        -74.7993436
-       ],
-       [
-        10.9208161,
-        -74.7993014
-       ],
-       [
-        10.9208162,
-        -74.799242
-       ],
-       [
-        10.9208163,
-        -74.7991912
-       ],
-       [
-        10.9208165,
-        -74.7991404
-       ],
-       [
-        10.9208167,
-        -74.7990842
-       ],
-       [
-        10.920787,
-        -74.7990843
-       ],
-       [
-        10.9206523,
-        -74.7990846
-       ],
-       [
-        10.9205219,
-        -74.7990831
-       ],
-       [
-        10.9198021,
-        -74.7990569
-       ]
-      ]
-     }
-    },
-    {
-     "via": "esquina sin nombre",
-     "pie": {
-      "seco_m": 14,
-      "lluvia_m": 986,
-      "desde": "esquina sin nombre",
-      "hasta": "esquina sin nombre",
-      "cerrado": [
-       [
-        10.9196758,
-        -74.7990153
-       ],
-       [
-        10.9198004,
-        -74.7990173
-       ]
-      ],
-      "forma": [
-       [
-        10.9196758,
-        -74.7990153
-       ],
-       [
-        10.9191592,
-        -74.799016
-       ],
-       [
-        10.919075,
-        -74.7990148
-       ],
-       [
-        10.9174792,
-        -74.7990109
-       ],
-       [
-        10.9174804,
-        -74.7989924
-       ],
-       [
-        10.917616,
-        -74.7989933
-       ],
-       [
-        10.9176171,
-        -74.7993413
-       ],
-       [
-        10.9174813,
-        -74.7993445
-       ],
-       [
-        10.9174816,
-        -74.7993566
-       ],
-       [
-        10.9177114,
-        -74.7993587
-       ],
-       [
-        10.9180075,
-        -74.7993613
-       ],
-       [
-        10.9182844,
-        -74.7993609
-       ],
-       [
-        10.9185865,
-        -74.7993612
-       ],
-       [
-        10.9185757,
-        -74.7997845
-       ],
-       [
-        10.9189923,
-        -74.7998018
-       ],
-       [
-        10.9190098,
-        -74.7999667
-       ],
-       [
-        10.919825,
-        -74.7999894
-       ],
-       [
-        10.9199319,
-        -74.799993
-       ],
-       [
-        10.9199337,
-        -74.8001286
-       ],
-       [
-        10.9200167,
-        -74.8001292
-       ],
-       [
-        10.9200192,
-        -74.7995594
-       ],
-       [
-        10.9200194,
-        -74.7994749
-       ],
-       [
-        10.9201539,
-        -74.7993101
-       ],
-       [
-        10.9205551,
-        -74.7993449
-       ],
-       [
-        10.9208159,
-        -74.7993436
-       ],
-       [
-        10.9208161,
-        -74.7993014
-       ],
-       [
-        10.9208162,
-        -74.799242
-       ],
-       [
-        10.9208163,
-        -74.7991912
-       ],
-       [
-        10.9208165,
-        -74.7991404
-       ],
-       [
-        10.9208167,
-        -74.7990842
-       ],
-       [
-        10.920787,
-        -74.7990843
-       ],
-       [
-        10.9206523,
-        -74.7990846
-       ],
-       [
-        10.9205219,
-        -74.7990831
-       ],
-       [
-        10.9205214,
-        -74.7990417
-       ],
-       [
-        10.9198004,
-        -74.7990173
-       ]
-      ]
-     }
-    },
-    {
-     "via": "Calle 60",
-     "carro": {
-      "seco_m": 132,
-      "lluvia_m": null,
-      "desde": "Calle 60 x Carrera 22",
-      "hasta": "Calle 61",
-      "cerrado": [
-       [
-        10.9189778,
-        -74.7970617
-       ],
-       [
-        10.9193083,
-        -74.797077
-       ],
-       [
-        10.9194126,
-        -74.7971284
-       ],
-       [
-        10.9195071,
-        -74.797195
-       ],
-       [
-        10.9196587,
-        -74.797306
-       ],
-       [
-        10.9196737,
-        -74.797474
-       ],
-       [
-        10.9196911,
-        -74.7975587
-       ],
-       [
-        10.9197255,
-        -74.7975752
-       ],
-       [
-        10.91976,
-        -74.7975917
-       ],
-       [
-        10.9198355,
-        -74.7976004
-       ],
-       [
-        10.9198764,
-        -74.7975975
-       ]
-      ],
-      "forma": []
-     },
-     "pie": {
-      "seco_m": 132,
-      "lluvia_m": 1036,
-      "desde": "Calle 60 x Carrera 22",
-      "hasta": "Calle 61",
-      "cerrado": [
-       [
-        10.9189778,
-        -74.7970617
-       ],
-       [
-        10.9193083,
-        -74.797077
-       ],
-       [
-        10.9194126,
-        -74.7971284
-       ],
-       [
-        10.9195071,
-        -74.797195
-       ],
-       [
-        10.9196587,
-        -74.797306
-       ],
-       [
-        10.9196737,
-        -74.797474
-       ],
-       [
-        10.9196911,
-        -74.7975587
-       ],
-       [
-        10.9197255,
-        -74.7975752
-       ],
-       [
-        10.91976,
-        -74.7975917
-       ],
-       [
-        10.9198355,
-        -74.7976004
-       ],
-       [
-        10.9198764,
-        -74.7975975
-       ]
-      ],
-      "forma": [
-       [
-        10.9189778,
-        -74.7970617
-       ],
-       [
-        10.9189724,
-        -74.7968498
-       ],
-       [
-        10.9189569,
-        -74.7962345
-       ],
-       [
-        10.9189748,
-        -74.7962249
-       ],
-       [
-        10.9190018,
-        -74.7961708
-       ],
-       [
-        10.9190337,
-        -74.7961366
-       ],
-       [
-        10.9190864,
-        -74.796098
-       ],
-       [
-        10.9192454,
-        -74.7960207
-       ],
-       [
-        10.9195051,
-        -74.7959369
-       ],
-       [
-        10.9195361,
-        -74.795925
-       ],
-       [
-        10.9196428,
-        -74.7958714
-       ],
-       [
-        10.919759,
-        -74.7957903
-       ],
-       [
-        10.9197613,
-        -74.7955235
-       ],
-       [
-        10.9197612,
-        -74.7952899
-       ],
-       [
-        10.9197626,
-        -74.7949573
-       ],
-       [
-        10.9199014,
-        -74.7949497
-       ],
-       [
-        10.9202014,
-        -74.7949367
-       ],
-       [
-        10.9202133,
-        -74.7942776
-       ],
-       [
-        10.9204072,
-        -74.7942773
-       ],
-       [
-        10.9205435,
-        -74.7942779
-       ],
-       [
-        10.9205727,
-        -74.7942781
-       ],
-       [
-        10.9205933,
-        -74.7941869
-       ],
-       [
-        10.9206155,
-        -74.7941439
-       ],
-       [
-        10.920643,
-        -74.7941026
-       ],
-       [
-        10.920686,
-        -74.7940677
-       ],
-       [
-        10.9207417,
-        -74.7940386
-       ],
-       [
-        10.920804,
-        -74.7940111
-       ],
-       [
-        10.9208687,
-        -74.7939952
-       ],
-       [
-        10.9209978,
-        -74.7939549
-       ],
-       [
-        10.9210512,
-        -74.7940896
-       ],
-       [
-        10.9211199,
-        -74.7941996
-       ],
-       [
-        10.9211527,
-        -74.7942772
-       ],
-       [
-        10.9212284,
-        -74.7944877
-       ],
-       [
-        10.9212952,
-        -74.7947108
-       ],
-       [
-        10.9213478,
-        -74.7949026
-       ],
-       [
-        10.9213767,
-        -74.795005
-       ],
-       [
-        10.9207417,
-        -74.795147
-       ],
-       [
-        10.9208101,
-        -74.7952486
-       ],
-       [
-        10.9208025,
-        -74.7955177
-       ],
-       [
-        10.9207933,
-        -74.7957813
-       ],
-       [
-        10.9207918,
-        -74.7958267
-       ],
-       [
-        10.9207669,
-        -74.7958835
-       ],
-       [
-        10.9207169,
-        -74.7959492
-       ],
-       [
-        10.9206681,
-        -74.7960549
-       ],
-       [
-        10.9202216,
-        -74.7960515
-       ],
-       [
-        10.9201691,
-        -74.7961387
-       ],
-       [
-        10.9200967,
-        -74.7962634
-       ],
-       [
-        10.9200516,
-        -74.7963205
-       ],
-       [
-        10.9200111,
-        -74.7964122
-       ],
-       [
-        10.919921,
-        -74.7965874
-       ],
-       [
-        10.9199,
-        -74.79684
        ],
        [
-        10.919893,
-        -74.797102
+        10.9192225,
+        -74.7981583
        ],
        [
-        10.9199,
-        -74.7973768
+        10.918964,
+        -74.7981608
        ],
        [
-        10.9198764,
-        -74.7975975
+        10.918973,
+        -74.7977085
        ]
       ]
      }
@@ -7039,7 +6071,7 @@
      },
      "pie": {
       "seco_m": 46,
-      "lluvia_m": 918,
+      "lluvia_m": 576,
       "desde": "Calle 59A",
       "hasta": "Calle 59B x Carrera 22E",
       "cerrado": [
@@ -7098,40 +6130,202 @@
         -74.7962249
        ],
        [
-        10.9190018,
-        -74.7961708
+        10.9189569,
+        -74.7962345
        ],
        [
-        10.9190337,
-        -74.7961366
+        10.9189724,
+        -74.7968498
        ],
        [
-        10.9190864,
-        -74.796098
+        10.9189778,
+        -74.7970617
        ],
        [
-        10.9192454,
-        -74.7960207
+        10.918973,
+        -74.7977085
        ],
        [
-        10.9195051,
-        -74.7959369
+        10.918964,
+        -74.7981608
        ],
        [
-        10.9195361,
-        -74.795925
+        10.9192225,
+        -74.7981583
        ],
        [
-        10.9196428,
-        -74.7958714
+        10.9195098,
+        -74.798158
        ],
        [
-        10.919759,
-        -74.7957903
+        10.9196896,
+        -74.7981599
        ],
        [
-        10.9197613,
-        -74.7955235
+        10.9198576,
+        -74.7981684
+       ],
+       [
+        10.9199,
+        -74.798181
+       ],
+       [
+        10.919879,
+        -74.797899
+       ],
+       [
+        10.9198764,
+        -74.7975975
+       ],
+       [
+        10.9199,
+        -74.7973768
+       ],
+       [
+        10.919893,
+        -74.797102
+       ],
+       [
+        10.9199,
+        -74.79684
+       ],
+       [
+        10.919921,
+        -74.7965874
+       ]
+      ]
+     }
+    },
+    {
+     "via": "Avenida Murillo",
+     "pie": {
+      "seco_m": 14,
+      "lluvia_m": 511,
+      "desde": "Avenida Murillo",
+      "hasta": "Avenida Murillo",
+      "cerrado": [
+       [
+        10.9197993,
+        -74.7992399
+       ],
+       [
+        10.9196747,
+        -74.7992352
+       ]
+      ],
+      "forma": [
+       [
+        10.9197993,
+        -74.7992399
+       ],
+       [
+        10.9201376,
+        -74.7992639
+       ],
+       [
+        10.9205562,
+        -74.799294
+       ],
+       [
+        10.9205551,
+        -74.7993449
+       ],
+       [
+        10.9201539,
+        -74.7993101
+       ],
+       [
+        10.9200194,
+        -74.7994749
+       ],
+       [
+        10.9200192,
+        -74.7995594
+       ],
+       [
+        10.9200167,
+        -74.8001292
+       ],
+       [
+        10.9199337,
+        -74.8001286
+       ],
+       [
+        10.9199319,
+        -74.799993
+       ],
+       [
+        10.919825,
+        -74.7999894
+       ],
+       [
+        10.9190098,
+        -74.7999667
+       ],
+       [
+        10.9189923,
+        -74.7998018
+       ],
+       [
+        10.91899,
+        -74.7996748
+       ],
+       [
+        10.9189922,
+        -74.7993615
+       ],
+       [
+        10.9189918,
+        -74.7992731
+       ],
+       [
+        10.9189916,
+        -74.7992289
+       ],
+       [
+        10.9194587,
+        -74.7992368
+       ],
+       [
+        10.9196747,
+        -74.7992352
+       ]
+      ]
+     }
+    },
+    {
+     "via": "Calle 58A",
+     "pie": {
+      "seco_m": 50,
+      "lluvia_m": 529,
+      "desde": "Calle 58A",
+      "hasta": "Calle 57D x Calle 58A",
+      "cerrado": [
+       [
+        10.9204268,
+        -74.7953014
+       ],
+       [
+        10.920642,
+        -74.7953051
+       ],
+       [
+        10.9206528,
+        -74.7952612
+       ],
+       [
+        10.9206453,
+        -74.7951618
+       ],
+       [
+        10.9207417,
+        -74.795147
+       ]
+      ],
+      "forma": [
+       [
+        10.9204268,
+        -74.7953014
        ],
        [
         10.9197612,
@@ -7228,58 +6422,268 @@
        [
         10.9207417,
         -74.795147
+       ]
+      ]
+     }
+    },
+    {
+     "via": "esquina sin nombre",
+     "pie": {
+      "seco_m": 14,
+      "lluvia_m": 460,
+      "desde": "esquina sin nombre",
+      "hasta": "esquina sin nombre",
+      "cerrado": [
+       [
+        10.9196758,
+        -74.7990153
        ],
        [
-        10.9208101,
-        -74.7952486
+        10.9198004,
+        -74.7990173
+       ]
+      ],
+      "forma": [
+       [
+        10.9196758,
+        -74.7990153
        ],
        [
-        10.9208025,
-        -74.7955177
+        10.9191592,
+        -74.799016
        ],
        [
-        10.9207933,
-        -74.7957813
+        10.919075,
+        -74.7990148
        ],
        [
-        10.9207918,
-        -74.7958267
+        10.9192613,
+        -74.7987515
        ],
        [
-        10.9207669,
-        -74.7958835
+        10.9194209,
+        -74.7987849
        ],
        [
-        10.9207169,
-        -74.7959492
+        10.9194591,
+        -74.7987776
        ],
        [
-        10.9206681,
-        -74.7960549
+        10.9194857,
+        -74.7987601
        ],
        [
-        10.9202216,
-        -74.7960515
+        10.9195118,
+        -74.7987272
        ],
        [
-        10.9201691,
-        -74.7961387
+        10.9195374,
+        -74.7986635
        ],
        [
-        10.9200967,
-        -74.7962634
+        10.919544,
+        -74.7982692
        ],
        [
-        10.9200516,
-        -74.7963205
+        10.9195335,
+        -74.7982129
        ],
        [
-        10.9200111,
-        -74.7964122
+        10.9195098,
+        -74.798158
        ],
        [
-        10.919921,
-        -74.7965874
+        10.9196896,
+        -74.7981599
+       ],
+       [
+        10.9198576,
+        -74.7981684
+       ],
+       [
+        10.9199,
+        -74.798181
+       ],
+       [
+        10.9199001,
+        -74.7984329
+       ],
+       [
+        10.9199,
+        -74.798498
+       ],
+       [
+        10.9198983,
+        -74.7987911
+       ],
+       [
+        10.9204808,
+        -74.7990143
+       ],
+       [
+        10.9205214,
+        -74.7990417
+       ],
+       [
+        10.9198004,
+        -74.7990173
+       ]
+      ]
+     }
+    },
+    {
+     "via": "Carrera 22D",
+     "pie": {
+      "seco_m": 163,
+      "lluvia_m": 566,
+      "desde": "esquina cerca de Avenida Murillo",
+      "hasta": "esquina cerca de Carrera 22D",
+      "cerrado": [
+       [
+        10.919501,
+        -74.7992728
+       ],
+       [
+        10.9198283,
+        -74.7995511
+       ],
+       [
+        10.9198523,
+        -74.7995685
+       ],
+       [
+        10.9198774,
+        -74.7995718
+       ],
+       [
+        10.9199009,
+        -74.7995661
+       ],
+       [
+        10.9197537,
+        -74.7993182
+       ],
+       [
+        10.9197456,
+        -74.7992936
+       ],
+       [
+        10.9197453,
+        -74.7989864
+       ],
+       [
+        10.9197486,
+        -74.7987806
+       ],
+       [
+        10.9198983,
+        -74.7987911
+       ]
+      ],
+      "forma": [
+       [
+        10.919501,
+        -74.7992728
+       ],
+       [
+        10.9189918,
+        -74.7992731
+       ],
+       [
+        10.9189922,
+        -74.7993615
+       ],
+       [
+        10.91899,
+        -74.7996748
+       ],
+       [
+        10.9189923,
+        -74.7998018
+       ],
+       [
+        10.9190098,
+        -74.7999667
+       ],
+       [
+        10.919825,
+        -74.7999894
+       ],
+       [
+        10.9199319,
+        -74.799993
+       ],
+       [
+        10.9199337,
+        -74.8001286
+       ],
+       [
+        10.9200167,
+        -74.8001292
+       ],
+       [
+        10.9200192,
+        -74.7995594
+       ],
+       [
+        10.9200194,
+        -74.7994749
+       ],
+       [
+        10.9201539,
+        -74.7993101
+       ],
+       [
+        10.9205551,
+        -74.7993449
+       ],
+       [
+        10.9208159,
+        -74.7993436
+       ],
+       [
+        10.9208161,
+        -74.7993014
+       ],
+       [
+        10.9208162,
+        -74.799242
+       ],
+       [
+        10.9208163,
+        -74.7991912
+       ],
+       [
+        10.9208165,
+        -74.7991404
+       ],
+       [
+        10.9208167,
+        -74.7990842
+       ],
+       [
+        10.920787,
+        -74.7990843
+       ],
+       [
+        10.9206523,
+        -74.7990846
+       ],
+       [
+        10.9205219,
+        -74.7990831
+       ],
+       [
+        10.9205214,
+        -74.7990417
+       ],
+       [
+        10.9204808,
+        -74.7990143
+       ],
+       [
+        10.9198983,
+        -74.7987911
        ]
       ]
      }
@@ -7342,10 +6746,647 @@
      "semaforo": false
     }
    ],
-   "recorridos_desviados": 5151
+   "recorridos_desviados": 5151,
+   "circulacion": {
+    "demanda": {
+     "modelo": "gravedad: peso del par = exp(-distancia sin obra / d0), normalizado",
+     "d0_m": 400,
+     "peso_esquina": "uniforme",
+     "pares_peatones": 3600,
+     "pares_vehiculos": 7200
+    },
+    "peatones": {
+     "obra": {
+      "desvio_ponderado_m": 262.7,
+      "desvio_positivo_m": 262.7,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 42.1
+     },
+     "con_pasos_regla_500m": {
+      "desvio_ponderado_m": 66.5,
+      "desvio_positivo_m": 66.5,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 9.5
+     },
+     "con_pasos_por_demanda": {
+      "desvio_ponderado_m": 23.6,
+      "desvio_positivo_m": 23.6,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 3.0
+     }
+    },
+    "vehiculos": {
+     "obra": {
+      "desvio_ponderado_m": 355.0,
+      "desvio_positivo_m": 355.0,
+      "sin_camino": 644,
+      "demanda_sin_camino_pct": 17.5,
+      "demanda_desvio_relativo_pct": 0.0
+     },
+     "con_cambios_de_sentido": {
+      "desvio_ponderado_m": 357.2,
+      "desvio_positivo_m": 357.2,
+      "sin_camino": 584,
+      "demanda_sin_camino_pct": 16.0,
+      "demanda_desvio_relativo_pct": 0.0
+     },
+     "con_cambios_y_pares_viales": {
+      "desvio_ponderado_m": 357.2,
+      "desvio_positivo_m": 357.2,
+      "sin_camino": 584,
+      "demanda_sin_camino_pct": 16.0,
+      "demanda_desvio_relativo_pct": 0.0
+     }
+    },
+    "capacidad": {
+     "unidad": "carriles del corte mínimo (sentido a_b: del lado A al lado B)",
+     "veh_h_carril": 950,
+     "seco": {
+      "a_b": 15,
+      "calles_a_b": [
+       "Avenida Murillo",
+       "Calle 45",
+       "Calle 51B",
+       "Calle 61",
+       "Calle 64A",
+       "Calle 67",
+       "Calle 67A",
+       "Calle 67B",
+       "Calle 68",
+       "Carrera 16 Sur",
+       "Carrera 18 Sur",
+       "Carrera 23",
+       "Carrera 23B",
+       "Carrera 24"
+      ],
+      "b_a": 17,
+      "calles_b_a": [
+       "Avenida Murillo",
+       "Calle 61",
+       "Calle 68",
+       "Carrera 14",
+       "Carrera 14A",
+       "Carrera 15",
+       "Carrera 15A",
+       "Carrera 15D",
+       "Carrera 18",
+       "Carrera 19",
+       "Carrera 21B",
+       "Carrera 22D",
+       "Carrera 24",
+       "calle sin nombre"
+      ]
+     },
+     "obra": {
+      "a_b": 11,
+      "calles_a_b": [
+       "Calle 45",
+       "Calle 51B",
+       "Calle 68",
+       "Carrera 16 Sur",
+       "Carrera 18 Sur",
+       "Carrera 22D",
+       "Carrera 23",
+       "Carrera 23B",
+       "Carrera 24",
+       "Vía local junto al eje (en OSM: Arroyo El Salao)"
+      ],
+      "b_a": 11,
+      "calles_b_a": [
+       "Calle 68",
+       "Carrera 14",
+       "Carrera 14A",
+       "Carrera 15",
+       "Carrera 15A",
+       "Carrera 15D",
+       "Carrera 18",
+       "Carrera 19",
+       "Carrera 21B",
+       "Carrera 22D",
+       "Carrera 24"
+      ]
+     },
+     "con_medidas": {
+      "a_b": 11,
+      "calles_a_b": [
+       "Calle 45",
+       "Calle 51B",
+       "Calle 68",
+       "Carrera 16 Sur",
+       "Carrera 18 Sur",
+       "Carrera 22D",
+       "Carrera 23",
+       "Carrera 23B",
+       "Carrera 24",
+       "Vía local junto al eje (en OSM: Arroyo El Salao)"
+      ],
+      "b_a": 11,
+      "calles_b_a": [
+       "Calle 68",
+       "Carrera 14",
+       "Carrera 14A",
+       "Carrera 15",
+       "Carrera 15A",
+       "Carrera 15D",
+       "Carrera 18",
+       "Carrera 19",
+       "Carrera 21B",
+       "Carrera 22D",
+       "Carrera 24"
+      ]
+     },
+     "conserva_pct": {
+      "a_b": 73.3,
+      "b_a": 64.7
+     },
+     "conserva_con_medidas_pct": {
+      "a_b": 73.3,
+      "b_a": 64.7
+     },
+     "veh_h_aprox": {
+      "seco": {
+       "a_b": 14250,
+       "b_a": 16150
+      },
+      "obra": {
+       "a_b": 10450,
+       "b_a": 10450
+      },
+      "con_medidas": {
+       "a_b": 10450,
+       "b_a": 10450
+      }
+     }
+    },
+    "esquina_mas_cargada_pct": 60.1
+   },
+   "pares_viales": {
+    "pares": [],
+    "evaluados": 0,
+    "propuestos": 0,
+    "calles_un_sentido": [],
+    "excluidas": [
+     {
+      "via": "Avenida Circunvalar",
+      "motivo": "tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)"
+     },
+     {
+      "via": "Avenida Murillo",
+      "motivo": "tiene tramos en los dos sentidos (dos calzadas de una vía o una calle que cambia de sentido)"
+     },
+     {
+      "via": "Calle 45G",
+      "motivo": "solo tiene 62 m de un sentido cerca de la etapa"
+     },
+     {
+      "via": "Calle 58B",
+      "motivo": "solo tiene 33 m de un sentido cerca de la etapa"
+     },
+     {
+      "via": "Carrera 28",
+      "motivo": "solo tiene 31 m de un sentido cerca de la etapa"
+     }
+    ],
+    "motivo": "No se encontraron calles locales de un solo sentido, con nombre y de al menos 100 m, cerca de esta etapa. En OpenStreetMap pocas calles traen la etiqueta de sentido (oneway): verificar en terreno."
+   },
+   "pasos_por_demanda": {
+    "pasos": [
+     {
+      "orden": 1,
+      "tipo": "cruce",
+      "via": "esquina cerca de Calle 62",
+      "desde": "esquina cerca de Calle 62",
+      "hasta": "Calle 62 x Carrera22B",
+      "recorrido_m": 38,
+      "forma": [
+       [
+        10.9198576,
+        -74.7981684
+       ],
+       [
+        10.9196896,
+        -74.7981599
+       ],
+       [
+        10.9195098,
+        -74.798158
+       ]
+      ],
+      "pos_m": 1995,
+      "desvio_ponderado_m": 66.5,
+      "desvio_positivo_m": 66.5,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 9.5
+     },
+     {
+      "orden": 2,
+      "tipo": "cruce",
+      "via": "esquina sin nombre",
+      "desde": "esquina sin nombre",
+      "hasta": "esquina sin nombre",
+      "recorrido_m": 14,
+      "forma": [
+       [
+        10.9197991,
+        -74.7992767
+       ],
+       [
+        10.9196745,
+        -74.7992753
+       ]
+      ],
+      "pos_m": 1872,
+      "desvio_ponderado_m": 47.5,
+      "desvio_positivo_m": 47.5,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 6.7
+     },
+     {
+      "orden": 3,
+      "tipo": "cruce",
+      "via": "Calle 58A",
+      "desde": "Calle 58A",
+      "hasta": "Calle 57D x Calle 58A",
+      "recorrido_m": 50,
+      "forma": [
+       [
+        10.9204268,
+        -74.7953014
+       ],
+       [
+        10.920642,
+        -74.7953051
+       ],
+       [
+        10.9206528,
+        -74.7952612
+       ],
+       [
+        10.9206453,
+        -74.7951618
+       ],
+       [
+        10.9207417,
+        -74.795147
+       ]
+      ],
+      "pos_m": 2345,
+      "desvio_ponderado_m": 29.8,
+      "desvio_positivo_m": 29.8,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 3.8
+     },
+     {
+      "orden": 4,
+      "tipo": "cruce",
+      "via": "Calle 59A",
+      "desde": "Calle 59A",
+      "hasta": "Calle 59B x Carrera 22E",
+      "recorrido_m": 46,
+      "forma": [
+       [
+        10.9196955,
+        -74.7962395
+       ],
+       [
+        10.9197693,
+        -74.7963065
+       ],
+       [
+        10.9198397,
+        -74.7964092
+       ],
+       [
+        10.9198688,
+        -74.7964638
+       ],
+       [
+        10.919921,
+        -74.7965874
+       ]
+      ],
+      "pos_m": 2190,
+      "desvio_ponderado_m": 23.6,
+      "desvio_positivo_m": 23.6,
+      "sin_camino": 0,
+      "demanda_sin_camino_pct": 0.0,
+      "demanda_desvio_relativo_pct": 3.0
+     }
+    ],
+    "numero": 4,
+    "candidatos": 19,
+    "limitado_por_maximo": false,
+    "brecha_max_m": 195,
+    "tramos_sobre_brecha": [],
+    "comparacion_regla_500m": {
+     "numero": 1,
+     "brecha_max_m": 391,
+     "tramos_sobre_brecha": [
+      {
+       "inicio_m": 1995,
+       "fin_m": 2386,
+       "largo_m": 391,
+       "candidatos_dentro": 6
+      }
+     ],
+     "desvio_ponderado_m": 66.5,
+     "desvio_positivo_m": 66.5,
+     "sin_camino": 0,
+     "demanda_sin_camino_pct": 0.0,
+     "demanda_desvio_relativo_pct": 9.5
+    },
+    "metodo": "voraz ponderado por la demanda supuesta; con pocos candidatos se comparó contra fuerza bruta (tests/test_demanda.py): con 2 pasos el voraz puede no ser óptimo"
+   },
+   "control_temporal": {
+    "esquinas": [
+     {
+      "esquina": "1879842413",
+      "nombre": "Calle 60 x Carrera 18",
+      "posicion": [
+       10.9171107,
+       -74.797227
+      ],
+      "puntaje_pct": 60.1,
+      "accesos": 4,
+      "cruza_via_mayor": true,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 60 % de la demanda desviada; 4 accesos; cruza una vía principal; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     },
+     {
+      "esquina": "1882409251",
+      "nombre": "Calle 66A x Carrera 22A",
+      "posicion": [
+       10.9195169,
+       -74.8010874
+      ],
+      "puntaje_pct": 53.1,
+      "accesos": 4,
+      "cruza_via_mayor": false,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 53 % de la demanda desviada; 4 accesos; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     },
+     {
+      "esquina": "950488155",
+      "nombre": "Carrera 18",
+      "posicion": [
+       10.9171211,
+       -74.7954625
+      ],
+      "puntaje_pct": 48.3,
+      "accesos": 3,
+      "cruza_via_mayor": true,
+      "semaforo_existente": false,
+      "motivo": "Pasa por aquí el 48 % de la demanda desviada; 3 accesos; cruza una vía principal; sin semáforo registrado en OpenStreetMap. Candidata a control temporal (semáforo provisional o agente de tránsito); verificar con conteos."
+     }
+    ],
+    "descartadas_por_semaforo": 4,
+    "semaforos_conocidos": true
+   }
   }
  ],
  "semaforos_conocidos": 29,
+ "supuestos": [
+  {
+   "nombre": "d0_m",
+   "valor": 400,
+   "unidad": "m",
+   "rango": [
+    200,
+    1000
+   ],
+   "justificacion": "Distancia característica de la demanda: el peso de un par de esquinas a distancia d (sin obra) es exp(-d / d0). Con d0 = 400 m un par a 400 m pesa 0,37 frente a uno a 0 m.",
+   "fuente": "Forma del modelo de gravedad: Princeton ORF 467, Trip Distribution. Gao, Wang, Gao y Liu (2013), Environment and Planning B 40(1):135-153: con el decaimiento por distancia el modelo predice mejor el tráfico que la intermediación sola. El valor 400 m no tiene fuente.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "peso_esquina",
+   "valor": "uniforme",
+   "unidad": "",
+   "rango": "uniforme",
+   "justificacion": "Cada esquina genera y atrae lo mismo. No hay población ni comercios por manzana.",
+   "fuente": "Sin fuente: no hay datos por manzana en el proyecto.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "veh_h_carril",
+   "valor": 950,
+   "unidad": "veh/h por carril",
+   "rango": [
+    600,
+    1900
+   ],
+   "justificacion": "Capacidad de un carril en una calle con intersecciones: 1900 vehículos por hora de verde (base del HCM) por una fracción de verde g/C = 0,5. Si es igual en todas las calles no cambia el orden de las alternativas: solo multiplica la capacidad en carriles.",
+   "fuente": "1900 por hora de verde y por carril: Highway Capacity Manual, citado por FHWA (HPMS, apéndice N) y otros. g/C = 0,5 no tiene fuente (no hay tiempos de semáforo).",
+   "estado": "reportado"
+  },
+  {
+   "nombre": "carriles_por_clase",
+   "valor": {
+    "trunk": 4,
+    "primary": 4,
+    "secondary": 2,
+    "tertiary": 2,
+    "unclassified": 2,
+    "residential": 2,
+    "living_street": 1,
+    "service": 1,
+    "road": 2
+   },
+   "unidad": "carriles (total de la vía)",
+   "rango": "±1 carril",
+   "justificacion": "Carriles cuando OpenStreetMap no trae la etiqueta lanes (la trae cerca del 20 % de las vías de la zona de El Salao). En una vía de doble sentido se reparten por mitades.",
+   "fuente": "Sin fuente: valores típicos elegidos por el equipo.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "dist_par_max_m",
+   "valor": 200,
+   "unidad": "m",
+   "rango": [
+    80,
+    300
+   ],
+   "justificacion": "Dos calles paralelas forman un posible par vial si sus centros están a menos de esto (unas dos cuadras).",
+   "fuente": "Sin fuente.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "largo_min_par_m",
+   "valor": 100,
+   "unidad": "m",
+   "rango": [
+    50,
+    300
+   ],
+   "justificacion": "Una calle cuenta para un par vial si tiene al menos este largo de un solo sentido cerca de la etapa.",
+   "fuente": "Sin fuente.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "sep_calzadas_m",
+   "valor": 40,
+   "unidad": "m",
+   "rango": [
+    20,
+    60
+   ],
+   "justificacion": "Dos tramos de un solo sentido con el mismo nombre, sentidos opuestos y a menos de esto son las dos calzadas de una misma avenida: no se proponen como par vial.",
+   "fuente": "Sin fuente.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "carriles_min_doble",
+   "valor": 2,
+   "unidad": "carriles",
+   "rango": [
+    1,
+    3
+   ],
+   "justificacion": "Una calle de un solo sentido solo puede pasar a doble sentido si tiene al menos estos carriles.",
+   "fuente": "Sin fuente: con un solo carril no caben dos sentidos.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "clases_invertibles",
+   "valor": [
+    "residential",
+    "tertiary",
+    "unclassified",
+    "living_street"
+   ],
+   "unidad": "clases de OSM",
+   "rango": "residential, tertiary, unclassified, living_street",
+   "justificacion": "Solo se propone invertir calles locales. Las avenidas (trunk, primary, secondary) quedan fuera.",
+   "fuente": "Sin fuente.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "max_pares_etapa",
+   "valor": 3,
+   "unidad": "pares",
+   "rango": [
+    1,
+    6
+   ],
+   "justificacion": "Pares de calles que se evalúan por etapa (los más cercanos a la obra). Limita el tiempo de cálculo.",
+   "fuente": "Sin fuente: límite de cálculo.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "sep_min_pasos_m",
+   "valor": 80,
+   "unidad": "m",
+   "rango": [
+    50,
+    150
+   ],
+   "justificacion": "Separación mínima, a lo largo del eje, entre dos pasos peatonales provisionales elegidos por demanda.",
+   "fuente": "Global Street Design Guide (GDCI): cruces a nivel cada 80 a 100 m en zonas urbanas. Es una guía internacional, no la norma colombiana.",
+   "estado": "reportado"
+  },
+  {
+   "nombre": "brecha_max_m",
+   "valor": 200,
+   "unidad": "m",
+   "rango": [
+    100,
+    400
+   ],
+   "justificacion": "Tramo de obra sin ningún cruce abierto que se marca como demasiado largo.",
+   "fuente": "Global Street Design Guide (GDCI): distancias de más de 200 m entre cruces deben evitarse.",
+   "estado": "reportado"
+  },
+  {
+   "nombre": "max_pasos_etapa",
+   "valor": 8,
+   "unidad": "pasos",
+   "rango": [
+    2,
+    12
+   ],
+   "justificacion": "Máximo de pasos peatonales por demanda en una etapa. Limita el cálculo; normalmente el voraz se detiene antes porque el siguiente paso ya no mejora lo suficiente.",
+   "fuente": "Sin fuente: límite de cálculo.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "mejora_min",
+   "valor": 0.02,
+   "unidad": "fracción",
+   "rango": [
+    0.0,
+    0.1
+   ],
+   "justificacion": "Un paso peatonal más se agrega solo si baja el desvío ponderado al menos este 2 % (y 0,5 m).",
+   "fuente": "Sin fuente: el mismo umbral que usa el voraz del proyecto (analisis.MEJORA_MIN).",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "tolerancia_desvio_relativo",
+   "valor": 0.5,
+   "unidad": "fracción",
+   "rango": [
+    0.25,
+    1.0
+   ],
+   "justificacion": "Un par con un recorrido a pie más de un 50 % más largo que sin obra se cuenta como «probable que cruce por donde no debe».",
+   "fuente": "Moore y Older (1965), citados en un artículo de la WCTR 2019 (Mumbai, n.º 992): casi nadie usa un puente peatonal que tarda un 50 % más que cruzar a nivel. No se leyó el estudio original.",
+   "estado": "reportado"
+  },
+  {
+   "nombre": "percentil_carga",
+   "valor": 90,
+   "unidad": "percentil",
+   "rango": [
+    75,
+    95
+   ],
+   "justificacion": "Una esquina es candidata a control temporal si los recorridos desviados que pasan por ella están en este percentil o más de la etapa.",
+   "fuente": "Sin fuente. NO es un criterio de justificación de semáforos (MUTCD, capítulo 4C): esos criterios exigen conteos de vehículos y peatones.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "accesos_min",
+   "valor": 3,
+   "unidad": "accesos",
+   "rango": [
+    3,
+    4
+   ],
+   "justificacion": "Una esquina candidata a control debe tener al menos 3 calles vehiculares (no es un simple codo).",
+   "fuente": "Sin fuente.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "sep_control_m",
+   "valor": 150,
+   "unidad": "m",
+   "rango": [
+    80,
+    300
+   ],
+   "justificacion": "Separación mínima entre dos esquinas elegidas para control temporal.",
+   "fuente": "Sin fuente: la misma separación que usa el proyecto entre cambios de sentido.",
+   "estado": "supuesto del equipo"
+  },
+  {
+   "nombre": "max_controles_etapa",
+   "valor": 3,
+   "unidad": "esquinas",
+   "rango": [
+    1,
+    5
+   ],
+   "justificacion": "Máximo de esquinas propuestas para control temporal por etapa.",
+   "fuente": "Sin fuente.",
+   "estado": "supuesto del equipo"
+  }
+ ],
  "resumen": {
   "etapas": 3,
   "longitud_m": 2386,
@@ -7354,7 +7395,14 @@
   "rutas_alternas": 18,
   "esquinas_de_control": 15,
   "esquinas_sin_semaforo": 14,
-  "etapa_mas_dificil": 1
+  "etapa_mas_dificil": 1,
+  "calculadas": {
+   "pares_viales_evaluados": 0,
+   "pares_viales_propuestos": 0,
+   "pasos_por_demanda": 16,
+   "controles_temporales": 9,
+   "brecha_max_m": 427
+  }
  },
  "pasos": [
   {
@@ -7484,9 +7532,9 @@
    "cifra": "2",
    "unidad": "pasos peatonales",
    "detalle": [
-    "Tramo del metro 0 al 975 (975 m). Se cierran 24 cruces, 3 de ellos puentes existentes.",
+    "Tramo del metro 0 al 975 (975 m). Se cierran 24 cruces, 3 de ellos son puentes existentes.",
     "A pie: el desvío medio pasa de 387 m a 48 m con 2 pasos peatonales.",
-    "En carro: desvío medio de 332 m; 60 pares sin camino; 1 cambio(s) de sentido."
+    "En carro: desvío medio de 332 m; 60 pares sin camino; 1 cambio de sentido."
    ],
    "capas": [
     "etapas",
@@ -7513,9 +7561,9 @@
    "cifra": "2",
    "unidad": "pasos peatonales",
    "detalle": [
-    "Tramo del metro 975 al 1825 (850 m). Se cierran 24 cruces, 1 de ellos puentes existentes.",
+    "Tramo del metro 975 al 1825 (850 m). Se cierran 24 cruces, uno de ellos es un puente existente.",
     "A pie: el desvío medio pasa de 129 m a 28 m con 2 pasos peatonales.",
-    "En carro: desvío medio de 287 m; 1 cambio(s) de sentido."
+    "En carro: desvío medio de 287 m; 1 cambio de sentido."
    ],
    "capas": [
     "etapas",
@@ -7542,9 +7590,9 @@
    "cifra": "1",
    "unidad": "paso peatonal",
    "detalle": [
-    "Tramo del metro 1825 al 2386 (561 m). Se cierran 26 cruces, 5 de ellos puentes existentes.",
+    "Tramo del metro 1825 al 2386 (561 m). Se cierran 26 cruces, 5 de ellos son puentes existentes.",
     "A pie: el desvío medio pasa de 219 m a 56 m con 1 paso peatonal.",
-    "En carro: desvío medio de 293 m; 644 pares sin camino; 1 cambio(s) de sentido."
+    "En carro: desvío medio de 293 m; 644 pares sin camino; 1 cambio de sentido."
    ],
    "capas": [
     "etapas",
@@ -7562,6 +7610,84 @@
      10.9221074,
      -74.79338750000001
     ]
+   ]
+  },
+  {
+   "id": "reorganizacion",
+   "titulo": "Reorganización de calles",
+   "cifra": "0",
+   "unidad": "pares viales propuestos",
+   "etapa": null,
+   "capas": [
+    "pares_viales"
+   ],
+   "foco": [
+    [
+     10.915536,
+     -74.8162502
+    ],
+    [
+     10.9221074,
+     -74.79338750000001
+    ]
+   ],
+   "detalle": [
+    "Etapa 1: Hay calles de un solo sentido cerca de esta etapa, pero ningún par es paralelo y está a menos de 200 m. Carriles para cruzar la obra (corte mínimo): 16 y 15 sin obra; 14 y 13 con la obra; 14 y 13 con las medidas.",
+    "Etapa 2: No se encontraron calles locales de un solo sentido, con nombre y de al menos 100 m, cerca de esta etapa. En OpenStreetMap pocas calles traen la etiqueta de sentido (oneway): verificar en terreno. Carriles para cruzar la obra (corte mínimo): 15 y 18 sin obra; 10 y 13 con la obra; 10 y 13 con las medidas.",
+    "Etapa 3: No se encontraron calles locales de un solo sentido, con nombre y de al menos 100 m, cerca de esta etapa. En OpenStreetMap pocas calles traen la etiqueta de sentido (oneway): verificar en terreno. Carriles para cruzar la obra (corte mínimo): 15 y 17 sin obra; 11 y 11 con la obra; 11 y 11 con las medidas.",
+    "Para cada par se prueban todas las configuraciones (sin cambio, invertir una, invertir la otra, las dos a doble sentido) con Dijkstra y con el flujo máximo entre los dos lados."
+   ]
+  },
+  {
+   "id": "pasos-demanda",
+   "titulo": "Pasos peatonales según la demanda",
+   "cifra": "16",
+   "unidad": "pasos peatonales",
+   "etapa": null,
+   "capas": [
+    "pasos_demanda"
+   ],
+   "foco": [
+    [
+     10.915536,
+     -74.8162502
+    ],
+    [
+     10.9221074,
+     -74.79338750000001
+    ]
+   ],
+   "detalle": [
+    "Etapa 1: 7 pasos (con la regla de 500 m: 2). Desvío a pie ponderado: 491 m con la obra, -16 m con estos pasos y 76 m con la regla. Mayor tramo sin cruce: 213 m.",
+    "Etapa 2: 5 pasos (con la regla de 500 m: 2). Desvío a pie ponderado: 163 m con la obra, 17 m con estos pasos y 35 m con la regla. Mayor tramo sin cruce: 427 m.",
+    "Etapa 3: 4 pasos (con la regla de 500 m: 1). Desvío a pie ponderado: 263 m con la obra, 24 m con estos pasos y 66 m con la regla. Mayor tramo sin cruce: 195 m.",
+    "La demanda es supuesta (gravedad con d0 = 400 m). Se agrega un paso más solo si baja el desvío ponderado al menos un 2 %, con 80 m de separación como mínimo. Se eligen con un voraz, que puede no ser el óptimo."
+   ]
+  },
+  {
+   "id": "control-temporal",
+   "titulo": "Control temporal en esquinas",
+   "cifra": "9",
+   "unidad": "esquinas candidatas",
+   "etapa": null,
+   "capas": [
+    "control_temporal"
+   ],
+   "foco": [
+    [
+     10.915536,
+     -74.8162502
+    ],
+    [
+     10.9221074,
+     -74.79338750000001
+    ]
+   ],
+   "detalle": [
+    "Etapa 1: Calle 73 x Carrera 19A (64 % de la demanda desviada); Calle 75 x Carrera 19A (47 % de la demanda desviada); Calle 78C 1 x Carrera 18E (34 % de la demanda desviada).",
+    "Etapa 2: Calle 75 x Carrera 21A (75 % de la demanda desviada); Calle 73 x Carrera 19 (45 % de la demanda desviada); Calle 72A x Carrera 22 (36 % de la demanda desviada).",
+    "Etapa 3: Calle 60 x Carrera 18 (60 % de la demanda desviada); Calle 66A x Carrera 22A (53 % de la demanda desviada); Carrera 18 (48 % de la demanda desviada).",
+    "Es una priorización sin conteos (esquinas con al menos 3 accesos, en el 10 % más cargado, sin semáforo registrado y separadas 150 m): no es un criterio para instalar un semáforo."
    ]
   },
   {
@@ -7584,7 +7710,9 @@
    "detalle": [
     "No hay datos de volumen de tránsito: no se mide congestión, solo desvíos en metros.",
     "No se diseñan carriles ni tiempos de semáforo.",
-    "Los pasos peatonales y cambios de sentido deben verificarse en terreno antes de proponerlos."
+    "Los pasos peatonales y cambios de sentido deben verificarse en terreno antes de proponerlos.",
+    "La demanda es supuesta (modelo de gravedad con d0 = 400 m y esquinas de igual peso): no hay conteos de vehículos ni de peatones.",
+    "La capacidad se cuenta en carriles (de OpenStreetMap o supuestos por tipo de vía); no mide congestión ni demoras en las esquinas. Los cambios de sentido pueden tener efectos que este modelo no ve (paradoja de Braess)."
    ]
   }
  ]
